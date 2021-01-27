@@ -1,4 +1,4 @@
-package com.metallic;
+package com.metallic.metallic.smartcontract.wrapperClass.com.metallic;
 
 import java.math.BigInteger;
 import java.util.Arrays;
