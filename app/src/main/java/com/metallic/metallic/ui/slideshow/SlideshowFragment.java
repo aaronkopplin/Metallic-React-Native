@@ -1,4 +1,4 @@
-package com.example.metallic.ui.slideshow;
+package com.metallic.metallic.ui.slideshow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.metallic.R;
+import com.metallic.metallic.R;
 
 public class SlideshowFragment extends Fragment {
 

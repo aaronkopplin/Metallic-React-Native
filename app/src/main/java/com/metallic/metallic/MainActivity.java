@@ -1,4 +1,4 @@
-package com.example.metallic;
+package com.metallic.metallic;
 
 import android.os.Bundle;
 import android.view.View;

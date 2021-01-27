@@ -1,4 +1,4 @@
-package com.example.metallic.ui.slideshow;
+package com.metallic.metallic.ui.slideshow;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

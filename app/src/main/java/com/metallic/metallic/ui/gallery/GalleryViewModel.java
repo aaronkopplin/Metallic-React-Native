@@ -1,4 +1,4 @@
-package com.example.metallic.ui.gallery;
+package com.metallic.metallic.ui.gallery;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

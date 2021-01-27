@@ -1,4 +1,4 @@
-package com.example.metallic.ui.home;
+package com.metallic.metallic.ui.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
