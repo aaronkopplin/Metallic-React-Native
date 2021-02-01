@@ -1,0 +1,11 @@
+npm install @react-navigation/native
+expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
+npm install @react-navigation/bottom-tabs
+npm install @react-navigation/stack
+npm install @react-navigation/drawer
+npm install react-native-elements
+npm install -g solc
+npm install web3
+npm install ethereumjs-tx
+npm install --save node-libs-browser
+npm install --save-dev babel-cli babel-preset-es2015
