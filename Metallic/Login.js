@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StyleSheet, Text, View, Dimensions, TextInput, Button } from 'react-native';
 import SignUp from './SignUp';
 import CustomButton from './button';
+import Account from './Account';
 
 const screenSize = Dimensions.get("screen");
 
@@ -22,7 +23,7 @@ class Login extends React.Component {
                 <TextInput style={styles.textInputStyle} placeholder='Enter your password' autoCapitalize={'none'} secureTextEntry={true} />
                 
                 <View style={{zIndex: 1, paddingTop: screenSize.height / 20, paddingBottom: screenSize.height / 70}}>
-                  <CustomButton text='Login' color='#1e1c21' width={screenSize.width - 60} height={screenSize.height / 20}/>
+                  <CustomButton onPress={() => this.props.navigation.navigate(Account)} text='Login' color='#1e1c21' width={screenSize.width - 60} height={screenSize.height / 20}/>
                 </View>
                 <View style={{zIndex: 2}}>
                   <CustomButton onPress={() => this.props.navigation.navigate(SignUp)} 

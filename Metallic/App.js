@@ -5,6 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SignUp from './SignUp';
 import Login from './Login';
+import Account from './Account';
+import Contacts from './Contacts';
+import Payments from './Payments';
 
 const Stack = createStackNavigator();
 const screenSize = Dimensions.get("screen");
@@ -24,6 +27,9 @@ export default function App() {
         
         <Stack.Screen name="Login" component={Login} options={{ title: 'Metallic' }} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Account" component={Account} />
+        <Stack.Screen name="Contacts" component={Contacts} />
+        <Stack.Screen name="Payments" component={Payments} />
       </Stack.Navigator>
     </NavigationContainer>
   );
