@@ -9,11 +9,11 @@ import CustomButton from '../Metallic/button';
 const Stack = createStackNavigator();
 const screenSize = Dimensions.get("screen");
 
-function LoginScreen() {
+function LoginScreen({navigation}) {
   return (
     <View style={styles.mainBackground}>
       <View style={{ backgroundColor: '#2e2b30', width: screenSize.width - 20, height: screenSize.width - 20, paddingTop: screenSize.height / 50, paddingLeft: 20, borderRadius: 4 }}>
-        <Text style={[textStyle.headText, {paddingBottom: screenSize.height / 18}]}>Login Screen</Text>
+        <Text style={[textStyle.headText, {paddingBottom: screenSize.height / 18}]}>Login</Text>
         <Text style={[textStyle.normalText, {paddingBottom: screenSize.height / 150}]}>Username</Text>
         <TextInput style={styles.textInputStyle} placeholder='Enter your username' autoCapitalize={'none'} />
         <Text style={[textStyle.normalText, {paddingBottom: screenSize.height / 150, paddingTop: screenSize.height / 60}]}>Password</Text>
@@ -22,7 +22,8 @@ function LoginScreen() {
           <CustomButton text='Login' color='#1e1c21' width={screenSize.width - 60} height={screenSize.height / 20}/>
         </View>
         <View style={{zIndex: 2}}>
-          <CustomButton text={'Don\'t have an account'} color='#1e1c21' width={screenSize.width - 60} height={screenSize.height / 20} />
+          <CustomButton onPress={() => navigation.navigate('SignUp')} 
+          text={'Don\'t have an account'} color='#1e1c21' width={screenSize.width - 60} height={screenSize.height / 20 } />
         </View>
         
       </View>
@@ -30,7 +31,7 @@ function LoginScreen() {
   );
 }
 
-function SignUpScreen() {
+function SignUpScreen({navigation}) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Sign Up Screen</Text>
@@ -38,7 +39,7 @@ function SignUpScreen() {
   );
 }
 
-function App() {
+export default function App() {
 
   return (
     <NavigationContainer>
@@ -49,6 +50,7 @@ function App() {
         headTintColor: '#79777d',
         headTitleStyle: { fontSize: 20, fontWeight: 'bold' },
       }}>
+        
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Metallic' }} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
       </Stack.Navigator>
@@ -56,7 +58,7 @@ function App() {
   );
 }
 
-export default App;
+// export default App;
 
 const textStyle = StyleSheet.create({
   headText: {
