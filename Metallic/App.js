@@ -12,17 +12,17 @@ const screenSize = Dimensions.get("screen");
 function LoginScreen() {
   return (
     <View style={styles.mainBackground}>
-      <View style={{ backgroundColor: '#2e2b30', width: screenSize.width - 20, height: screenSize.width - 20, paddingTop: 20, paddingLeft: 20, borderRadius: 4 }}>
-        <Text style={[textStyle.headText, {paddingBottom: screenSize.width / 8}]}>Login Screen</Text>
-        <Text style={[textStyle.normalText, {paddingBottom: 5}]}>Username</Text>
+      <View style={{ backgroundColor: '#2e2b30', width: screenSize.width - 20, height: screenSize.width - 20, paddingTop: screenSize.height / 50, paddingLeft: 20, borderRadius: 4 }}>
+        <Text style={[textStyle.headText, {paddingBottom: screenSize.height / 18}]}>Login Screen</Text>
+        <Text style={[textStyle.normalText, {paddingBottom: screenSize.height / 150}]}>Username</Text>
         <TextInput style={styles.textInputStyle} placeholder='Enter your username' autoCapitalize={'none'} />
-        <Text style={[textStyle.normalText, {paddingBottom: 5, paddingTop: 15}]}>Password</Text>
+        <Text style={[textStyle.normalText, {paddingBottom: screenSize.height / 150, paddingTop: screenSize.height / 60}]}>Password</Text>
         <TextInput style={styles.textInputStyle} placeholder='Enter your password' autoCapitalize={'none'} secureTextEntry={true} />
-        <View style={{zIndex: 1, paddingTop: 45, paddingBottom: 10}}>
-          <CustomButton text='Login' color='#1e1c21' width={screenSize.width - 60} height={40}/>
+        <View style={{zIndex: 1, paddingTop: screenSize.height / 20, paddingBottom: screenSize.height / 70}}>
+          <CustomButton text='Login' color='#1e1c21' width={screenSize.width - 60} height={screenSize.height / 20}/>
         </View>
         <View style={{zIndex: 2}}>
-          <CustomButton text={'Don\'t have an account'} color='#1e1c21' width={screenSize.width - 60} height={40} />
+          <CustomButton text={'Don\'t have an account'} color='#1e1c21' width={screenSize.width - 60} height={screenSize.height / 20} />
         </View>
         
       </View>
