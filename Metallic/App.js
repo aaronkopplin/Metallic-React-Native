@@ -20,9 +20,9 @@ export default function App() {
       initialRouteName={Login}
       
       screenOptions={{
-        headStyle: { backgroundColor: '#2e2b30', borderColor: '#2e2b30', shadowColor: '#2e2b30' },
-        headTintColor: '#79777d',
-        headTitleStyle: { fontSize: 20, fontWeight: 'bold' },
+        headerStyle: { backgroundColor: '#2e2b30', borderColor: '#2e2b30', shadowColor: '#2e2b30' },
+        headerTintColor: '#79777d',
+        headerTitleStyle: { fontSize: 20, fontWeight: 'bold' },
       }}>
         
         <Stack.Screen name="Login" component={Login} options={{ title: 'Metallic' }} />
