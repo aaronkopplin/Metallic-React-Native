@@ -19,6 +19,7 @@ export default function RegistrationScreen({ navigation }) {
             alert("Passwords don't match.");
             return;
         }
+
         firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
