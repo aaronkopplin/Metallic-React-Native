@@ -10,6 +10,7 @@ import {
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import { useNavigation} from "@react-navigation/native";
+import App from "../../../App";
 
 export default function HomeScreen(props) {
     const [entityText, setEntityText] = useState("");
@@ -44,7 +45,9 @@ export default function HomeScreen(props) {
         firebase.auth()
         .signOut()
         .then(() => {
-            navigation.navigate("Login");
+            props.navigation.navigate("Login");
+            
+            // navigation.navigate("Login");
             alert("Logout Successful.");
         });
     }
