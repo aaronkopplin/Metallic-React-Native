@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-    container: {
+    mainBackground: {
         flex: 1,
-        alignItems: "center",
+        backgroundColor: '#1e1c21',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     title: {},
     logo: {
@@ -17,7 +19,8 @@ export default StyleSheet.create({
         height: 48,
         borderRadius: 5,
         overflow: "hidden",
-        backgroundColor: "white",
+        color: "#788eec",
+        backgroundColor: "#fff",
         marginTop: 10,
         marginBottom: 10,
         marginLeft: 30,

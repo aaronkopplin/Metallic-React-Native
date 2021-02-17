@@ -11,10 +11,12 @@ export default function RegistrationScreen({ navigation }) {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const onFooterLinkPress = () => {
+        console.log("Already Have Account Pressed");
         navigation.navigate("Login");
     };
 
     const onRegisterPress = () => {
+        console.log("Create Account Pressed.");
         if (password !== confirmPassword) {
             alert("Passwords don't match.");
             return;
@@ -35,9 +37,12 @@ export default function RegistrationScreen({ navigation }) {
                     .doc(uid)
                     .set(data)
                     .then(() => {
+                        console.log("Attempting to navigate to home");
+                        alert("Account Created.");
                         navigation.navigate("Home", { user: data });
                     })
                     .catch((error) => {
+                        console.log("error caught in firebase.");
                         alert(error);
                     });
             })

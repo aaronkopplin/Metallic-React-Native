@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Text, TextInput, TouchableOpacity, View, Dimensions, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
+import CustomButton from '../../../button';
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const screenSize = Dimensions.get("screen");
     const onFooterLinkPress = () => {
+        console.log("Don't Have Account Pressed");
         navigation.navigate("Registration");
     };
 
     const onLoginPress = () => {
+        console.log("Login Button Pressed.");
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
@@ -40,7 +43,7 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={styles.mainBackground}>
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: "100%" }}
                 keyboardShouldPersistTaps="always"
@@ -66,25 +69,22 @@ export default function LoginScreen({ navigation }) {
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"
-                    autoCapitalize="none"
+                    autoCapitalize="none"q
                 />
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => onLoginPress()}
-                >
-                    <Text style={styles.buttonTitle}>Log in</Text>
-                </TouchableOpacity>
-                <View style={styles.footerView}>
-                    <Text style={styles.footerText}>
-                        Don't have an account?{" "}
-                        <Text
-                            onPress={onFooterLinkPress}
-                            style={styles.footerLink}
-                        >
-                            Sign up
-                        </Text>
-                    </Text>
+                <View style={{zIndex: 1, justifyContent: "center"}}>
+                  <CustomButton onPress={onLoginPress} 
+                  text='Login' 
+                  color='#1e1c21' 
+                    />
                 </View>
+
+                <View style={{zIndex: 3, justifyContent: "center"}}>
+                    <CustomButton onPress={onFooterLinkPress} 
+                    text={'Don\'t have an account'} 
+                    color='#1e1c21' 
+                    />
+                </View>
+
             </KeyboardAwareScrollView>
         </View>
     );

@@ -37,6 +37,16 @@ export default function HomeScreen(props) {
             );
     }, []);
 
+    const onLogoutPress = () => {
+        console.log("Logout Pressed.");
+        firebase.auth()
+        .signOut()
+        .then(() => {
+            props.navigation.navigate("Login");
+            alert("Logout Successful.");
+        });
+    }
+
     const onAddButtonPress = () => {
         if (entityText && entityText.length > 0) {
             const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -69,6 +79,14 @@ export default function HomeScreen(props) {
 
     return (
         <View style={styles.container}>
+            <View>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={onLogoutPress}    
+                >
+                    <Text style={styles.buttonText}>Log Out</Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.formContainer}>
                 <TextInput
                     style={styles.input}
