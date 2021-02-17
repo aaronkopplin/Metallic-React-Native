@@ -18,7 +18,6 @@ export default StyleSheet.create({
         margin: 30,
     },
     input: {
-        flex: .1,
         width: screenSize.width * .95,
         height: 25, 
         backgroundColor: '#fff', 
