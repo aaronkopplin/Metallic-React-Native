@@ -44,10 +44,7 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.mainBackground}>
-            <KeyboardAwareScrollView
-                style={{ flex: 1, width: "100%" }}
-                keyboardShouldPersistTaps="always"
-            >
+             <View style={{ backgroundColor: '#2e2b30', width: '100%', height: '90%', paddingTop: screenSize.height / 50, paddingLeft: 20, borderRadius: 4 }}>
                 <Image
                     style={styles.logo}
                     source={require("../../../assets/icon.png")}
@@ -61,6 +58,7 @@ export default function LoginScreen({ navigation }) {
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
+                <View style={styles.filler}></View>
                 <TextInput
                     style={styles.input}
                     placeholderTextColor="#aaaaaa"
@@ -71,21 +69,25 @@ export default function LoginScreen({ navigation }) {
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"q
                 />
-                <View style={{zIndex: 1, justifyContent: "center"}}>
+                <View style={{zIndex: 1, paddingTop: screenSize.height / 20, paddingBottom: screenSize.height / 70}}>
                   <CustomButton onPress={onLoginPress} 
                   text='Login' 
-                  color='#1e1c21' 
+                  color='#1e1c21'
+                  
+                  width={screenSize.width / 1.1}
+                  height={screenSize.height / 20} 
                     />
                 </View>
 
-                <View style={{zIndex: 3, justifyContent: "center"}}>
+                <View style={{zIndex: 2}}>
                     <CustomButton onPress={onFooterLinkPress} 
                     text={'Don\'t have an account'} 
                     color='#1e1c21' 
+                    width={screenSize.width / 1.1}
+                    height={screenSize.height / 20} 
                     />
                 </View>
-
-            </KeyboardAwareScrollView>
+            </View>
         </View>
     );
 }

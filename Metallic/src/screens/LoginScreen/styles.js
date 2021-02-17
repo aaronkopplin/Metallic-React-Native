@@ -1,33 +1,40 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
+const screenSize= Dimensions.get("screen");
 export default StyleSheet.create({
+    
     mainBackground: {
         flex: 1,
-        backgroundColor: '#1e1c21',
+        backgroundColor: '#2e2b30',
         alignItems: 'center',
         justifyContent: 'center',
     },
     title: {},
     logo: {
-        flex: 1,
+        flex: .25,
         height: 120,
         width: 90,
         alignSelf: "center",
         margin: 30,
     },
     input: {
-        height: 48,
-        borderRadius: 5,
-        overflow: "hidden",
-        color: "#788eec",
-        backgroundColor: "#fff",
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 30,
-        marginRight: 30,
-        paddingLeft: 16,
+        flex: .1,
+        width: screenSize.width * .95,
+        height: 25, 
+        backgroundColor: '#fff', 
+        borderRadius: 3,
+        paddingLeft: 5,
+        justifyContent: 'space-evenly'
+
+    },
+    filler: {
+        flex: .025,
+        backgroundColor: '#2e2b30',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     button: {
+        flex: .1,
         backgroundColor: "#788eec",
         marginLeft: 30,
         marginRight: 30,
@@ -36,24 +43,5 @@ export default StyleSheet.create({
         borderRadius: 5,
         alignItems: "center",
         justifyContent: "center",
-    },
-    buttonTitle: {
-        color: "white",
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    footerView: {
-        flex: 1,
-        alignItems: "center",
-        marginTop: 20,
-    },
-    footerText: {
-        fontSize: 16,
-        color: "#2e2e2d",
-    },
-    footerLink: {
-        color: "#788eec",
-        fontWeight: "bold",
-        fontSize: 16,
     },
 });
