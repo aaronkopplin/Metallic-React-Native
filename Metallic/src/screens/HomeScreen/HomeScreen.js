@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
-import { useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import App from "../../../App";
 
 export default function HomeScreen(props) {
@@ -42,15 +42,13 @@ export default function HomeScreen(props) {
 
     const onLogoutPress = () => {
         console.log("Logout Pressed.");
-        firebase.auth()
-        .signOut()
-        .then(() => {
-            props.navigation.navigate("Login");
-            
-            // navigation.navigate("Login");
-            alert("Logout Successful.");
-        });
-    }
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                alert("Logout Successful.");
+            });
+    };
 
     const onAddButtonPress = () => {
         if (entityText && entityText.length > 0) {
@@ -85,10 +83,7 @@ export default function HomeScreen(props) {
     return (
         <View style={styles.container}>
             <View>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={onLogoutPress}    
-                >
+                <TouchableOpacity style={styles.button} onPress={onLogoutPress}>
                     <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableOpacity>
             </View>

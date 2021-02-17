@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View, Dimensions, StyleSheet } from "react-native";
+import {
+    Image,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+    Dimensions,
+    StyleSheet,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
-import CustomButton from '../../../button';
+import CustomButton from "../../../button";
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
@@ -31,7 +39,6 @@ export default function LoginScreen({ navigation }) {
                             return;
                         }
                         const user = firestoreDocument.data();
-                        navigation.navigate("Home", { user: user });
                     })
                     .catch((error) => {
                         alert(error);
@@ -44,7 +51,16 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.mainBackground}>
-             <View style={{ backgroundColor: '#2e2b30', width: '100%', height: '90%', paddingTop: screenSize.height / 50, paddingLeft: 20, borderRadius: 4 }}>
+            <View
+                style={{
+                    backgroundColor: "#2e2b30",
+                    width: "100%",
+                    height: "90%",
+                    paddingTop: screenSize.height / 50,
+                    paddingLeft: 20,
+                    borderRadius: 4,
+                }}
+            >
                 <Image
                     style={styles.logo}
                     source={require("../../../assets/icon.png")}
@@ -67,24 +83,32 @@ export default function LoginScreen({ navigation }) {
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"
-                    autoCapitalize="none"q
+                    autoCapitalize="none"
+                    q
                 />
-                <View style={{zIndex: 1, paddingTop: screenSize.height / 20, paddingBottom: screenSize.height / 70}}>
-                  <CustomButton onPress={onLoginPress} 
-                  text='Login' 
-                  color='#1e1c21'
-                  
-                  width={screenSize.width / 1.1}
-                  height={screenSize.height / 20} 
+                <View
+                    style={{
+                        zIndex: 1,
+                        paddingTop: screenSize.height / 20,
+                        paddingBottom: screenSize.height / 70,
+                    }}
+                >
+                    <CustomButton
+                        onPress={onLoginPress}
+                        text="Login"
+                        color="#1e1c21"
+                        width={screenSize.width / 1.1}
+                        height={screenSize.height / 20}
                     />
                 </View>
 
-                <View style={{zIndex: 2}}>
-                    <CustomButton onPress={onFooterLinkPress} 
-                    text={'Don\'t have an account'} 
-                    color='#1e1c21' 
-                    width={screenSize.width / 1.1}
-                    height={screenSize.height / 20} 
+                <View style={{ zIndex: 2 }}>
+                    <CustomButton
+                        onPress={onFooterLinkPress}
+                        text={"Don't have an account"}
+                        color="#1e1c21"
+                        width={screenSize.width / 1.1}
+                        height={screenSize.height / 20}
                     />
                 </View>
             </View>
