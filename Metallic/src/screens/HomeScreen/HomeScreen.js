@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
+import { useNavigation} from "@react-navigation/native";
 
 export default function HomeScreen(props) {
     const [entityText, setEntityText] = useState("");
@@ -16,6 +17,7 @@ export default function HomeScreen(props) {
 
     const entityRef = firebase.firestore().collection("entities");
     const userID = props.extraData.id;
+    const navigation = useNavigation();
 
     useEffect(() => {
         entityRef
@@ -42,7 +44,7 @@ export default function HomeScreen(props) {
         firebase.auth()
         .signOut()
         .then(() => {
-            props.navigation.navigate("Login");
+            navigation.navigate("Login");
             alert("Logout Successful.");
         });
     }
