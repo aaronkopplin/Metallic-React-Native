@@ -3,6 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
+import { login } from "../LoginScreen/LoginScreen";
 
 export default function RegistrationScreen({ navigation }) {
     const [fullName, setFullName] = useState("");
@@ -38,8 +39,6 @@ export default function RegistrationScreen({ navigation }) {
                     .set(data)
                     .then(() => {
                         console.log("Attempting to navigate to home");
-                        alert("Account Created.");
-                        navigation.navigate("Home", { user: data });
                     })
                     .catch((error) => {
                         console.log("error caught in firebase.");
@@ -48,6 +47,9 @@ export default function RegistrationScreen({ navigation }) {
             })
             .catch((error) => {
                 alert(error);
+            })
+            .then(() => {
+                login(email, password);
             });
     };
 
