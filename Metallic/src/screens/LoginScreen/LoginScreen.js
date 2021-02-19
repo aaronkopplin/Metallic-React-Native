@@ -7,6 +7,7 @@ import {
     View,
     Dimensions,
     StyleSheet,
+    Platform,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
@@ -55,20 +56,26 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.mainBackground}>
+            
+            <Image
+                style={styles.logo}
+                source={require("../../../assets/icon.png")}
+                
+            />
+
             <View
                 style={{
                     backgroundColor: "#2e2b30",
-                    width: "100%",
-                    height: "90%",
+                    width: screenSize.width - 20,
+                    height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.width - 30,
                     paddingTop: screenSize.height / 50,
                     paddingLeft: 20,
                     borderRadius: 4,
                 }}
             >
-                <Image
-                    style={styles.logo}
-                    source={require("../../../assets/icon.png")}
-                />
+
+                <Text style={[styles.headings, {paddingBottom: screenSize.height * .005}]}>E-Mail</Text>
+
                 <TextInput
                     style={styles.input}
                     placeholder="E-mail"
@@ -79,6 +86,9 @@ export default function LoginScreen({ navigation }) {
                     autoCapitalize="none"
                 />
                 <View style={styles.filler}></View>
+
+                <Text style={[styles.headings, {paddingBottom: screenSize.height * .005}]}>Password</Text>
+
                 <TextInput
                     style={styles.input}
                     placeholderTextColor="#aaaaaa"
@@ -88,7 +98,8 @@ export default function LoginScreen({ navigation }) {
                     value={password}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
-                    q
+                                            width={screenSize.width - 60}
+                        height={screenSize.height / 20}
                 />
                 <View
                     style={{
@@ -101,7 +112,7 @@ export default function LoginScreen({ navigation }) {
                         onPress={onLoginPress}
                         text="Login"
                         color="#1e1c21"
-                        width={screenSize.width / 1.1}
+                        width={screenSize.width - 60}
                         height={screenSize.height / 20}
                     />
                 </View>
@@ -109,9 +120,9 @@ export default function LoginScreen({ navigation }) {
                 <View style={{ zIndex: 2 }}>
                     <CustomButton
                         onPress={onFooterLinkPress}
-                        text={"Don't have an account"}
+                        text={"Don't have an account?"}
                         color="#1e1c21"
-                        width={screenSize.width / 1.1}
+                        width={screenSize.width - 60}
                         height={screenSize.height / 20}
                     />
                 </View>

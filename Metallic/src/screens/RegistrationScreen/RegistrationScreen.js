@@ -49,6 +49,7 @@ export default function RegistrationScreen({ navigation }) {
                 alert(error);
             })
             .then(() => {
+                console.log("Hoes mad");
                 login(email, password);
             });
     };
@@ -63,6 +64,7 @@ export default function RegistrationScreen({ navigation }) {
                     style={styles.logo}
                     source={require("../../../assets/icon.png")}
                 />
+                
                 <TextInput
                     style={styles.input}
                     placeholder="Full Name"
