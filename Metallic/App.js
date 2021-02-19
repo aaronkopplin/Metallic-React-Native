@@ -23,7 +23,7 @@ const Tab = createBottomTabNavigator();
 
 function Tabs() {
     return (
-        <Tab.Navigator initialRouteName="Home">
+        <Tab.Navigator>
             <Tab.Screen
                 name="RecentChats"
                 component={RecentChatsScreen}
