@@ -7,6 +7,7 @@ import { decode, encode } from "base-64";
 import { firebase } from "./src/firebase/config";
 import { RecentChatsScreen } from "./src/screens/RecentChatsScreen/RecentChatsScreen";
 import { PaymentsScreen } from "./src/screens/PaymentsScreen/PaymentsScreen";
+import { AccountScreen } from "./src/screens/AccountScreen/AccountScreen";
 
 if (!global.btoa) {
     global.btoa = encode;
@@ -58,6 +59,10 @@ export default function App() {
                         <Stack.Screen
                             name="Payments"
                             component={PaymentsScreen}
+                        />
+                        <Stack.Screen
+                            name="Account"
+                            component={AccountScreen}
                         />
                         <Stack.Screen name="Home">
                             {(props) => (

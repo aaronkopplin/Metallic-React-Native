@@ -14,17 +14,17 @@ import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 
-export function PaymentsScreen({ navigation }) {
+export function AccountScreen({ navigation }) {
     return (
         <View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("Account");
+                    navigation.navigate("Payments");
                 }}
             >
-                Go to Account Screen
-            </TouchableOpacity>
-            <Text> Hello payments screen </Text>
+                Go To Paymets Screen
+            </TouchableOpacity> */}
+            <Text> Account Screen </Text>
         </View>
     );
 }
