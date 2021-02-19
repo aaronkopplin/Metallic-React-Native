@@ -17,13 +17,13 @@ import CustomButton from "../../../button";
 export function ContactsScreen({ navigation }) {
     return (
         <View>
-            {/* <TouchableOpacity
+            <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("Payments");
+                    navigation.navigate("Account");
                 }}
             >
-                Go To Paymets Screen
-            </TouchableOpacity> */}
+                Go To Accounts Screen
+            </TouchableOpacity>
             <Text> Hello Contacts </Text>
         </View>
     );
