@@ -18,7 +18,7 @@ class Login extends React.Component {
               <View style={{ backgroundColor: '#2e2b30', width: screenSize.width - 20, height: screenSize.width - 20, paddingTop: screenSize.height / 50, paddingLeft: 20, borderRadius: 4 }}>
                 <Text style={[textStyle.headText, {paddingBottom: screenSize.height / 18}]}>Login</Text>
                 <Text style={[textStyle.normalText, {paddingBottom: screenSize.height / 150}]}>Username</Text>
-                <TextInput style={styles.textInputStyle} placeholder='Enter your username' autoCapitalize={'none'} />
+                <TextInput style={styles.textInputStyle} placeholder='Enter your username' autoCapitalize={'none'} keyboardType={'email-address'} />
                 <Text style={[textStyle.normalText, {paddingBottom: screenSize.height / 150, paddingTop: screenSize.height / 60}]}>Password</Text>
                 <TextInput style={styles.textInputStyle} placeholder='Enter your password' autoCapitalize={'none'} secureTextEntry={true} />
                 

@@ -80,12 +80,13 @@ export default function LoginScreen({ navigation }) {
                 <TextInput
                     style={[styles.input,
                         {width: screenSize.width - 60}]}
-                    placeholder="E-mail"
+                    placeholder="Enter your e-mail"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
                     value={email}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    keyboardType={'email-address'}
                 />
 
 
@@ -96,7 +97,7 @@ export default function LoginScreen({ navigation }) {
                         {width: screenSize.width - 60}]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder="Password"
+                    placeholder="Enter your password"
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"
