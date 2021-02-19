@@ -10,6 +10,9 @@ import {
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import { useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { RecentChatsScreen } from "../RecentChatsScreen/RecentChatsScreen";
 
 export default function HomeScreen(props) {
     const [entityText, setEntityText] = useState("");
@@ -78,6 +81,7 @@ export default function HomeScreen(props) {
             </View>
         );
     };
+    const Stack = createStackNavigator();
 
     return (
         <View style={styles.container}>

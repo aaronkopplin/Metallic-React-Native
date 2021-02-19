@@ -5,6 +5,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen, HomeScreen, RegistrationScreen } from "./src/screens";
 import { decode, encode } from "base-64";
 import { firebase } from "./src/firebase/config";
+import { RecentChatsScreen } from "./src/screens/RecentChatsScreen/RecentChatsScreen";
+import { PaymentsScreen } from "./src/screens/PaymentsScreen/PaymentsScreen";
 
 if (!global.btoa) {
     global.btoa = encode;
@@ -48,9 +50,21 @@ export default function App() {
         <NavigationContainer>
             <Stack.Navigator>
                 {user ? (
-                    <Stack.Screen name="Home">
-                        {(props) => <HomeScreen {...props} extraData={user} />}
-                    </Stack.Screen>
+                    <>
+                        <Stack.Screen
+                            name="RecentChats"
+                            component={RecentChatsScreen}
+                        />
+                        <Stack.Screen
+                            name="Payments"
+                            component={PaymentsScreen}
+                        />
+                        <Stack.Screen name="Home">
+                            {(props) => (
+                                <HomeScreen {...props} extraData={user} />
+                            )}
+                        </Stack.Screen>
+                    </>
                 ) : (
                     <>
                         <Stack.Screen name="Login" component={LoginScreen} />
