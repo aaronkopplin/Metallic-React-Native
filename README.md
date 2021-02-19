@@ -16,4 +16,4 @@ npm install --save @react-native-firebase/app
 
 npm install firebase  
 
-yarn add react-navigation-tabs
+yarn add @react-navigation/bottom-tabs
