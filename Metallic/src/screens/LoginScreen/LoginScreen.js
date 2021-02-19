@@ -43,7 +43,7 @@ export function login(email, password) {
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const screenSize = Dimensions.get("screen");
+    const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     const onFooterLinkPress = () => {
         console.log("Don't Have Account Pressed");
         navigation.navigate("Registration");
@@ -58,13 +58,14 @@ export default function LoginScreen({ navigation }) {
         <View style={styles.mainBackground}>
             
             <Image
-                style={styles.logo}
+                style={[styles.logo, {flex: .5}]} 
                 source={require("../../../assets/icon.png")}
                 
             />
 
             <View
                 style={{
+                    flex: 4,
                     backgroundColor: "#2e2b30",
                     width: screenSize.width - 20,
                     height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.width - 30,
@@ -77,7 +78,8 @@ export default function LoginScreen({ navigation }) {
                 <Text style={[styles.headings, {paddingBottom: screenSize.height * .005}]}>E-Mail</Text>
 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input,
+                        {width: screenSize.width - 60}]}
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
@@ -85,12 +87,13 @@ export default function LoginScreen({ navigation }) {
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
-                <View style={styles.filler}></View>
+
 
                 <Text style={[styles.headings, {paddingBottom: screenSize.height * .005}]}>Password</Text>
 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input,
+                        {width: screenSize.width - 60}]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder="Password"
@@ -98,9 +101,8 @@ export default function LoginScreen({ navigation }) {
                     value={password}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
-                                            width={screenSize.width - 60}
-                        height={screenSize.height / 20}
                 />
+
                 <View
                     style={{
                         zIndex: 1,
@@ -127,6 +129,12 @@ export default function LoginScreen({ navigation }) {
                     />
                 </View>
             </View>
+
+            <View style={
+                styles.mainBackground,
+                {flex: 1}
+            }></View>
+
         </View>
     );
 }

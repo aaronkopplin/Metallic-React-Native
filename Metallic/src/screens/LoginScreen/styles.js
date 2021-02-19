@@ -15,7 +15,6 @@ export default StyleSheet.create({
         width: 90,
         alignSelf: "center",
         margin: 30,
-        justifyContent: "space-between",
     },
     headings: {
         color: '#79777d',
@@ -23,13 +22,11 @@ export default StyleSheet.create({
         fontSize: 25,
     },
     input: {
-        width: screenSize.width - 60,
         fontSize: 18,
         height: 25,
         backgroundColor: '#fff', 
         borderRadius: 3,
         paddingLeft: 5,
-        
     },
     filler: {
         flex: .025,
