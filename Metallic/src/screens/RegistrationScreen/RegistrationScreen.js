@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View, Dimensions, Platform} from "react-native";
-import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button"
+import { masterStyles } from '../../../../Metallic/masterStyles';
 export default function RegistrationScreen({ navigation }) {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
@@ -54,10 +54,10 @@ export default function RegistrationScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.mainBackground}>
+        <View style={masterStyles.mainBackground}>
 
             <Image
-                style={[styles.logo, {flex: .5}]}
+                style={[masterStyles.logo, {flex: .5}]}
                 source={require("../../../assets/icon.png")}
             />
                 
@@ -72,10 +72,10 @@ export default function RegistrationScreen({ navigation }) {
             }}
             >
 
-                <Text style={[styles.headings, {paddingBottom: screenSize.height * .005}]}>Name</Text>
+                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Name</Text>
 
                 <TextInput
-                    style={[styles.input,
+                    style={[masterStyles.input,
                         {width: screenSize.width - 60}]}
                     placeholder="Full Name"
                     placeholderTextColor="#aaaaaa"
@@ -85,10 +85,10 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[styles.headings, {paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
+                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
 
                 <TextInput
-                    style={[styles.input,
+                    style={[masterStyles.input,
                         {width: screenSize.width - 60}]}
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
@@ -98,10 +98,10 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[styles.headings, {paddingBottom: screenSize.height * .005}]}>Password</Text>
+                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Password</Text>
 
                 <TextInput
-                    style={[styles.input,
+                    style={[masterStyles.input,
                         {width: screenSize.width - 60}]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
@@ -112,10 +112,10 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[styles.headings, {paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
+                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
 
                 <TextInput
-                    style={[styles.input,
+                    style={[masterStyles.input,
                         {width: screenSize.width - 60}]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
@@ -140,12 +140,12 @@ export default function RegistrationScreen({ navigation }) {
                         height={screenSize.height / 20}
                     />
                 </View>
-                <View style={styles.footerView}>
-                    <Text style={styles.footerText}>
+                <View style={masterStyles.footerView}>
+                    <Text style={masterStyles.footerText}>
                         Already got an account?{" "}
                         <Text
                             onPress={onFooterLinkPress}
-                            style={styles.footerLink}
+                            style={masterStyles.footerLink}
                         >
                             Log in
                         </Text>
@@ -154,7 +154,7 @@ export default function RegistrationScreen({ navigation }) {
             </View>
 
             <View style={
-                styles.mainBackground,
+                masterStyles.mainBackground,
                 {flex: 1}
             }></View>
 
