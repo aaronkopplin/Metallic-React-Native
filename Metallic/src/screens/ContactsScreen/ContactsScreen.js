@@ -10,11 +10,11 @@ import {
     Platform,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import styles from "./styles";
+// import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 
-export function PaymentsScreen({ navigation }) {
+export function ContactsScreen({ navigation }) {
     return (
         <View>
             <TouchableOpacity
@@ -22,9 +22,9 @@ export function PaymentsScreen({ navigation }) {
                     navigation.navigate("Account");
                 }}
             >
-                Go to Account Screen
+                Go To Accounts Screen
             </TouchableOpacity>
-            <Text> Hello payments screen </Text>
+            <Text> Hello Contacts </Text>
         </View>
     );
 }

@@ -2,11 +2,14 @@ import "react-native-gesture-handler";
 import React, { Text, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { LoginScreen, HomeScreen, RegistrationScreen } from "./src/screens";
+import { LoginScreen, HomeScreen, RegistrationScreen} from "./src/screens";
 import { decode, encode } from "base-64";
 import { firebase } from "./src/firebase/config";
 import { RecentChatsScreen } from "./src/screens/RecentChatsScreen/RecentChatsScreen";
 import { PaymentsScreen } from "./src/screens/PaymentsScreen/PaymentsScreen";
+import { AccountScreen } from "./src/screens/AccountScreen/AccountScreen";
+import { ContactsScreen } from "./src/screens/ContactsScreen/ContactsScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 if (!global.btoa) {
     global.btoa = encode;
@@ -16,6 +19,22 @@ if (!global.atob) {
 }
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function Tabs() {
+    return (
+        <Tab.Navigator>
+            <Tab.Screen
+                name="RecentChats"
+                component={RecentChatsScreen}
+            />
+            <Tab.Screen
+                name="Contacts"
+                component={ContactsScreen}
+            />
+        </Tab.Navigator>
+    );
+}
 
 export default function App() {
     const [loading, setLoading] = useState(true);
@@ -48,7 +67,7 @@ export default function App() {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator initialRouteName="Home">
                 {user ? (
                     <>
                         <Stack.Screen
@@ -59,9 +78,13 @@ export default function App() {
                             name="Payments"
                             component={PaymentsScreen}
                         />
+                        <Stack.Screen
+                            name="Account"
+                            component={AccountScreen}
+                        />
                         <Stack.Screen name="Home">
                             {(props) => (
-                                <HomeScreen {...props} extraData={user} />
+                                <Tabs {...props} extraData={user} component={HomeScreen}/>
                             )}
                         </Stack.Screen>
                     </>
