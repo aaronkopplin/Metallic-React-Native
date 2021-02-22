@@ -23,7 +23,21 @@ const Tab = createBottomTabNavigator();
 
 function Tabs() {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator
+        tabBarOptions={{ 
+            activeTintColor: '#79777d', 
+            inactiveBackgroundColor: '#fff',
+            activeBackgroundColor: '#1e1c21', 
+            labelPosition: 'beside-icon', 
+            labelStyle: {
+                fontSize: 15,
+                fontWeight: 'bold'
+            },
+            iconStyle: {
+                
+            }
+        }}
+        >
             <Tab.Screen
                 name="RecentChats"
                 component={RecentChatsScreen}
