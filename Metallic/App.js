@@ -1,74 +1,117 @@
-import 'react-native-gesture-handler';
-import * as React from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import SignUp from './SignUp';
-import Login from './Login';
-import Account from './Account';
-import Contacts from './Contacts';
-import Payments from './Payments';
+import "react-native-gesture-handler";
+import React, { Text, useEffect, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { LoginScreen, HomeScreen, RegistrationScreen} from "./src/screens";
+import { decode, encode } from "base-64";
+import { firebase } from "./src/firebase/config";
+import { RecentChatsScreen } from "./src/screens/RecentChatsScreen/RecentChatsScreen";
+import { PaymentsScreen } from "./src/screens/PaymentsScreen/PaymentsScreen";
+import { AccountScreen } from "./src/screens/AccountScreen/AccountScreen";
+import { ContactsScreen } from "./src/screens/ContactsScreen/ContactsScreen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-const Stack = createStackNavigator();
-const screenSize = Dimensions.get("screen");
-
-export default function App() {
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator 
-      initialRouteName={Login}
-      
-      screenOptions={{
-        headerStyle: { backgroundColor: '#2e2b30', borderColor: '#2e2b30', shadowColor: '#2e2b30' },
-        headerTintColor: '#79777d',
-        headerTitleStyle: { fontSize: 20, fontWeight: 'bold' },
-      }}>
-        
-        <Stack.Screen name="Login" component={Login} options={{ title: 'Metallic' }} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Account" component={Account} />
-        <Stack.Screen name="Contacts" component={Contacts} />
-        <Stack.Screen name="Payments" component={Payments} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+if (!global.btoa) {
+    global.btoa = encode;
+}
+if (!global.atob) {
+    global.atob = decode;
 }
 
-const textStyle = StyleSheet.create({
-  headText: {
-    // 121, 119, 125
-    color: '#79777d',
-    fontWeight: 'bold',
-    fontSize: 25,
-  },
-  normalText: {
-    color: '#79777d',
-    fontSize: 18,
-  },
-});
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
-const styles = StyleSheet.create({
-  mainBackground: {
-    flex: 1,
-    backgroundColor: '#1e1c21',
-    // bg rgb: r:30, g:28, b:33
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  secondaryBackground: {
-    // 46, 43, 48
-    backgroundColor: '#2e2b30',
-  },
-  textInputStyle: {
-    width: screenSize.width - 60, 
-    height: 25, 
-    backgroundColor: '#fff', 
-    borderRadius: 3,
-    paddingLeft: 5,
-  },
-  buttonStyle: {
-    backgroundColor: '#1e1c21',
-    padding: 20
-  }
-});
+function Tabs() {
+    return (
+        <Tab.Navigator
+        tabBarOptions={{ 
+            activeTintColor: '#79777d', 
+            inactiveBackgroundColor: '#fff',
+            activeBackgroundColor: '#1e1c21', 
+            labelPosition: 'beside-icon', 
+            labelStyle: {
+                fontSize: 15,
+                fontWeight: 'bold'
+            },
+            iconStyle: {
+                
+            }
+        }}
+        >
+            <Tab.Screen
+                name="RecentChats"
+                component={RecentChatsScreen}
+            />
+            <Tab.Screen
+                name="Contacts"
+                component={ContactsScreen}
+            />
+        </Tab.Navigator>
+    );
+}
+
+export default function App() {
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(null);
+
+    // if (loading) {
+    //     return <>{/* <Text>Loading</Text> */}</>;
+    // }
+
+    useEffect(() => {
+        const usersRef = firebase.firestore().collection("users");
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                usersRef
+                    .doc(user.uid)
+                    .get()
+                    .then((document) => {
+                        const userData = document.data();
+                        setLoading(false);
+                        setUser(userData);
+                    })
+                    .catch((error) => {
+                        setLoading(false);
+                    });
+            } else {
+                setUser(null);
+            }
+        });
+    }, []);
+
+    return (
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+                {user ? (
+                    <>
+                        <Stack.Screen
+                            name="RecentChats"
+                            component={RecentChatsScreen}
+                        />
+                        <Stack.Screen
+                            name="Payments"
+                            component={PaymentsScreen}
+                        />
+                        <Stack.Screen
+                            name="Account"
+                            component={AccountScreen}
+                        />
+                        <Stack.Screen name="Home">
+                            {(props) => (
+                                <Tabs {...props} extraData={user} component={HomeScreen}/>
+                            )}
+                        </Stack.Screen>
+                    </>
+                ) : (
+                    <>
+                        <Stack.Screen name="Login" component={LoginScreen} />
+                        <Stack.Screen
+                            name="Registration"
+                            component={RegistrationScreen}
+                        />
+                    </>
+                )}
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+}
