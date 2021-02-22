@@ -62,7 +62,7 @@ export function AccountScreen(props) {
             <TouchableOpacity
                 onPress={onLogoutPress}
             >
-                Logout
+                <Text> Logout </Text>
             </TouchableOpacity>
             <Text> Account Screen </Text>
         </View>

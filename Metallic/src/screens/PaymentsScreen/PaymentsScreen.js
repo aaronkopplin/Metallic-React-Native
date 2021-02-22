@@ -22,7 +22,7 @@ export function PaymentsScreen({ navigation }) {
                     navigation.navigate("Account");
                 }}
             >
-                Go to Account Screen
+                <Text> Go to Account Screen </Text>
             </TouchableOpacity>
             <Text> Hello payments screen </Text>
         </View>

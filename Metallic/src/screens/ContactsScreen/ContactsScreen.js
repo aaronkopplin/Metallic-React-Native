@@ -22,7 +22,7 @@ export function ContactsScreen({ navigation }) {
                     navigation.navigate("Account");
                 }}
             >
-                Go To Accounts Screen
+                <Text> Go To Accounts Screen </Text>
             </TouchableOpacity>
             <Text> Hello Contacts </Text>
         </View>

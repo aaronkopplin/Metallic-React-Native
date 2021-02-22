@@ -22,7 +22,7 @@ export function RecentChatsScreen({ navigation }) {
                     navigation.navigate("Payments");
                 }}
             >
-                Go To Paymets Screen
+                <Text> Go To Paymets Screen </Text>
             </TouchableOpacity>
             <Text> Hello recent chats </Text>
         </View>
