@@ -10,12 +10,12 @@ import {
     Platform,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import CustomButton from "../../../button";
+import { masterStyles } from '../../../../Metallic/masterStyles';
 
 export function AccountScreen(props) {
     // const [entityText, setEntityText] = useState("");

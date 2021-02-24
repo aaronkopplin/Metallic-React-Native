@@ -13,6 +13,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 // import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
+import { masterStyles } from '../../../../Metallic/masterStyles';
 
 export function ContactsScreen({ navigation }) {
     return (
