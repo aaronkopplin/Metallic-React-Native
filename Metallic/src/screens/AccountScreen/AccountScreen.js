@@ -16,34 +16,10 @@ import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import CustomButton from "../../../button";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { masterStyles } from "../../../masterStyles";
 
 export function AccountScreen(props) {
-    // const [entityText, setEntityText] = useState("");
-    // const [entities, setEntities] = useState([]);
-
-    // const entityRef = firebase.firestore().collection("entities");
-    // const userID = props.extraData.id;
-    // const navigation = useNavigation();
-
-    // useEffect(() => {
-    //     entityRef
-    //         .where("authorID", "==", userID)
-    //         .orderBy("createdAt", "desc")
-    //         .onSnapshot(
-    //             (querySnapshot) => {
-    //                 const newEntities = [];
-    //                 querySnapshot.forEach((doc) => {
-    //                     const entity = doc.data();
-    //                     entity.id = doc.id;
-    //                     newEntities.push(entity);
-    //                 });
-    //                 setEntities(newEntities);
-    //             },
-    //             (error) => {
-    //                 console.log(error);
-    //             }
-    //         );
-    // }, []);
 
     const onLogoutPress = () => {
         console.log("Logout Pressed.");
@@ -58,6 +34,7 @@ export function AccountScreen(props) {
     };
 
     return (
+        // <SafeAreaView style={{flex: 1, backgroundColor: masterStyles.mainBackground.backgroundColor}}>
         <View>
             <TouchableOpacity
                 onPress={onLogoutPress}
@@ -66,5 +43,6 @@ export function AccountScreen(props) {
             </TouchableOpacity>
             <Text> Account Screen </Text>
         </View>
+        // </SafeAreaView>
     );
 }
