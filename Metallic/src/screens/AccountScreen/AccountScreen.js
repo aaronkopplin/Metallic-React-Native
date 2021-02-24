@@ -40,15 +40,8 @@ export function AccountScreen(props) {
         <View>
             <View style={{top: 20, backgroundColor: '#000'}}>
                 <CustomButton onPress={onLogoutPress} text='Logout' height={50}>
-                {/* <Text> Logout </Text> */}
                 </CustomButton>
             </View>
-            {/* <TouchableOpacity
-                onPress={onLogoutPress}
-                style={{paddingTop: 50}}
-            >
-                
-            </TouchableOpacity> */}
             <Text style={{paddingTop: 40}}> Full Name </Text>
             <Text style={{paddingTop: 20}}> Email </Text>
             
