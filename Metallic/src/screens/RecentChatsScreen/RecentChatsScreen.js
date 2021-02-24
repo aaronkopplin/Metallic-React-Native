@@ -25,7 +25,7 @@ export function RecentChatsScreen({ navigation }) {
                     navigation.navigate("Payments");
                 }}
             >
-                <Text style={{color: masterStyles.headings.color}}> Go To Paymets Screen </Text>
+                <Text style={{color: masterStyles.headings.color}}> Go To Payments Screen </Text>
             </TouchableOpacity>
             <Text style={{color: masterStyles.headings.color}}> Hello recent chats </Text>
         </View>

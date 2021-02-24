@@ -33,15 +33,25 @@ export function AccountScreen(props) {
             });
     };
 
+    // var database = firebase.database();
+
     return (
         // <SafeAreaView style={{flex: 1, backgroundColor: masterStyles.mainBackground.backgroundColor}}>
         <View>
-            <TouchableOpacity
+            <View style={{top: 20, backgroundColor: '#000'}}>
+                <CustomButton onPress={onLogoutPress} text='Logout' height={50}>
+                {/* <Text> Logout </Text> */}
+                </CustomButton>
+            </View>
+            {/* <TouchableOpacity
                 onPress={onLogoutPress}
+                style={{paddingTop: 50}}
             >
-                <Text> Logout </Text>
-            </TouchableOpacity>
-            <Text> Account Screen </Text>
+                
+            </TouchableOpacity> */}
+            <Text style={{paddingTop: 40}}> Full Name </Text>
+            <Text style={{paddingTop: 20}}> Email </Text>
+            
         </View>
         // </SafeAreaView>
     );
