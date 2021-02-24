@@ -19,8 +19,13 @@ export const masterStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
   },
-  input: {
+  bodyText: {
+    color: '#79777d',
+    fontWeight: 'bold',
     fontSize: 18,
+  },
+  input: {
+    fontSize: 15,
     height: 25,
     backgroundColor: '#fff', 
     borderRadius: 3,

@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { RecentChatsScreen } from "../RecentChatsScreen/RecentChatsScreen";
+import { masterStyles } from "../../../masterStyles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen(props) {
     const [entityText, setEntityText] = useState("");
@@ -84,6 +86,7 @@ export default function HomeScreen(props) {
     const Stack = createStackNavigator();
 
     return (
+        // <SafeAreaView style={{flex: 1, backgroundColor: masterStyles.mainBackground.backgroundColor}}>
         <View style={styles.container}>
             <View>
                 <TouchableOpacity style={styles.button} onPress={onLogoutPress}>
@@ -118,5 +121,6 @@ export default function HomeScreen(props) {
                 </View>
             )}
         </View>
+        // </SafeAreaView>
     );
 }

@@ -65,14 +65,14 @@ export default function RegistrationScreen({ navigation }) {
                 flex: 4, 
                 backgroundColor: "#2e2b30",
                 width: screenSize.width - 20,
-                height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.width - 30,
+                height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.height / 2.5,
                 paddingTop: screenSize.height / 50,
                 paddingLeft: 20,
                 borderRadius: 4,
             }}
             >
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Name</Text>
+                <Text style={[masterStyles.bodyText, {paddingBottom: screenSize.height * .005}]}>Name</Text>
 
                 <TextInput
                     style={[masterStyles.input,
@@ -85,7 +85,7 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
+                <Text style={[masterStyles.bodyText, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
 
                 <TextInput
                     style={[masterStyles.input,
@@ -98,7 +98,7 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Password</Text>
+                <Text style={[masterStyles.bodyText, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Password</Text>
 
                 <TextInput
                     style={[masterStyles.input,
@@ -112,7 +112,7 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
+                <Text style={[masterStyles.bodyText, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
 
                 <TextInput
                     style={[masterStyles.input,
