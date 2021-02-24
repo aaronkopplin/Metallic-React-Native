@@ -61,12 +61,14 @@ function Tabs() {
                         borderBottomWidth: 0,
 
                     },
+                    title: 'Recent Chats',
                     headerTintColor: masterStyles.headings.color,
                     headerTitleStyle: {
                         fontWeight: 'normal',
                         fontSize: 24,
                     },
                 }}
+                
             />
             <Tab.Screen
                 name="Contacts"
@@ -133,7 +135,8 @@ export default function App() {
                                     borderColor: masterStyles.mainBackground.backgroundColor,
                                     elevation: 0,
                                     shadowOpacity: 0,
-                                    borderBottomWidth: 0 
+                                    borderBottomWidth: 0,
+                                    
                                 },
                                 headerTintColor: masterStyles.headings.color,
                                 headerTitleStyle: {

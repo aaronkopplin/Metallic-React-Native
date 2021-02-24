@@ -4,6 +4,7 @@ import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button"
 import { masterStyles } from '../../../../Metallic/masterStyles';
+
 export default function RegistrationScreen({ navigation }) {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
