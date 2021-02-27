@@ -7,7 +7,11 @@ export const masterStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
-  title: {},
+  title: {
+    color: '#79777d',
+    fontWeight: 'bold',
+    fontSize: 40,
+  },
   logo: {
     height: 120,
     width: 90,
@@ -18,6 +22,11 @@ export const masterStyles = StyleSheet.create({
     color: '#79777d',
     fontWeight: 'bold',
     fontSize: 25,
+  },
+  headingsSmall: {
+    color: '#79777d',
+    fontWeight: 'bold',
+    fontSize: 20,
   },
   input: {
     fontSize: 18,

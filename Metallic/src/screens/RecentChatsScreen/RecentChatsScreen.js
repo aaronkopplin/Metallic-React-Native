@@ -16,7 +16,7 @@ import { masterStyles } from '../../../../Metallic/masterStyles';
 
 export function RecentChatsScreen({ navigation }) {
     return (
-        <View>
+        <View style={masterStyles.mainBackground}>
             <TouchableOpacity
                 onPress={() => {
                     navigation.navigate("Payments");
