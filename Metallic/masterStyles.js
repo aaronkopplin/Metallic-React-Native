@@ -13,7 +13,7 @@ export const masterStyles = StyleSheet.create({
     fontSize: 40,
   },
   logo: {
-    height: 120,
+    height: 150,
     width: 90,
     alignSelf: "center",
     margin: 30,

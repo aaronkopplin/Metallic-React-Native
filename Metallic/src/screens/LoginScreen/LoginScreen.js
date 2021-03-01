@@ -3,13 +3,10 @@ import {
     Image,
     Text,
     TextInput,
-    TouchableOpacity,
     View,
     Dimensions,
-    StyleSheet,
     Platform,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from '../../../../Metallic/masterStyles';
@@ -58,8 +55,8 @@ export default function LoginScreen({ navigation }) {
         <View style={masterStyles.mainBackground}>
             
             <Image
-                style={[masterStyles.logo, {flex: .5}]} 
-                source={require("../../../assets/icon.png")}
+                style={[masterStyles.logo, {flex: .75}]} 
+                source={require("../../../assets/metallic logo.png")}
                 
             />
 
@@ -75,7 +72,7 @@ export default function LoginScreen({ navigation }) {
                 }}
             >
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>E-Mail</Text>
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>E-Mail</Text>
 
                 <TextInput
                     style={[masterStyles.input,
@@ -89,8 +86,7 @@ export default function LoginScreen({ navigation }) {
                     keyboardType={'email-address'}
                 />
 
-
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Password</Text>
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Password</Text>
 
                 <TextInput
                     style={[masterStyles.input,

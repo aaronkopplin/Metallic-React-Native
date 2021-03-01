@@ -58,8 +58,8 @@ export default function RegistrationScreen({ navigation }) {
         <View style={masterStyles.mainBackground}>
 
             <Image
-                style={[masterStyles.logo, {flex: .5}]}
-                source={require("../../../assets/icon.png")}
+                style={[masterStyles.logo, {flex: .75}]}
+                source={require("../../../assets/metallic logo.png")}
             />
                 
             <View style={{

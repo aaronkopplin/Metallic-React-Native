@@ -94,7 +94,7 @@ export function AccountScreen(props) {
             
             <Image
                 style={[masterStyles.logo]} 
-                source={require("../../../assets/icon.png")}
+                source={require("../../../assets/Default_Img.png")}
             />
 
             <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userFullName}</Text>
