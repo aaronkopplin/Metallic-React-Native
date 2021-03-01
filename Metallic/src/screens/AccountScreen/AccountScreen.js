@@ -2,22 +2,13 @@ import React, { useState } from "react";
 import {
     Image,
     Text,
-    TextInput,
-    TouchableOpacity,
     View,
     Dimensions,
-    StyleSheet,
     Platform,
-    SnapshotViewIOS,
     Alert,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { firebase } from "../../firebase/config";
-import { useNavigation } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
 import CustomButton from "../../../button";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from '../../../../Metallic/masterStyles';
 
 export function AccountScreen(props) {
@@ -25,27 +16,39 @@ export function AccountScreen(props) {
     const [userEmail, setEmail] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
 
-    const onLogoutPress = () =>
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "OK", onPress: () => {
+    const onLogoutPress = () => {
+        Alert.alert(
+        "Logout",
+        "Are you sure you want to logout?",
+        [
+            {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+            },
+            { text: "OK", onPress: () => {
+            firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                }).catch((error) => {
+                    console.log(error);
+                }); } }
+        ],
+        { cancelable: false }
+        )
+    };
+
+    const onLogoutPressWeb = () => {
         firebase
-            .auth()
-            .signOut()
-            .then(() => {
-            }).catch((error) => {
-                console.log(error);
-            }); } }
-      ],
-      { cancelable: false }
-    );
+        .auth()
+        .signOut()
+        .then(() => {
+            alert("Logout Successful");
+        }).catch((error) => {
+            console.log(error);
+        })
+    };
 
     var user = firebase.auth().currentUser;
     var db = firebase.firestore();
@@ -92,7 +95,6 @@ export function AccountScreen(props) {
             <Image
                 style={[masterStyles.logo]} 
                 source={require("../../../assets/icon.png")}
-                
             />
 
             <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userFullName}</Text>
@@ -109,7 +111,7 @@ export function AccountScreen(props) {
                 >
 
                     <CustomButton
-                        onPress={onLogoutPress}
+                        onPress={Platform.OS === "web" ? onLogoutPressWeb : onLogoutPress}
                         text="Logout"
                         color="#1e1c21"
                         width={screenSize.width - 80}
