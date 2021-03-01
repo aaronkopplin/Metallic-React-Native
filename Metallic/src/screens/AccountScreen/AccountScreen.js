@@ -65,8 +65,8 @@ export function AccountScreen(props) {
                 <CustomButton onPress={onLogoutPress} text='Logout' height={50}>
                 </CustomButton>
             </View>
-            <Text style={{paddingTop: 40}}> {userFullName} </Text>
-            <Text style={{paddingTop: 20}}> {userEmail} </Text>
+            <Text style={{paddingTop: 40}}> Full Name: {userFullName} </Text>
+            <Text style={{paddingTop: 20}}> Email: {userEmail} </Text>
             
         </View>
         // </SafeAreaView>
