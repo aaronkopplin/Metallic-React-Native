@@ -7,14 +7,12 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { RecentChatsScreen } from "../RecentChatsScreen/RecentChatsScreen";
-import { masterStyles } from "../../../masterStyles";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { masterStyles } from '../../../../Metallic/masterStyles';
 
 export default function HomeScreen(props) {
     const [entityText, setEntityText] = useState("");
@@ -86,16 +84,15 @@ export default function HomeScreen(props) {
     const Stack = createStackNavigator();
 
     return (
-        // <SafeAreaView style={{flex: 1, backgroundColor: masterStyles.mainBackground.backgroundColor}}>
-        <View style={styles.container}>
+        <View style={masterStyles.container}>
             <View>
-                <TouchableOpacity style={styles.button} onPress={onLogoutPress}>
-                    <Text style={styles.buttonText}>Log Out</Text>
+                <TouchableOpacity style={masterStyles.button} onPress={onLogoutPress}>
+                    <Text style={masterStyles.buttonText}>Log Out</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.formContainer}>
+            <View style={masterStyles.formContainer}>
                 <TextInput
-                    style={styles.input}
+                    style={masterStyles.homeInput}
                     placeholder="Add new entity"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEntityText(text)}
@@ -104,14 +101,14 @@ export default function HomeScreen(props) {
                     autoCapitalize="none"
                 />
                 <TouchableOpacity
-                    style={styles.button}
+                    style={masterStyles.button}
                     onPress={onAddButtonPress}
                 >
-                    <Text style={styles.buttonText}>Add</Text>
+                    <Text style={masterStyles.buttonText}>Add</Text>
                 </TouchableOpacity>
             </View>
             {entities && (
-                <View style={styles.listContainer}>
+                <View style={masterStyles.listContainer}>
                     <FlatList
                         data={entities}
                         renderItem={renderEntity}
@@ -121,6 +118,5 @@ export default function HomeScreen(props) {
                 </View>
             )}
         </View>
-        // </SafeAreaView>
     );
 }

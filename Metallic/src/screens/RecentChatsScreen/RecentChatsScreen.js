@@ -10,16 +10,13 @@ import {
     Platform,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
-import { masterStyles } from "../../../masterStyles";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { masterStyles } from '../../../../Metallic/masterStyles';
 
 export function RecentChatsScreen({ navigation }) {
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: masterStyles.mainBackground.backgroundColor}}>
-        <View>
+        <View style={masterStyles.mainBackground}>
             <TouchableOpacity
                 onPress={() => {
                     navigation.navigate("Payments");
@@ -29,6 +26,5 @@ export function RecentChatsScreen({ navigation }) {
             </TouchableOpacity>
             <Text style={{color: masterStyles.headings.color}}> Hello recent chats </Text>
         </View>
-        </SafeAreaView>
     );
 }
