@@ -2,6 +2,8 @@
 Read Me for Metallic App will be updated later about how to run and use app.
 
 # Dependencies
+yarn add expo
+
 npm install babel-preset-expo    
 
 npm install @react-navigation/native    
