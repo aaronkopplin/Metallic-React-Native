@@ -13,7 +13,7 @@ export const masterStyles = StyleSheet.create({
     fontSize: 40,
   },
   logo: {
-    height: 120,
+    height: 150,
     width: 90,
     alignSelf: "center",
     margin: 30,
@@ -26,6 +26,11 @@ export const masterStyles = StyleSheet.create({
   headingsSmall: {
     color: '#79777d',
     fontWeight: 'bold',
+    fontSize: 20,
+  },
+  headingsSmallNotBold: {
+    color: '#79777d',
+    fontWeight: 'normal',
     fontSize: 20,
   },
   input: {

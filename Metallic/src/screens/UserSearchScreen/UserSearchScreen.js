@@ -87,10 +87,9 @@ export function UserSearchScreen(props) {
                         // setThisUserID(entity.id);
                         // setThisUserEmail(entity.email);
                         entity.id = doc.id;
-                        // alert(thisUserEmail);
-                        // alert(doc.email);
                         entity.text = doc.data().email;
                         entity.fullName = doc.data().fullName;
+                        entity.userName = doc.data().userName;
                         setThisUserID(entity.id);
                         setThisUserEmail(entity.email);
                         
@@ -122,16 +121,16 @@ export function UserSearchScreen(props) {
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {
         return (
-            <View style={masterStyles.entityContainer}>
+            <View style={[masterStyles.entityContainer, {paddingBottom: 20}]}>
                 <TouchableOpacity onPress={() => {navigation.navigate('UserAccountScreen', {
                     email: item.email,
                     fullName: item.fullName,
-                    // username: item.user
+                    userName: item.userName,
 
                 });
                 }}>
-                    <Text style={masterStyles.entityText} >
-                    {index}. {item.text}
+                    <Text style={masterStyles.headingsSmallNotBold} >
+                    {item.text}
                     
                     </Text>
                 </TouchableOpacity>
@@ -141,57 +140,43 @@ export function UserSearchScreen(props) {
     };
 
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: masterStyles.mainBackground.backgroundColor}}>
-            <View style={masterStyles.mainBackground}>
-                <View style={{backgroundColor: '#1e1c21', alignItems: 'center', height: screenSize.height * 0.01}} />
-                
-                <TextInput
-                    style={[masterStyles.input,
-                        { top: 50, width: screenSize.width - 60}]}
-                    placeholder="Enter name/username"
-                    placeholderTextColor="#aaaaaa"
-                    // onChangeText={[text => setSearchText(text)]}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                {/* <TouchableOpacity onPress={updateFoundUsers()}>
-                    <Text>Search</Text>
-                </TouchableOpacity> */}
-                <CustomButton
-                    text="search"
-                    color="#1e1c21"
-                    width={screenSize.width - 60}
-                    height={screenSize.height / 20}
-                    // onPress={[alert(searchText)]}
-                />
-                {/* <View style={masterStyles.listContainer}> */}
-                {/* <ScrollView>
-                    { users.map( user => {
-                        return (
-                            <View key={user.key} >
-                                <TouchableOpacity>
-                                    <Text>{user.email}</Text>
-                                </TouchableOpacity>
-                                
-                            </View>
-                        );
-                    })}
-                </ScrollView> */}
-                <View>
+        <SafeAreaView style={{flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly'}}>
+            <View style={{backgroundColor: "#2e2b30", alignItems: 'center', justifyContent: 'space-evenly', borderRadius: 4, width: screenSize.width - 20, left: 10}}>
+                <View style={{backgroundColor: '#2e2b30', alignItems: 'center', height: screenSize.height * 0.01, paddingBottom: 20}} />
+                <View style={{width: screenSize.width - 60}}>
+                    <TextInput
+                        style={[masterStyles.input]}
+                        placeholder="Enter name/username to search for a user"
+                        placeholderTextColor="#aaaaaa"
+                        // onChangeText={[text => setSearchText(text)]}
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                    />
+                </View>
+                {/* <View style={{paddingTop: 15}}>
+                    <CustomButton
+                        text="search"
+                        color="#1e1c21"
+                        width={screenSize.width - 60}
+                        height={screenSize.height / 20}
+                        paddingTop={20}
+                        // onPress={[alert(searchText)]}
+                    />
+                </View> */}
+                <View style={{paddingTop: 20, paddingBottom: 20, width: screenSize.width - 60}}>
                     <FlatList
                         data={users}
                         renderItem={renderUser}
                         keyExtractor={(item) => item.id}
                         removeClippedSubviews={true}
-                        
                     />
+                    
                 </View>
-                {/* </View> */}
 
                 <View style={
                     masterStyles.mainBackground,
                     {flex: 1}
-                }></View>
+                }/>
 
             </View>
         </SafeAreaView>

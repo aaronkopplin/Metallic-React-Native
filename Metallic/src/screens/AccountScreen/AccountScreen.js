@@ -15,6 +15,7 @@ export function AccountScreen( {navigation} ) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
     const [userCreateDate, setCreateDate] = useState("");
+    const [userName, setUserName] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
 
     const onLogoutPress = () => {
@@ -68,6 +69,7 @@ export function AccountScreen( {navigation} ) {
                 setFullName(doc.data().fullName);
                 setEmail(doc.data().email);
                 setCreateDate(user.metadata.creationTime);
+                setUserName(doc.data().userName);
                 return doc;
             });
         }
@@ -96,10 +98,11 @@ export function AccountScreen( {navigation} ) {
             
             <Image
                 style={[masterStyles.logo, {borderRadius: 50}]} 
-                source={require("../../../assets/icon.png")}
+                source={require("../../../assets/Default_Img.png")}
             />
 
-            <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userFullName}</Text>
+            <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userName}</Text>
+            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: {userFullName}</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: {userEmail}</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Balance:</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Account Age:</Text>

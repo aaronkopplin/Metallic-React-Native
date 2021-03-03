@@ -84,7 +84,7 @@ function Tabs() {
                         borderBottomWidth: 0,
 
                     },
-                    title: 'User Search',
+                    title: 'Search',
                     headerTintColor: masterStyles.headings.color,
                     headerTitleStyle: {
                         fontWeight: 'normal',

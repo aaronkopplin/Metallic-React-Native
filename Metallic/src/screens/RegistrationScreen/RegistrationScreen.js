@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View, Dimensions, Platform} from "react-native";
+import { Image, Text, TextInput, View, Dimensions, Platform} from "react-native";
 import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button"
@@ -10,19 +10,27 @@ export default function RegistrationScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [userName, setUserName] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     const onFooterLinkPress = () => {
         console.log("Already Have Account Pressed");
         navigation.navigate("Login");
     };
 
-    const onRegisterPress = () => {
+    const onRegisterPress = async () => {
         console.log("Create Account Pressed.");
+        const db = firebase.firestore();
+        const snapshot = await db.collection("users").where("userName", "==", userName).get();
+
         if (password !== confirmPassword) {
             alert("Passwords don't match.");
             return;
         }
-
+        
+        if (!snapshot.empty){
+            alert("Username Already Taken!");
+        }
+        else {
         firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
@@ -32,8 +40,13 @@ export default function RegistrationScreen({ navigation }) {
                     id: uid,
                     email,
                     fullName,
+                    userName,
                 };
                 const usersRef = firebase.firestore().collection("users");
+                if (!snapshot.empty){
+                    alert("Username already taken.");
+                }
+                else{
                 usersRef
                     .doc(uid)
                     .set(data)
@@ -44,6 +57,7 @@ export default function RegistrationScreen({ navigation }) {
                         console.log("error caught in firebase.");
                         alert(error);
                     });
+                }
             })
             .catch((error) => {
                 alert(error);
@@ -52,14 +66,15 @@ export default function RegistrationScreen({ navigation }) {
                 console.log("Hoes mad");
                 login(email, password);
             });
+        }
     };
 
     return (
         <View style={masterStyles.mainBackground}>
 
             <Image
-                style={[masterStyles.logo, {flex: .5}]}
-                source={require("../../../assets/icon.png")}
+                style={[masterStyles.logo, {flex: .75}]}
+                source={require("../../../assets/metalliclogo.png")}
             />
                 
             <View style={{
@@ -95,6 +110,19 @@ export default function RegistrationScreen({ navigation }) {
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
                     value={email}
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                />
+
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Username</Text>
+
+                <TextInput
+                    style={[masterStyles.input,
+                        {width: screenSize.width - 60}]}
+                    placeholderTextColor="#aaaaaa"
+                    placeholder="Username"
+                    onChangeText={(text) => setUserName(text)}
+                    value={userName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
