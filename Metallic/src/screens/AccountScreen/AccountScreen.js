@@ -14,6 +14,7 @@ import { masterStyles } from '../../../../Metallic/masterStyles';
 export function AccountScreen(props) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
+    const [userName, setUserName] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
 
     const onLogoutPress = () => {
@@ -66,6 +67,7 @@ export function AccountScreen(props) {
             snapshot.forEach(doc => {
                 setFullName(doc.data().fullName);
                 setEmail(doc.data().email);
+                setUserName(doc.data().userName);
                 return doc;
             });
         }
@@ -97,7 +99,8 @@ export function AccountScreen(props) {
                 source={require("../../../assets/Default_Img.png")}
             />
 
-            <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userFullName}</Text>
+            <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userName}</Text>
+            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: {userFullName}</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: {userEmail}</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Balance:</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Account Age:</Text>
