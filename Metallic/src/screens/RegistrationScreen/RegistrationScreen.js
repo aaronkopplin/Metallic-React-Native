@@ -74,7 +74,7 @@ export default function RegistrationScreen({ navigation }) {
 
             <Image
                 style={[masterStyles.logo, {flex: .75}]}
-                source={require("../../../assets/metallic logo.png")}
+                source={require("../../../assets/metalliclogo.png")}
             />
                 
             <View style={{

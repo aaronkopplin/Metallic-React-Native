@@ -56,7 +56,7 @@ export default function LoginScreen({ navigation }) {
             
             <Image
                 style={[masterStyles.logo, {flex: .75}]} 
-                source={require("../../../assets/metallic logo.png")}
+                source={require("../../../assets/metalliclogo.png")}
                 
             />
 
