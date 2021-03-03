@@ -1,27 +1,36 @@
 import React, { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View, Dimensions, Platform} from "react-native";
+import { Image, Text, TextInput, View, Dimensions, Platform} from "react-native";
 import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button"
 import { masterStyles } from '../../../../Metallic/masterStyles';
+
 export default function RegistrationScreen({ navigation }) {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [userName, setUserName] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     const onFooterLinkPress = () => {
         console.log("Already Have Account Pressed");
         navigation.navigate("Login");
     };
 
-    const onRegisterPress = () => {
+    const onRegisterPress = async () => {
         console.log("Create Account Pressed.");
+        const db = firebase.firestore();
+        const snapshot = await db.collection("users").where("userName", "==", userName).get();
+
         if (password !== confirmPassword) {
             alert("Passwords don't match.");
             return;
         }
-
+        
+        if (!snapshot.empty){
+            alert("Username Already Taken!");
+        }
+        else {
         firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
@@ -31,8 +40,13 @@ export default function RegistrationScreen({ navigation }) {
                     id: uid,
                     email,
                     fullName,
+                    userName,
                 };
                 const usersRef = firebase.firestore().collection("users");
+                if (!snapshot.empty){
+                    alert("Username already taken.");
+                }
+                else{
                 usersRef
                     .doc(uid)
                     .set(data)
@@ -43,6 +57,7 @@ export default function RegistrationScreen({ navigation }) {
                         console.log("error caught in firebase.");
                         alert(error);
                     });
+                }
             })
             .catch((error) => {
                 alert(error);
@@ -51,28 +66,29 @@ export default function RegistrationScreen({ navigation }) {
                 console.log("Hoes mad");
                 login(email, password);
             });
+        }
     };
 
     return (
         <View style={masterStyles.mainBackground}>
 
             <Image
-                style={[masterStyles.logo, {flex: .5}]}
-                source={require("../../../assets/icon.png")}
+                style={[masterStyles.logo, {flex: .75}]}
+                source={require("../../../assets/metallic logo.png")}
             />
                 
             <View style={{
                 flex: 4, 
                 backgroundColor: "#2e2b30",
                 width: screenSize.width - 20,
-                height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.width - 30,
+                height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.height / 2.5,
                 paddingTop: screenSize.height / 50,
                 paddingLeft: 20,
                 borderRadius: 4,
             }}
             >
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Name</Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005}]}>Name</Text>
 
                 <TextInput
                     style={[masterStyles.input,
@@ -85,7 +101,7 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
 
                 <TextInput
                     style={[masterStyles.input,
@@ -98,7 +114,20 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Password</Text>
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Username</Text>
+
+                <TextInput
+                    style={[masterStyles.input,
+                        {width: screenSize.width - 60}]}
+                    placeholderTextColor="#aaaaaa"
+                    placeholder="Username"
+                    onChangeText={(text) => setUserName(text)}
+                    value={userName}
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                />
+
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Password</Text>
 
                 <TextInput
                     style={[masterStyles.input,
@@ -112,7 +141,7 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
 
                 <TextInput
                     style={[masterStyles.input,

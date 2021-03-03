@@ -10,21 +10,21 @@ import {
     Platform,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
+import { masterStyles } from '../../../../Metallic/masterStyles';
 
 export function RecentChatsScreen({ navigation }) {
     return (
-        <View>
+        <View style={masterStyles.mainBackground}>
             <TouchableOpacity
                 onPress={() => {
                     navigation.navigate("Payments");
                 }}
             >
-                <Text> Go To Paymets Screen </Text>
+                <Text style={{color: masterStyles.headings.color}}> Go To Payments Screen </Text>
             </TouchableOpacity>
-            <Text> Hello recent chats </Text>
+            <Text style={{color: masterStyles.headings.color}}> Hello recent chats </Text>
         </View>
     );
 }

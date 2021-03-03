@@ -10,6 +10,7 @@ import { PaymentsScreen } from "./src/screens/PaymentsScreen/PaymentsScreen";
 import { AccountScreen } from "./src/screens/AccountScreen/AccountScreen";
 import { ContactsScreen } from "./src/screens/ContactsScreen/ContactsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { masterStyles } from "./masterStyles";
 
 if (!global.btoa) {
     global.btoa = encode;
@@ -25,26 +26,67 @@ function Tabs() {
     return (
         <Tab.Navigator
         tabBarOptions={{ 
-            activeTintColor: '#79777d', 
-            inactiveBackgroundColor: '#fff',
-            activeBackgroundColor: '#1e1c21', 
-            labelPosition: 'beside-icon', 
+            activeTintColor: '#1e1c21', 
+            inactiveTintColor: '#79777d',
+            inactiveBackgroundColor: '#1e1c21',
+            activeBackgroundColor: '#79777d', 
+            labelPosition: 'below-icon',
             labelStyle: {
                 fontSize: 15,
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                position: 'absolute',
             },
-            iconStyle: {
-                
+            style: {
+                elevation: 0,
+                shadowOpacity: 0,
+                borderTopWidth: 0,
+                borderBottomWidth: 0,
+                borderTopColor: '#79777d',
+                backgroundColor: masterStyles.mainBackground.backgroundColor
+            },
+            tabStyle: {
+                justifyContent: 'center'
             }
         }}
         >
             <Tab.Screen
                 name="RecentChats"
                 component={RecentChatsScreen}
+                options={{ 
+                    headerStyle: { 
+                        backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                        borderColor: masterStyles.mainBackground.backgroundColor,
+                        elevation: 0,
+                        shadowOpacity: 0,
+                        borderBottomWidth: 0,
+
+                    },
+                    title: 'Recent Chats',
+                    headerTintColor: masterStyles.headings.color,
+                    headerTitleStyle: {
+                        fontWeight: 'normal',
+                        fontSize: 24,
+                    },
+                }}
+                
             />
             <Tab.Screen
                 name="Contacts"
                 component={ContactsScreen}
+                options={{ 
+                    headerStyle: { 
+                        backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                        borderColor: masterStyles.mainBackground.backgroundColor,
+                        elevation: 0,
+                        shadowOpacity: 0,
+                        borderBottomWidth: 0 
+                    },
+                    headerTintColor: masterStyles.headings.color,
+                    headerTitleStyle: {
+                        fontWeight: 'normal',
+                        fontSize: 24
+                    },
+                }}
             />
         </Tab.Navigator>
     );
@@ -80,23 +122,102 @@ export default function App() {
     }, []);
 
     return (
-        <NavigationContainer>
+        <NavigationContainer >
             <Stack.Navigator initialRouteName="Home">
                 {user ? (
                     <>
                         <Stack.Screen
                             name="RecentChats"
                             component={RecentChatsScreen}
+                            options={{ 
+                                headerStyle: { 
+                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0,
+                                    
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: 'normal',
+                                    fontSize: 24,
+                                    alignContent: 'center'
+                                },
+                            }}
+                        />
+                        <Stack.Screen
+                            name="Contacts"
+                            component={ContactsScreen}
+                            options={{ 
+                                headerStyle: { 
+                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0 
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: 'normal',
+                                    fontSize: 24,
+                                    alignContent: 'center'
+                                },
+                            }}
                         />
                         <Stack.Screen
                             name="Payments"
                             component={PaymentsScreen}
+                            options={{ 
+                                headerStyle: { 
+                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0 
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: 'normal',
+                                    fontSize: 24
+                                },
+                            }}
                         />
                         <Stack.Screen
                             name="Account"
                             component={AccountScreen}
+                            options={{ 
+                                headerStyle: { 
+                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0  
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: 'normal',
+                                    fontSize: 24
+                                },
+                            }}
                         />
-                        <Stack.Screen name="Home">
+                        <Stack.Screen 
+                        name="Home"
+                        options={{ 
+                            headerStyle: { 
+                                backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                borderColor: masterStyles.mainBackground.backgroundColor,
+                                elevation: 0,
+                                shadowOpacity: 0,
+                                borderBottomWidth: 0
+                            },
+                            headerTintColor: masterStyles.headings.color,
+                            headerTitleStyle: {
+                                fontWeight: 'normal',
+                                fontSize: 24
+                            },
+                        }}
+                        >
                             {(props) => (
                                 <Tabs {...props} extraData={user} component={HomeScreen}/>
                             )}
@@ -104,13 +225,46 @@ export default function App() {
                     </>
                 ) : (
                     <>
-                        <Stack.Screen name="Login" component={LoginScreen} />
+                        <Stack.Screen 
+                        name="Login" 
+                        component={LoginScreen} 
+                        options={{ 
+                            headerStyle: { 
+                                backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                borderColor: masterStyles.mainBackground.backgroundColor,
+                                elevation: 0,
+                                shadowOpacity: 0,
+                                borderBottomWidth: 0 
+                            },
+                            headerTintColor: masterStyles.headings.color,
+                            headerTitleStyle: {
+                                fontWeight: 'normal',
+                                fontSize: 24
+                            },
+                        }}
+                        />
                         <Stack.Screen
                             name="Registration"
                             component={RegistrationScreen}
-                        />
+                            options={{ 
+                                headerStyle: { 
+                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0
+                                    
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: 'normal',
+                                    fontSize: 24
+                                },
+                                
+                            }}
+                            />
                     </>
-                )}
+                )} 
             </Stack.Navigator>
         </NavigationContainer>
     );
