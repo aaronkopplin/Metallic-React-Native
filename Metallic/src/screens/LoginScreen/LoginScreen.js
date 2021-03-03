@@ -56,13 +56,13 @@ export default function LoginScreen({ navigation }) {
             
             <Image
                 style={[masterStyles.logo, {flex: .75}]} 
-                source={require("../../../assets/metallic logo.png")}
+                source={require("../../../assets/metalliclogo.png")}
                 
             />
 
             <View
                 style={{
-                    flex: 4,
+                    flex: 3,
                     backgroundColor: "#2e2b30",
                     width: screenSize.width - 20,
                     height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.width - 30,
@@ -129,7 +129,7 @@ export default function LoginScreen({ navigation }) {
 
             <View style={
                 masterStyles.mainBackground,
-                {flex: 1}
+                {flex: 2}
             }></View>
 
         </View>
