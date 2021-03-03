@@ -73,7 +73,7 @@ export default function RegistrationScreen({ navigation }) {
             }}
             >
 
-                <Text style={[masterStyles.bodyText, {paddingBottom: screenSize.height * .005}]}>Name</Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005}]}>Name</Text>
 
                 <TextInput
                     style={[masterStyles.input,
@@ -86,7 +86,7 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.bodyText, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
 
                 <TextInput
                     style={[masterStyles.input,
@@ -99,7 +99,7 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.bodyText, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Password</Text>
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Password</Text>
 
                 <TextInput
                     style={[masterStyles.input,
@@ -113,7 +113,7 @@ export default function RegistrationScreen({ navigation }) {
                     autoCapitalize="none"
                 />
 
-                <Text style={[masterStyles.bodyText, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
+                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
 
                 <TextInput
                     style={[masterStyles.input,

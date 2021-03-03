@@ -11,9 +11,10 @@ import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from '../../../../Metallic/masterStyles';
 
-export function AccountScreen(props) {
+export function AccountScreen( {navigation} ) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
+    const [userCreateDate, setCreateDate] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
 
     const onLogoutPress = () => {
@@ -66,6 +67,7 @@ export function AccountScreen(props) {
             snapshot.forEach(doc => {
                 setFullName(doc.data().fullName);
                 setEmail(doc.data().email);
+                setCreateDate(user.metadata.creationTime);
                 return doc;
             });
         }
@@ -93,7 +95,7 @@ export function AccountScreen(props) {
             <Text style={[masterStyles.title, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>My Account</Text>
             
             <Image
-                style={[masterStyles.logo]} 
+                style={[masterStyles.logo, {borderRadius: 50}]} 
                 source={require("../../../assets/icon.png")}
             />
 
@@ -101,7 +103,7 @@ export function AccountScreen(props) {
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: {userEmail}</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Balance:</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Account Age:</Text>
-
+            
             <View
                     style={{
                         zIndex: 1,
@@ -117,6 +119,15 @@ export function AccountScreen(props) {
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}
                     />
+                    {/* <CustomButton
+                        onPress={() => {
+                            navigation.navigate("ContactSearch");
+                        }}
+                        text="To Contact Search"
+                        color="#1e1c21"
+                        width={screenSize.width - 80}
+                        height={screenSize.height / 20}
+                    /> */}
                 </View>
             </View>
 

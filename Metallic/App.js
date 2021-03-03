@@ -10,6 +10,8 @@ import { PaymentsScreen } from "./src/screens/PaymentsScreen/PaymentsScreen";
 import { AccountScreen } from "./src/screens/AccountScreen/AccountScreen";
 import { ContactsScreen } from "./src/screens/ContactsScreen/ContactsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { UserAccountScreen } from "./src/screens/UserAccountScreen/UserAccountScreen";
+import { UserSearchScreen } from "./src/screens/UserSearchScreen/UserSearchScreen";
 import { masterStyles } from "./masterStyles";
 
 if (!global.btoa) {
@@ -62,6 +64,27 @@ function Tabs() {
 
                     },
                     title: 'Recent Chats',
+                    headerTintColor: masterStyles.headings.color,
+                    headerTitleStyle: {
+                        fontWeight: 'normal',
+                        fontSize: 24,
+                    },
+                }}
+                
+            />
+            <Tab.Screen
+                name="UserSearch"
+                component={UserSearchScreen}
+                options={{ 
+                    headerStyle: { 
+                        backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                        borderColor: masterStyles.mainBackground.backgroundColor,
+                        elevation: 0,
+                        shadowOpacity: 0,
+                        borderBottomWidth: 0,
+
+                    },
+                    title: 'User Search',
                     headerTintColor: masterStyles.headings.color,
                     headerTitleStyle: {
                         fontWeight: 'normal',
@@ -186,6 +209,42 @@ export default function App() {
                         <Stack.Screen
                             name="Account"
                             component={AccountScreen}
+                            options={{ 
+                                headerStyle: { 
+                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0  
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: 'normal',
+                                    fontSize: 24
+                                },
+                            }}
+                        />
+                        <Stack.Screen
+                            name="UserAccountScreen"
+                            component={UserAccountScreen}
+                            options={{ 
+                                headerStyle: { 
+                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
+                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0  
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: 'normal',
+                                    fontSize: 24
+                                },
+                            }}
+                        />
+                        <Stack.Screen
+                            name="UserSearchScreen"
+                            component={UserSearchScreen}
                             options={{ 
                                 headerStyle: { 
                                     backgroundColor: masterStyles.mainBackground.backgroundColor, 
