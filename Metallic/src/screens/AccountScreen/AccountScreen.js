@@ -89,7 +89,7 @@ export function AccountScreen( {navigation} ) {
                     width: screenSize.width - 40,
                     height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.width - 30,
                     paddingTop: screenSize.height / 50,
-                    paddingLeft: 20,
+                    alignItems: "center",
                     borderRadius: 4,
                 }}
             >
