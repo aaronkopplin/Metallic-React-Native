@@ -162,6 +162,7 @@ export function AccountScreen(props) {
                     ]}
                 >
                     Public Key: {props.ethAccount.address}
+                    {/* Public Key: test */}
                 </Text>
                 <Text
                     style={[
@@ -173,6 +174,7 @@ export function AccountScreen(props) {
                     ]}
                 >
                     Private Key: {props.ethAccount.privateKey}
+                    {/* Private Key: test also */}
                 </Text>
 
                 <View

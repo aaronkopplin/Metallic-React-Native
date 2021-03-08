@@ -12,7 +12,16 @@ import { ContactsScreen } from "./src/screens/ContactsScreen/ContactsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { masterStyles } from "./masterStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Web3 from "web3";
+// import Web3 from "web3";
+
+// Import the crypto getRandomValues shim (**BEFORE** the shims)
+import "react-native-get-random-values";
+
+// Import the the ethers shims (**BEFORE** ethers)
+import "@ethersproject/shims";
+
+// Import the ethers library
+import { ethers } from "ethers";
 
 if (!global.btoa) {
     global.btoa = encode;
@@ -101,8 +110,6 @@ export default function App() {
     const [user, setUser] = useState(null);
     const [ethAccount, setEthAccount] = useState("test");
 
-    const web3 = new Web3();
-
     useEffect(() => {
         const usersRef = firebase.firestore().collection("users");
         firebase.auth().onAuthStateChanged((user) => {
@@ -133,31 +140,53 @@ export default function App() {
     const getData = async () => {
         try {
             const jsonValue = await AsyncStorage.getItem("@account");
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
+            return jsonValue;
+            // return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch (e) {
             // error reading value
         }
     };
 
-    async function fetchOrCreateAccount() {
-        const encryptedAcct = await getData();
-        if (encryptedAcct == null) {
-            const localAcct = web3.eth.accounts.create();
-            setEthAccount(localAcct);
-            await storeData(localAcct.encrypt("accountPassword"));
-        } else {
-            // there was an account found
-            const decryptedAccount = web3.eth.accounts.decrypt(
-                encryptedAcct,
-                "accountPassword"
-            );
-            setEthAccount(decryptedAccount);
-        }
-    }
+    const newWallet = ethers.Wallet.createRandom();
+    // setEthAccount(newWallet);
 
-    useEffect(() => {
-        fetchOrCreateAccount();
-    }, []);
+    // async function fetchOrCreateAccount() {
+    //     const newWallet = ethers.Wallet.createRandom();
+    //     setEthAccount(newWallet);
+
+    //     //write the wallet to storage
+    //     newWallet.encrypt("accountPassword").then((encryptedWallet) => {
+    //         storeData(encryptedWallet);
+    //     });
+
+    //     const encryptedAcct = await getData();
+    //     if (encryptedAcct == null) {
+    //         // no wallet was found
+    //         const newWallet = ethers.Wallet.createRandom();
+    //         setEthAccount(newWallet);
+
+    //         //write the wallet to storage
+    //         newWallet.encrypt("accountPassword").then((encryptedWallet) => {
+    //             storeData(encryptedWallet);
+    //         });
+    //     } else {
+    //         // there was an account found
+    //         getData().then((encryptedWallet) => {
+    //             ethers.Wallet.fromEncryptedJson(
+    //                 encryptedWallet,
+    //                 "accountPassword"
+    //             ).then((decryptedAccount) => {
+    //                 setEthAccount(decryptedAccount);
+    //             });
+    //         });
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     fetchOrCreateAccount();
+    // }, []);
+
+    // const wallet = ethers.Wallet.createRandom();
 
     return (
         <NavigationContainer>
@@ -256,7 +285,8 @@ export default function App() {
                             {(props) => (
                                 <AccountScreen
                                     {...props}
-                                    ethAccount={ethAccount}
+                                    ethAccount={newWallet}
+                                    // ethAccount={wallet}
                                 />
                             )}
                         </Stack.Screen>
