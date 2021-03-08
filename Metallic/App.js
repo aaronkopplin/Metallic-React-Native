@@ -12,7 +12,6 @@ import { ContactsScreen } from "./src/screens/ContactsScreen/ContactsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { masterStyles } from "./masterStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import Web3 from "web3";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -140,53 +139,28 @@ export default function App() {
     const getData = async () => {
         try {
             const jsonValue = await AsyncStorage.getItem("@account");
-            return jsonValue;
-            // return jsonValue != null ? JSON.parse(jsonValue) : null;
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch (e) {
             // error reading value
         }
     };
 
-    const newWallet = ethers.Wallet.createRandom();
-    // setEthAccount(newWallet);
+    async function fetchOrCreateAccount() {
+        const encryptedAcct = await getData();
+        if (encryptedAcct == null) {
+            // no wallet was found, create a new one
+            const newWallet = ethers.Wallet.createRandom();
+            setEthAccount(newWallet);
+            storeData(newWallet);
+        } else {
+            // there was an account found
+            setEthAccount(encryptedAcct);
+        }
+    }
 
-    // async function fetchOrCreateAccount() {
-    //     const newWallet = ethers.Wallet.createRandom();
-    //     setEthAccount(newWallet);
-
-    //     //write the wallet to storage
-    //     newWallet.encrypt("accountPassword").then((encryptedWallet) => {
-    //         storeData(encryptedWallet);
-    //     });
-
-    //     const encryptedAcct = await getData();
-    //     if (encryptedAcct == null) {
-    //         // no wallet was found
-    //         const newWallet = ethers.Wallet.createRandom();
-    //         setEthAccount(newWallet);
-
-    //         //write the wallet to storage
-    //         newWallet.encrypt("accountPassword").then((encryptedWallet) => {
-    //             storeData(encryptedWallet);
-    //         });
-    //     } else {
-    //         // there was an account found
-    //         getData().then((encryptedWallet) => {
-    //             ethers.Wallet.fromEncryptedJson(
-    //                 encryptedWallet,
-    //                 "accountPassword"
-    //             ).then((decryptedAccount) => {
-    //                 setEthAccount(decryptedAccount);
-    //             });
-    //         });
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     fetchOrCreateAccount();
-    // }, []);
-
-    // const wallet = ethers.Wallet.createRandom();
+    useEffect(() => {
+        fetchOrCreateAccount();
+    }, []);
 
     return (
         <NavigationContainer>
@@ -285,7 +259,7 @@ export default function App() {
                             {(props) => (
                                 <AccountScreen
                                     {...props}
-                                    ethAccount={newWallet}
+                                    ethAccount={ethAccount}
                                     // ethAccount={wallet}
                                 />
                             )}
