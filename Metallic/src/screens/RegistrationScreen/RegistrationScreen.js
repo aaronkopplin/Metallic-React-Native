@@ -98,7 +98,7 @@ export default function RegistrationScreen({ navigation }) {
                     onChangeText={(text) => setFullName(text)}
                     value={fullName}
                     underlineColorAndroid="transparent"
-                    autoCapitalize="none"
+                    autoCapitalize="words"
                 />
 
                 <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
@@ -110,6 +110,7 @@ export default function RegistrationScreen({ navigation }) {
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
                     value={email}
+                    keyboardType="email-address"
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />

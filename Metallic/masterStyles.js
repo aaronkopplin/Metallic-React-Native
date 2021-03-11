@@ -28,6 +28,11 @@ export const masterStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
   },
+  headingsSmallNotBold: {
+    color: '#79777d',
+    fontWeight: 'normal',
+    fontSize: 20,
+  },
   input: {
     fontSize: 18,
   },
