@@ -71,12 +71,23 @@ export function UserAccountScreen({route}) {
                 style={[masterStyles.logo, {borderRadius: 50}]} 
                 source={require("../../../assets/Default_Img.png")}
             />
-
             <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userName}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: {fullName}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: {email}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Balance:</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Account Age:</Text>
+            
+            <Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: </Text>
+                <Text style={[masterStyles.headingsSmallNotBold, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{fullName}</Text>
+            </Text>
+
+            <Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: </Text>
+                <Text style={[masterStyles.headingsSmallNotBold, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{email}</Text>
+            </Text>
+
+            <Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Account Age: </Text>
+                <Text style={[masterStyles.headingsSmallNotBold, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>###</Text>
+            </Text>
+            
             <View
                     style={{
                         zIndex: 1,

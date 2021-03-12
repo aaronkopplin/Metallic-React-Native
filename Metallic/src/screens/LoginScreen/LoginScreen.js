@@ -83,6 +83,8 @@ export default function LoginScreen({ navigation }) {
                     value={email}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    autoCompleteType="off"
+                    autoCorrect={false}
                     keyboardType={'email-address'}
                 />
 
@@ -98,6 +100,8 @@ export default function LoginScreen({ navigation }) {
                     value={password}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    autoCompleteType="off"
+                    autoCorrect={false}
                 />
 
                 <View

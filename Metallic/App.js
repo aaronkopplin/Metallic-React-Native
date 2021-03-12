@@ -238,7 +238,7 @@ export default function App() {
                         />
                         <Stack.Screen
                             name="Payments"
-                            component={PaymentsScreen}
+                            // component={PaymentsScreen}
                             options={{
                                 headerStyle: {
                                     backgroundColor:
@@ -257,7 +257,15 @@ export default function App() {
                                     fontSize: 24,
                                 },
                             }}
-                        />
+                        >
+                            {(props) => (
+                                <PaymentsScreen
+                                    {...props}
+                                    ethAccount={ethAccount}
+                                    // ethAccount={wallet}
+                                />
+                            )}
+                        </Stack.Screen>
                         <Stack.Screen
                             name="Account"
                             options={{

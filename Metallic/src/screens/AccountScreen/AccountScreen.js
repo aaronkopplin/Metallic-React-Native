@@ -101,22 +101,34 @@ export function AccountScreen( props ) {
             />
 
             <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userName}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: {userFullName}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: {userEmail}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Balance:</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Account Age:</Text>
-            <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingBottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
-                    Public Key: {props.ethAccount.address}
-                    {/* Public Key: test */}
+            <Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: </Text>
+                <Text style={[masterStyles.headingsSmallNotBold, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userFullName}</Text>
+            </Text>
+
+            <Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: </Text>
+                <Text style={[masterStyles.headingsSmallNotBold, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userEmail}</Text>
+            </Text>
+
+            <Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Balance: </Text>
+                <Text style={[masterStyles.headingsSmallNotBold, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>###</Text>
+            </Text>
+
+            <Text>
+                <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Account Age: </Text>
+                <Text style={[masterStyles.headingsSmallNotBold, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>###</Text>
+            </Text>
+
+            <Text>
+                <Text style={[masterStyles.headingsSmall, { paddingBottom: screenSize.height * 0.005, textAlign: "center" }]}>Public Key: </Text>
+                <Text style={[masterStyles.headingsSmallNotBold, { paddingBottom: screenSize.height * 0.005, textAlign: "center", fontSize: 11 }]}>
+                    {props.ethAccount.address}
                 </Text>
+            </Text>
+
+            <Text>
                 <Text
                     style={[
                         masterStyles.headingsSmall,
@@ -129,6 +141,8 @@ export function AccountScreen( props ) {
                     Private Key: {props.ethAccount.privateKey}
                     {/* Private Key: test also */}
                 </Text>
+            </Text>
+
             <View
                     style={{
                         zIndex: 1,

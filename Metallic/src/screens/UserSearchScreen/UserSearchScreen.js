@@ -31,7 +31,7 @@ export function UserSearchScreen(props) {
     const [searchText, setSearchText] = useState("");
     
 
-    const [users, setUsers] = useState([]);
+    var [users, setUsers] = useState([]);
     const userRef = firebase.firestore().collection("users");
 
     useEffect(() => {
@@ -50,9 +50,9 @@ export function UserSearchScreen(props) {
                             entity.userName = doc.data().userName;
 
                             // get text prior to @ of email
-                            var emailToSearch = String(entity.email).substring(0, (String(entity.email).lastIndexOf('@')));
-
-                            if (emailToSearch.includes(searchText) || String(entity.fullName).includes(searchText) || String(entity.userName).includes(searchText)) {
+                            var emailToSearch = String(entity.email).substring(0, (String(entity.email).lastIndexOf('@'))).toLowerCase();
+                            const search = searchText.toLowerCase();
+                            if (emailToSearch.includes(search) || String(entity.fullName).toLowerCase().includes(search) || String(entity.userName).toLowerCase().includes(search)) {
                                 newEntities.push(entity);
                             }
                             
@@ -77,7 +77,7 @@ export function UserSearchScreen(props) {
                     console.log(error);
                 }
             );
-    }, []);
+    });
 
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {
@@ -116,7 +116,7 @@ export function UserSearchScreen(props) {
                         style={[masterStyles.input]}
                         placeholder="Enter name/username to search for a user"
                         placeholderTextColor="#aaaaaa"
-                        onChangeText={text => setSearchText(text)}
+                        onChangeText={(text) => setSearchText(text)}
                         clearButtonMode="while-editing"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
