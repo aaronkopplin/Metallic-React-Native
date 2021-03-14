@@ -20,12 +20,12 @@ import CustomButton from "../../../button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
 
-export function UserAccountScreen({route}) {
+export function UserAccountScreen({route, navigation}) {
     // const [userName, setUserName] = useState("");
     // const [userFullName, setFullName] = useState("");
     // const [userEmail, setEmail] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
-    const {email, fullName, userName} = route.params;
+    const {email, fullName, userName, uid} = route.params;
 
     // var db = firebase.firestore();
     // async function getUser(datab, userName) {
@@ -88,13 +88,13 @@ export function UserAccountScreen({route}) {
                 <Text style={[masterStyles.headingsSmallNotBold, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>###</Text>
             </Text>
             
-            <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
-                >
+                <View
+                        style={{
+                            zIndex: 1,
+                            paddingTop: screenSize.height / 20,
+                            paddingBottom: screenSize.height / 70,
+                        }}
+                    >
 
                     <CustomButton
                         // onPress={/** add user as friend */}
@@ -112,6 +112,28 @@ export function UserAccountScreen({route}) {
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}
                     /> */}
+                </View>
+                <View
+                        style={{
+                            zIndex: 1,
+                            // paddingTop: screenSize.height / 20,
+                            paddingBottom: screenSize.height / 70,
+                        }}
+                    >
+
+                    <CustomButton
+                        onPress={() => {navigation.navigate("Payments", {
+                            email: email,
+                            fullName: fullName,
+                            userName: userName,
+                            uid: uid
+                        });
+                        }}
+                        text="Send/Receive Payment"
+                        color="#1e1c21"
+                        width={screenSize.width - 80}
+                        height={screenSize.height / 20}
+                    />
                 </View>
             </View>
 

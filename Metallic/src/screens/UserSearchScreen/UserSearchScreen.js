@@ -87,7 +87,7 @@ export function UserSearchScreen(props) {
                     email: item.email,
                     fullName: item.fullName,
                     userName: item.userName,
-
+                    uid: item.uid
                 });
                 }}>
                     <View>
