@@ -11,7 +11,8 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     ScrollView,
-    FlatList
+    FlatList,
+    Alert
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { firebase } from "../../firebase/config";
@@ -20,19 +21,22 @@ import { masterStyles } from '../../../../Metallic/masterStyles';
 import { color } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 
-export function PaymentsScreen({navigation}) {
+export function PaymentsScreen({route, navigation}) {
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     const [amountInput, changeAmountInput] = useState(0.0);
     const [available, changeAvailable] = useState(10.0);
     const plat = Platform.OS;
-    // var sendingAmount = 0.0;
+    // const {email, fullName, userName, uid} = route.params;
 
-    // alert(plat);
-    // const navigation = useNavigation();
-    // changeAvailable(10.0);
+    const userImageSize = plat === "web" ? 75 : 50;
+    
 
     const renderMessage = ({ side, message }) => {
+        return(
+            <View>
 
+            </View>
+        );
     }
 
     return (
@@ -43,8 +47,6 @@ export function PaymentsScreen({navigation}) {
             style={{backgroundColor: '#1e1c21', alignItems: 'center', flex: 1, paddingTop: 20}} 
             enabled={true}
         >
-
-            {/* <View > */}
                 
                 <View style={{
                     backgroundColor: "#2e2b30",
@@ -61,10 +63,10 @@ export function PaymentsScreen({navigation}) {
                                 navigation.navigate("Account");
                             }}
                         >
-                            <Image style={{borderRadius: 50, backgroundColor: "#000", height: 50, width: 50}}/>
+                            <Image style={{borderRadius: 50, backgroundColor: "#000", height: userImageSize, width: userImageSize}}/>
                         </TouchableOpacity>
                         <View style={{height: 1, width: screenSize.width, backgroundColor:  '#1e1c21', top: 10}} />
-                        <FlatList />
+                        <FlatList renderItem={renderMessage}/>
 
                 </View>
                 
@@ -135,8 +137,39 @@ export function PaymentsScreen({navigation}) {
                                 if (amountInput == 0.0) {
                                     alert("Trying to send 0.0ETH or invalid input")
                                 }
-                                changeAvailable((available - amountInput));
-                                changeAmountInput(0.0);
+                                if (plat === "web") {
+                                    if (available == amountInput && available > 0.0) {
+                                        // const r = window.confirm("Trying to send your full balance amount.\nDo you wish to continue?");
+                                        if (window.confirm("Trying to send your full balance amount.\nDo you wish to continue?")) {
+                                            changeAvailable((available - amountInput));
+                                            changeAmountInput(0.0);
+                                        }
+                                    }
+                                } else {
+                                    if (available == amountInput && available > 0.0) {
+                                        Alert.alert(
+                                            "Trying to send your full balance amount.",
+                                            "Do you wish to continue?",
+                                            [
+                                                {
+                                                    text: "Yes",
+                                                    onPress: () => {
+                                                        changeAvailable((available - amountInput));
+                                                        changeAmountInput(0.0);
+                                                    },
+                                                },
+                                                {
+                                                    text: "No",
+                                                    onPress: () => console.log("Cancel Pressed"),
+                                                    style: "cancel",
+                                                },
+                                            ],
+                                            { cancelable: true }
+                                        );
+                                    }
+                                }
+                                
+                                
                             }}
                                 text="Send"
                                 color='#1e1c21'
@@ -151,7 +184,6 @@ export function PaymentsScreen({navigation}) {
                 
                 {/* <Text style={[masterStyles.headingsSmallNotBold, {fontSize: 15}]}>{props.ethAccount.address}</Text>
                 <Text style={[masterStyles.headingsSmallNotBold, {fontSize: 15}]}>{props.ethAccount.name}</Text> */}
-            {/* </View> */}
         </KeyboardAvoidingView>
     );
 }
