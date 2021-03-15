@@ -173,7 +173,7 @@ export function AccountScreen(props) {
                     onPress={() => {
                         navigation.navigate("AccountDetailScreen");
                     }}
-                    text="View Accout Details"
+                    text="View Account Details"
                     color="#1e1c21"
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
