@@ -29,7 +29,11 @@ export function PaymentsScreen({route, navigation}) {
     // const {email, fullName, userName, uid} = route.params;
 
     const userImageSize = plat === "web" ? 75 : 50;
-    
+    var sendingMessage = '';
+    const [memo, setMemo] = useState('');
+
+    const [memoTI, setMemoTI] = useState('');
+    const [amountTI, setAmountTI] = useState('');
 
     const renderMessage = ({ side, message }) => {
         return(
@@ -66,7 +70,20 @@ export function PaymentsScreen({route, navigation}) {
                             <Image style={{borderRadius: 50, backgroundColor: "#000", height: userImageSize, width: userImageSize}}/>
                         </TouchableOpacity>
                         <View style={{height: 1, width: screenSize.width, backgroundColor:  '#1e1c21', top: 10}} />
-                        <FlatList renderItem={renderMessage}/>
+                        <View style={{top: 20, paddingBottom: 15, backgroundColor: "#fff", width: screenSize.width - 30, height: screenSize.height/2, alignItems: 'center', justifyContent: 'center'}}>
+                            <Text>Display Chat</Text>
+                        </View>
+                        <TextInput 
+                                style={[masterStyles.input, {width: screenSize.width - 40, paddingRight: 5, marginTop: 29}]} 
+                                placeholder="Enter memo for transaction..."
+                                keyboardType="default"
+                                textAlign="left"
+                                onChangeText={(text) => { 
+                                    setMemoTI(text);
+                                    setMemo(text);
+                                }}
+                                value={memoTI}
+                            />
 
                 </View>
                 
@@ -99,10 +116,10 @@ export function PaymentsScreen({route, navigation}) {
                                 keyboardType="decimal-pad"
                                 returnKeyType="done"
                                 textAlign="left"
-                                clearTextOnFocus={true}
+                                // clearTextOnFocus={true}
                                 onFocus={() => changeAmountInput(0.0)}
                                 onChangeText={(text) => {
-                                
+                                    setAmountTI(text);
                                     var amount = 0.0;
 
                                     if (text.includes('.', 0) || text.length == 0) {
@@ -123,57 +140,202 @@ export function PaymentsScreen({route, navigation}) {
                                     
                                     changeAmountInput(amount)
                                 }}
+                                value={amountTI}
                             />
                         </View>
                             
                         <View style={{
                             justifyContent: 'center',
-                            alignItems: 'center',
+                            alignItems: '',
                             top: 10,
+                            flexDirection: 'row'
                             
                             }} >
                             <CustomButton
                             onPress={() => {
                                 if (amountInput == 0.0) {
                                     alert("Trying to send 0.0ETH or invalid input")
-                                }
-                                if (plat === "web") {
-                                    if (available == amountInput && available > 0.0) {
-                                        // const r = window.confirm("Trying to send your full balance amount.\nDo you wish to continue?");
-                                        if (window.confirm("Trying to send your full balance amount.\nDo you wish to continue?")) {
-                                            changeAvailable((available - amountInput));
-                                            changeAmountInput(0.0);
-                                        }
-                                    }
                                 } else {
-                                    if (available == amountInput && available > 0.0) {
-                                        Alert.alert(
-                                            "Trying to send your full balance amount.",
-                                            "Do you wish to continue?",
-                                            [
-                                                {
-                                                    text: "Yes",
-                                                    onPress: () => {
-                                                        changeAvailable((available - amountInput));
-                                                        changeAmountInput(0.0);
-                                                    },
+                                    Alert.alert(
+                                        "You are trying to send ETH",
+                                        "Do you wish to continue?",
+                                        [
+                                            {
+                                                text: "Yes",
+                                                onPress: () => {
+                                                    if (plat === "web") {
+                                                        if (available == amountInput && available > 0.0) {
+                                                            // const r = window.confirm("Trying to send your full balance amount.\nDo you wish to continue?");
+                                                            if (window.confirm("Trying to send your full balance amount.\nDo you wish to continue?")) {
+                                                                setAmountTI('');
+                                                                setMemoTI('');
+
+                                                                changeAvailable((available - amountInput));
+                                                                changeAmountInput(0.0);
+                                                                sendingMessage = memo + '\nSending: ' + amountInput + 'ETH';
+                                                                alert(sendingMessage);
+                                                                
+                                                            }
+                    
+                    
+                                                        } else {
+                                                            setAmountTI('');
+                                                            setMemoTI('');
+
+                                                            changeAvailable((available - amountInput));
+                                                            changeAmountInput(0.0);
+                                                            sendingMessage = memo + '\nSending: ' + amountInput + 'ETH';
+                                                            alert(sendingMessage);
+                                                        }
+                                                    } else {
+                                                        if (available == amountInput && available > 0.0) {
+                                                            Alert.alert(
+                                                                "Trying to send your full balance amount.",
+                                                                "Do you wish to continue?",
+                                                                [
+                                                                    {
+                                                                        text: "Yes",
+                                                                        onPress: () => {
+                                                                            setAmountTI('');
+                                                                            setMemoTI('');
+            
+                                                                            changeAvailable((available - amountInput));
+                                                                            changeAmountInput(0.0);
+                                                                            sendingMessage = memo + '\nSending: ' + amountInput + 'ETH';
+                                                                            alert(sendingMessage);
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        text: "No",
+                                                                        onPress: () => console.log("Cancel Pressed"),
+                                                                        style: "cancel",
+                                                                    },
+                                                                ],
+                                                                { cancelable: true }
+                                                            );
+                                                        } else {
+                                                            setAmountTI('');
+                                                            setMemoTI('');
+
+                                                            changeAvailable((available - amountInput));
+                                                            changeAmountInput(0.0);
+                                                            sendingMessage = memo + '\nSending: ' + amountInput + 'ETH';
+                                                            alert(sendingMessage);
+                                                        }
+                                                    }
                                                 },
-                                                {
-                                                    text: "No",
-                                                    onPress: () => console.log("Cancel Pressed"),
-                                                    style: "cancel",
-                                                },
-                                            ],
-                                            { cancelable: true }
-                                        );
-                                    }
+                                            },
+                                            {
+                                                text: "No",
+                                                onPress: () => console.log("Cancel Pressed"),
+                                                style: "cancel",
+                                            },
+                                        ],
+                                        { cancelable: true }
+                                    );
                                 }
+                                
                                 
                                 
                             }}
                                 text="Send"
                                 color='#1e1c21'
-                                width={screenSize.width - 40}
+                                width={(screenSize.width - 50) / 2}
+                                height={screenSize.height * 0.045}
+                            />
+
+                            <View style={{width: 10}} />
+
+                            <CustomButton
+                            onPress={() => {
+                                if (amountInput == 0.0) {
+                                    alert("Trying to request 0.0ETH or invalid input")
+                                } else {
+                                    Alert.alert(
+                                        "You are trying to request ETH",
+                                        "Do you wish to continue?",
+                                        [
+                                            {
+                                                text: "Yes",
+                                                onPress: () => {
+                                                    if (plat === "web") {
+                                                        if (available == amountInput && available > 0.0) {
+                                                            // const r = window.confirm("Trying to send your full balance amount.\nDo you wish to continue?");
+                                                            if (window.confirm("Trying to request your full balance amount.\nDo you wish to continue?")) {
+                                                                setAmountTI('');
+                                                                setMemoTI('');
+
+                                                                changeAvailable((available - amountInput));
+                                                                changeAmountInput(0.0);
+                                                                sendingMessage = memo + '\nRequesting: ' + amountInput + 'ETH';
+                                                                alert(sendingMessage);
+                                                                
+                                                            }
+                    
+                    
+                                                        } else {
+                                                            setAmountTI('');
+                                                            setMemoTI('');
+
+                                                            changeAvailable((available - amountInput));
+                                                            changeAmountInput(0.0);
+                                                            sendingMessage = memo + '\nRequesting: ' + amountInput + 'ETH';
+                                                            alert(sendingMessage);
+                                                        }
+                                                    } else {
+                                                        if (available == amountInput && available > 0.0) {
+                                                            Alert.alert(
+                                                                "Trying to request your full balance amount.",
+                                                                "Do you wish to continue?",
+                                                                [
+                                                                    {
+                                                                        text: "Yes",
+                                                                        onPress: () => {
+                                                                            setAmountTI('');
+                                                                            setMemoTI('');
+            
+                                                                            changeAvailable((available - amountInput));
+                                                                            changeAmountInput(0.0);
+                                                                            sendingMessage = memo + '\nRequesting: ' + amountInput + 'ETH';
+                                                                            alert(sendingMessage);
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        text: "No",
+                                                                        onPress: () => console.log("Cancel Pressed"),
+                                                                        style: "cancel",
+                                                                    },
+                                                                ],
+                                                                { cancelable: true }
+                                                            );
+                                                        } else {
+                                                            setAmountTI('');
+                                                            setMemoTI('');
+
+                                                            changeAvailable((available - amountInput));
+                                                            changeAmountInput(0.0);
+                                                            sendingMessage = memo + '\nRequesting: ' + amountInput + 'ETH';
+                                                            alert(sendingMessage);
+                                                        }
+                                                    }
+                                                },
+                                            },
+                                            {
+                                                text: "No",
+                                                onPress: () => console.log("Cancel Pressed"),
+                                                style: "cancel",
+                                            },
+                                        ],
+                                        { cancelable: true }
+                                    );
+                                }
+                                
+                                
+                                
+                            }}
+                                text="Request"
+                                color='#1e1c21'
+                                width={(screenSize.width - 50) / 2}
                                 height={screenSize.height * 0.045}
                             />
                         </View>
@@ -184,6 +346,7 @@ export function PaymentsScreen({route, navigation}) {
                 
                 {/* <Text style={[masterStyles.headingsSmallNotBold, {fontSize: 15}]}>{props.ethAccount.address}</Text>
                 <Text style={[masterStyles.headingsSmallNotBold, {fontSize: 15}]}>{props.ethAccount.name}</Text> */}
+
         </KeyboardAvoidingView>
     );
 }

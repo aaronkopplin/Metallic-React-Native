@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "@firebase/auth";
 import "@firebase/firestore";
+import { LogBox } from "react-native";
 
 var firebaseConfig = {
     apiKey: "AIzaSyBGdRMdssrrDSYgtsVepwMClTqsUmhskuY",
@@ -18,5 +19,8 @@ var firebaseConfig = {
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
+
+// will remove timer warning from log
+// LogBox.ignoreLogs('Setting a timer for a long period of time');
 
 export { firebase };
