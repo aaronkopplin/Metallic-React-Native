@@ -77,14 +77,7 @@ export function AccountScreen( props ) {
 
     return (
         <View style={masterStyles.mainBackground}>
-<<<<<<< HEAD
-            <View style={
-                masterStyles.mainBackground,
-                {flex: 0.1}
-            }></View>
-=======
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
->>>>>>> master
             <View
                 style={{
                     flex: 4,

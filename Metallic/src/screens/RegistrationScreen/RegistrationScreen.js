@@ -42,6 +42,13 @@ export default function RegistrationScreen({ navigation }) {
                     fullName,
                     userName,
                 };
+
+                const data2 = {
+                    userName,
+                    fullName,
+                    email
+                };
+
                 const usersRef = firebase.firestore().collection("users");
                 if (!snapshot.empty){
                     alert("Username already taken.");
@@ -57,6 +64,8 @@ export default function RegistrationScreen({ navigation }) {
                         console.log("error caught in firebase.");
                         alert(error);
                     });
+
+                usersRef.doc(uid).collection('contacts').doc(data.fullName).set(data2);
                 }
             })
             .catch((error) => {

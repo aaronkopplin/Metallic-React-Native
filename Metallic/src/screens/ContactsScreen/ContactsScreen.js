@@ -15,7 +15,14 @@ import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from '../../../../Metallic/masterStyles';
 
+
 export function ContactsScreen({ navigation }) {
+
+    // Create user reference
+    const userRef = firebase.firestore().collection("users");
+
+    
+
     return (
         <View style={masterStyles.mainBackground}>
             <TouchableOpacity
