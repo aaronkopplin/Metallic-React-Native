@@ -154,8 +154,7 @@ export default function App() {
 
     const storeData = async (value) => {
         try {
-            const jsonValue = JSON.stringify(value);
-            await AsyncStorage.setItem("@account", jsonValue);
+            await AsyncStorage.setItem("@account", value);
         } catch (e) {
             // saving error
         }
@@ -163,8 +162,8 @@ export default function App() {
 
     const getData = async () => {
         try {
-            const jsonValue = await AsyncStorage.getItem("@account");
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
+            const value = await AsyncStorage.getItem("@account");
+            return value;
         } catch (e) {
             // error reading value
         }
@@ -179,9 +178,15 @@ export default function App() {
             storeData(newWallet.privateKey);
         } else {
             // there was an account found
+            console.log(storedPrivateKey);
             const oldWallet = new ethers.Wallet(storedPrivateKey);
             setEthAccount(oldWallet);
         }
+
+        // const newWallet = ethers.Wallet.createRandom();
+        // storeData(newWallet.privateKey);
+        // console.log(newWallet.privateKey);
+        // setEthAccount(newWallet);
 
         getBalance();
     }
