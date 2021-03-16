@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Image, Text, View, Dimensions, Platform, Alert } from "react-native";
+import { Image, Text, View, Dimensions, Platform, Alert, Button } from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
+import * as ImagePicker from 'expo-image-picker';
 
 export function AccountScreen( props ) {
     const [userFullName, setFullName] = useState("");
@@ -11,6 +13,29 @@ export function AccountScreen( props ) {
     const [userCreateDate, setCreateDate] = useState("");
     const [userName, setUserName] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
+
+    const onChooseImagePress = async () => {
+        //let result = await ImagePicker.launchCameraAsync();
+        let result = await ImagePicker.launchImageLibraryAsync();
+    
+        if (!result.cancelled) {
+          uploadImage(result.uri, "test-image")
+            .then(() => {
+              Alert.alert("Success");
+            })
+            .catch((error) => {
+              Alert.alert(error);
+            });
+        }
+      };
+
+      const uploadImage = async (uri, imageName) => {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+    
+        var ref = firebase.storage().ref().child("images/" + imageName);
+        return ref.put(blob);
+      };
 
     const onLogoutPress = () => {
         Alert.alert(
@@ -100,6 +125,8 @@ export function AccountScreen( props ) {
                 source={require("../../../assets/Default_Img.png")}
             />
 
+<Button title="Choose image..." onPress={onChooseImagePress} />
+
             <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userName}</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: {userFullName}</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: {userEmail}</Text>
@@ -136,6 +163,7 @@ export function AccountScreen( props ) {
                         paddingBottom: screenSize.height / 70,
                     }}
                 >
+
                     <CustomButton
                         onPress={
                             Platform.OS === "web"
@@ -147,6 +175,7 @@ export function AccountScreen( props ) {
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}
                     />
+
                     {/* <CustomButton
                         onPress={() => {
                             navigation.navigate("ContactSearch");
