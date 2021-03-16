@@ -41,11 +41,8 @@ export function PaymentsScreen({ route, navigation }) {
     <KeyboardAvoidingView
       keyboardVerticalOffset={Platform.OS === "android" ? 40 : 0}
       behavior={
-        Platform.OS === "ios"
-          ? "position"
-          : "height" || Platform.OS === "android"
-          ? "position"
-          : "height"
+        Platform.OS === "ios" ? "position" : "height" ||
+          Platform.OS === "android" ? "position" : "height"
       }
       style={{
         backgroundColor: "#1e1c21",
