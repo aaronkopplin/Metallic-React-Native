@@ -83,7 +83,7 @@ export function PaymentsScreen({ route, navigation }) {
             paddingBottom: 15,
             backgroundColor: "#fff",
             width: screenSize.width - 30,
-            height: Platform.OS === "web" ? screenSize.height / 1.4 - 150 : screenSize.height / 1.54 - 120,
+            height: Platform.OS === "web" ? screenSize.height / 1.4 - 160 : Platform.OS === "android" ? screenSize.height / 1.54 - 140 : screenSize.height / 1.54 - 120,
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -323,7 +323,6 @@ export function PaymentsScreen({ route, navigation }) {
           </View>
         </View>
       </View>
-
       {/* <Text style={[masterStyles.headingsSmallNotBold, {fontSize: 15}]}>{props.ethAccount.address}</Text>
                 <Text style={[masterStyles.headingsSmallNotBold, {fontSize: 15}]}>{props.ethAccount.name}</Text> */}
     </KeyboardAvoidingView>
