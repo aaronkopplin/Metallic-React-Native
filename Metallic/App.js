@@ -134,6 +134,7 @@ export default function App() {
     const [ethAccount, setEthAccount] = useState(null);
     const [balance, setBalance] = useState(null);
     const [address, setAddress] = useState("");
+    const [mnemonic, setMnemonic] = useState("");
 
     useEffect(() => {
         const usersRef = firebase.firestore().collection("users");
@@ -193,6 +194,7 @@ export default function App() {
         console.log(newWallet.address);
         setEthAccount(newWallet);
         setAddress(newWallet.address);
+        setMnemonic(newWallet.mnemonic.phrase);
     }
 
     useEffect(() => {
@@ -322,6 +324,7 @@ export default function App() {
                                 <AccountDetailScreen
                                     {...props}
                                     ethAccount={ethAccount}
+                                    mnemonic={mnemonic}
                                 />
                             )}
                         </Stack.Screen>

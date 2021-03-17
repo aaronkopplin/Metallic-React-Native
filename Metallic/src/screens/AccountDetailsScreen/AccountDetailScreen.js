@@ -50,6 +50,17 @@ export function AccountDetailScreen(props) {
                 >
                     private Key: {props.ethAccount.privateKey}
                 </Text>
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        {
+                            paddingBottom: screenSize.height * 0.005,
+                            textAlign: "center",
+                        },
+                    ]}
+                >
+                    mnemonic: {props.mnemonic}
+                </Text>
             </View>
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
         </View>
