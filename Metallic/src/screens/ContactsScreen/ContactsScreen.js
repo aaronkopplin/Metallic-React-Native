@@ -81,7 +81,6 @@ export function ContactsScreen({ navigation }) {
                         renderItem={renderUser}
                         keyExtractor={(item) => item.id}
                         removeClippedSubviews={true}
-                        // style={{height: screenSize.height * 0.6}}
                     />
                     
                 </View>

@@ -65,7 +65,7 @@ export default function RegistrationScreen({ navigation }) {
                         alert(error);
                     });
 
-                usersRef.doc(uid).collection('contacts').doc(data.fullName).set(data2);
+                usersRef.doc(uid).collection('Contacts').doc(data.fullName).set(data2);
                 }
             })
             .catch((error) => {
