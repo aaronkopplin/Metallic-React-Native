@@ -43,7 +43,7 @@ export function ContactsScreen({ navigation }) {
             });
             setContactsList(list);
         })
-    });
+    }, []);
 
     const renderUser = ({ item, index }) => {
         return (
@@ -79,7 +79,7 @@ export function ContactsScreen({ navigation }) {
                     <FlatList
                         data={contactsList}
                         renderItem={renderUser}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item.uid}
                         removeClippedSubviews={true}
                     />
                     
