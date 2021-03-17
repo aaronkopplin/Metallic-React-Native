@@ -25,8 +25,8 @@ export function UserAccountScreen({route, navigation}) {
     // const [userFullName, setFullName] = useState("");
     // const [userEmail, setEmail] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
-    const {email, fullName, userName, uid} = route.params;
-
+    const {email, fullName, userName} = route.params;
+    const user = firebase.auth().currentUser;
     // var db = firebase.firestore();
     // async function getUser(datab, userName) {
     //     var users = datab.collection('users');
@@ -46,6 +46,19 @@ export function UserAccountScreen({route, navigation}) {
 
     // Placeholder call for Passed in username.
     // getUser(db, props.extraData.stuff);
+
+    const addContact = () => {
+        const userRef = firebase.firestore().collection("users").doc(user.uid);
+        const ContactsRef = userRef.collection("Contacts");
+
+        const data = {
+            email,
+            fullName,
+            userName
+        }
+
+        ContactsRef.add(data);
+    };
 
     return (
         <View style={masterStyles.mainBackground}>
@@ -97,7 +110,7 @@ export function UserAccountScreen({route, navigation}) {
                     >
 
                     <CustomButton
-                        // onPress={/** add user as friend */}
+                        onPress={addContact}
                         text="Add Contact"
                         color="#1e1c21"
                         width={screenSize.width - 80}
