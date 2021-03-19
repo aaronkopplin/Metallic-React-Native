@@ -7,8 +7,9 @@ import {
     View,
     Dimensions,
     StyleSheet,
-    FlatList,
+    SectionList,
     Platform,
+    StatusBar,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 // import styles from "./styles";
@@ -25,67 +26,82 @@ export function ContactsScreen({ navigation }) {
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
 
     const user = firebase.auth().currentUser
-    // Create user reference
+
+    // Is there a user currently?
     if (user != null){
-    const userRef = firebase.firestore().collection("users").doc(user.uid);
+        const userRef = firebase.firestore().collection("users").doc(user.uid);
 
-    const ContactsRef = userRef.collection("Contacts");
+        const ContactsRef = userRef.collection("Contacts");
 
-    const [contactsList, setContactsList] = useState([]); 
-
-    useEffect(() => {
-        ContactsRef.onSnapshot((querySnapshot) => {
-            var list = [];
-            querySnapshot.forEach(doc => {
-                const entity = doc.data();
-                
-                list.push(entity);
-            });
-            setContactsList(list);
-        })
-    });
-
-    const renderUser = ({ item, index }) => {
-        return (
-            <View style={[masterStyles.entityContainer, {paddingBottom: 20}]}>
-                <TouchableOpacity onPress={() => {navigation.navigate('UserAccountScreen', {
-                    email: item.email,
-                    fullName: item.fullName,
-                    userName: item.userName,
-
-                });
-                }}>
-                    <View>
-                        <Text>
-                        <View style={{justifyContent: "center", flex: 1}}>
-                            <Image style={{height: 35, width: 20}} source={require("../../../assets/Default_Img.png")}></Image>
-                        </View> 
-                        <View style={{justifyContent: "center", flex: 1}}>
-                            <Text style={[masterStyles.headingsSmall]} >{'\t'}{item.email}</Text>
-                            <Text style={[masterStyles.headingsSmallNotBold]} >{'\t'}{item.userName}</Text>
-                        </View>
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-                
-            </View>
-        );
-    };
-
-    return (
-        <SafeAreaView style={{flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center'}}>
-            <View style={{backgroundColor: "#2e2b30", alignItems: 'center', paddingBottom: 40, borderRadius: 4, height: screenSize.height * 0.75, width: screenSize.width - 20}}>
-                <View style={{paddingVertical: 20, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10}}>
-                    <FlatList
-                        data={contactsList}
-                        renderItem={renderUser}
-                        keyExtractor={(item) => item.id}
-                        removeClippedSubviews={true}
-                    />
+        const [contactsList, setContactsList] = useState([]); 
+        const titles = ["&","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+        // Get the lsit of contacts
+        useEffect(() => {
+            ContactsRef.onSnapshot((querySnapshot) => {
+                // Variable for holding each contacts data
+                var list = [];
+                querySnapshot.forEach(doc => {
+                    const entity = doc.data();
                     
-                </View>
+                    list.push(entity);
+                });
+                setContactsList(list);
+             //   console.log(contactsList);
+            });
+        }, []);
+          
+        const Item = ({ title }) => (
+            <View style={masterStyles.contactBar}>
+                <TouchableOpacity onPress={() => {
+                    contactsList.forEach((c) => {
+                        if (c.userName == title){
+                            navigation.navigate('UserAccountScreen',{
+                                email: c.email,
+                                fullName: c.fullName,
+                                userName: c.userName
+                            })
+                        }})}}>
+                    <Text style={masterStyles.headings}>{title}</Text>
+                </TouchableOpacity>
             </View>
-        </SafeAreaView>
-    );
-}
+          );
+
+        const populateData = () => {
+            contactsList.forEach((contact) => {
+                var i = 0;
+                titles.forEach((letter) => {
+                    // Check First letter of our contacts userName.
+                    if (contact.userName.substring(0,1).toUpperCase() == letter){
+                        // If we share this letter add them to this part of our data
+                        contactData[i].data.push(contact.userName);
+                    }
+                    i++;
+                })
+            });
+        };
+
+        // Map out letter to the title of our list.
+        const contactData = titles.map((item) => ({
+            title: item,
+            data: []
+        }));
+
+        populateData();
+
+        return (
+            <SafeAreaView style={{flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center'}}>
+                <View style={{backgroundColor: "#2e2b30", paddingBottom: 40, borderRadius: 4, height: screenSize.height * 0.75, width: screenSize.width - 20}}>
+                    <SectionList
+                    sections={contactData}
+                    keyExtractor={(item, index) => item + index}
+                    renderItem={({ item }) => <Item title={item} />}
+                    renderSectionHeader={({ section: { title } }) => (
+                        <Text style={masterStyles.title}>{title}</Text>
+                    )}
+                    />
+                </View>
+            
+            </SafeAreaView>
+        );
+    }
 }

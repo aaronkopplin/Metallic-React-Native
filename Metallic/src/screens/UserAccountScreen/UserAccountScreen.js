@@ -9,6 +9,8 @@ import {
     StyleSheet,
     Platform,
     SnapshotViewIOS,
+    Alert,
+    TouchableNativeFeedbackComponent,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 // import styles from "./styles";
@@ -21,43 +23,59 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
 
 export function UserAccountScreen({route}) {
-    // const [userName, setUserName] = useState("");
-    // const [userFullName, setFullName] = useState("");
-    // const [userEmail, setEmail] = useState("");
+
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     const {email, fullName, userName} = route.params;
     const user = firebase.auth().currentUser;
-    // var db = firebase.firestore();
-    // async function getUser(datab, userName) {
-    //     var users = datab.collection('users');
-    //     const snapshot = await users.where('id', '==', userID).get();
-        
-    //     if (snapshot.empty) {
-    //         alert('no matching');
-    //         return;
-    //     }
-    //     snapshot.forEach(doc => {
-    //         setUserName(doc.data().userName);
-    //         setFullName(doc.data().fullName);
-    //         setEmail(doc.data().email);
-    //         return doc;
-    //     });
-    // }
-
-    // Placeholder call for Passed in username.
-    // getUser(db, props.extraData.stuff);
 
     const addContact = () => {
         const userRef = firebase.firestore().collection("users").doc(user.uid);
         const ContactsRef = userRef.collection("Contacts");
 
-        const data = {
-            email,
-            fullName,
-            userName
+        async function getUser(dbRef, name) {
+            var contacts = dbRef.collection("Contacts");
+            const snapshot = await contacts.where("userName", "==", name).get();
+
+            // Already a contact?
+            if (snapshot.empty) {
+                const data = {
+                    email: email,
+                    fullName: fullName,
+                    userName: userName,
+                }
+                ContactsRef.doc(userName).set(data);
+                console.log("Contact Added");
+                return;
+            }
+            // If already a contact confirm delete?
+            else{
+                snapshot.forEach((doc) => {
+                    Alert.alert(
+                        "Remove Contact",
+                        "Would you like to remove the contact?",
+                        [
+                            { 
+                                text: "Cancel",
+                                onPress: () => console.log("Cancel removal"),
+                                style: "cancel"
+                            },
+                            {
+                                text: "Confirm", onPress: () => 
+                                {
+                                    console.log("OK preseed")
+                                    firebase.firestore()
+                                    .collection("users").doc(user.uid)
+                                    .collection("Contacts").doc(userName)
+                                    .delete();
+                                }
+                            }
+                        ]
+                    )
+                });
+            }
         }
 
-        ContactsRef.add(data);
+        getUser(userRef, userName);
     };
 
     return (
@@ -105,15 +123,7 @@ export function UserAccountScreen({route}) {
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}
                     />
-                    {/* <CustomButton
-                        onPress={() => {
-                            navigation.navigate("ContactSearch");
-                        }}
-                        text="To Contact Search"
-                        color="#1e1c21"
-                        width={screenSize.width - 80}
-                        height={screenSize.height / 20}
-                    /> */}
+
                 </View>
             </View>
 

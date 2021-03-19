@@ -46,7 +46,7 @@ export default function RegistrationScreen({ navigation }) {
                 const data2 = {
                     userName,
                     fullName,
-                    email
+                    email,
                 };
 
                 const usersRef = firebase.firestore().collection("users");
