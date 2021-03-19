@@ -42,6 +42,13 @@ export default function RegistrationScreen({ navigation }) {
                     fullName,
                     userName,
                 };
+
+                const data2 = {
+                    userName,
+                    fullName,
+                    email
+                };
+
                 const usersRef = firebase.firestore().collection("users");
                 if (!snapshot.empty){
                     alert("Username already taken.");
@@ -57,6 +64,8 @@ export default function RegistrationScreen({ navigation }) {
                         console.log("error caught in firebase.");
                         alert(error);
                     });
+
+                usersRef.doc(uid).collection('Contacts').doc(data.fullName).set(data2);
                 }
             })
             .catch((error) => {
@@ -78,7 +87,7 @@ export default function RegistrationScreen({ navigation }) {
             />
                 
             <View style={{
-                flex: 4, 
+                flex: 5, 
                 backgroundColor: "#2e2b30",
                 width: screenSize.width - 20,
                 height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.height / 2.5,
@@ -195,7 +204,7 @@ export default function RegistrationScreen({ navigation }) {
 
             <View style={
                 masterStyles.mainBackground,
-                {flex: 1}
+                {flex: .5}
             }></View>
 
         </View>
