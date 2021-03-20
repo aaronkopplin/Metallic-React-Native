@@ -7,7 +7,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import * as ImagePicker from 'expo-image-picker';
 import storage from '@react-native-firebase/storage';
-//import firestore from '@react-native-firebase/firestore';
 import 'firebase/storage';
 
 export function AccountScreen( props ) {
@@ -18,37 +17,41 @@ export function AccountScreen( props ) {
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     
     const storageRef = firebase.storage().ref();
+    const [filePath, setFilePath] = useState({});
  
     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
     
         if (!result.cancelled) {
-            const imageUri = result.uri
-            uploadImage(imageUri);
+            let imageUri = result.uri
+            let imageName = result.fileName
+
+            console.log('base64 -> ', result.base64);
+            console.log('uri -> ', result.uri);
+            console.log('width -> ', result.width);
+            console.log('height -> ', result.height);
+            console.log('fileSize -> ', result.fileSize);
+            console.log('type -> ', result.type);
+            console.log('fileName -> ', result.fileName);
+            setFilePath(result);
+
+            uploadImage(imageUri, imageName);
         }
       };
 
-      const uploadImage = async (image) => {
-        if( image == null ) {
+      const uploadImage = async (uri, name) => {
+        if( uri == null ) {
             return null;
           }
-
-        const uploadUri = image;
-        let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
-
-        const extension = filename.split('.').pop(); 
+/* 
+         const extension = filename.split('.').pop(); 
         const name = filename.split('.').slice(0, -1).join('.');
-        filename = name + Date.now() + '.' + extension;
+        filename = name + Date.now() + '.' + extension; */
 
         firebase
           .storage()
-          .ref(filename)
-          .put(uploadUri)
-          .then((snapshot) => {
-            //You can check the image is now uploaded in the storage bucket
-            console.log(`${imageName} has been successfully uploaded.`);
-        })
-        .catch((e) => console.log('uploading image error => ', e)); 
+          .ref(name)
+          .put(uri)
       };
 
     const onLogoutPress = () => {
