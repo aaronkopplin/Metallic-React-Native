@@ -19,6 +19,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import CustomButton from "../../../button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
+import { useEffect } from "react/cjs/react.development";
 
 export function UserAccountScreen({ route, navigation }) {
     // const [userName, setUserName] = useState("");
@@ -30,6 +31,10 @@ export function UserAccountScreen({ route, navigation }) {
             : Dimensions.get("screen");
     const { email, fullName, userName } = route.params;
     const user = firebase.auth().currentUser;
+
+    const [contactsRef, setContactsRef] = useState(null);
+    const [contacts, setContacts] = useState(null);
+
     // var db = firebase.firestore();
     // async function getUser(datab, userName) {
     //     var users = datab.collection('users');
@@ -50,17 +55,38 @@ export function UserAccountScreen({ route, navigation }) {
     // Placeholder call for Passed in username.
     // getUser(db, props.extraData.stuff);
 
-    const addContact = () => {
+    const getContacts = async () => {
         const userRef = firebase.firestore().collection("users").doc(user.uid);
         const ContactsRef = userRef.collection("Contacts");
+        const contacts = await ContactsRef.get();
 
-        const data = {
-            email,
-            fullName,
-            userName,
-        };
+        setContactsRef(ContactsRef);
+        console.log("setting contacts");
+        setContacts(contacts);
+    };
+    useEffect(() => {
+        getContacts();
+    }, []);
 
-        ContactsRef.add(data);
+    const addContact = () => {
+        var contactAlreadyExists = false;
+        contacts.forEach((element) => {
+            if (element.data().userName === userName) {
+                console.log("that contact already exists");
+                contactAlreadyExists = true;
+            }
+        });
+
+        if (!contactAlreadyExists) {
+            const data = {
+                email,
+                fullName,
+                userName,
+            };
+            console.log("adding contact");
+            contactsRef.add(data);
+            getContacts();
+        }
     };
 
     return (
