@@ -15,18 +15,31 @@ import "@ethersproject/shims";
 // Import the ethers library
 import { ethers } from "ethers";
 import { useEffect } from "react";
+import * as WalletFunctions from "../../ethereum/loadWallet";
 
 export function AccountScreen(props) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
     const [userCreateDate, setCreateDate] = useState("");
     const [userName, setUserName] = useState("");
-    const [balance, setBalance] = useState("Loading.");
     const screenSize =
         Platform.OS === "web"
             ? Dimensions.get("window")
             : Dimensions.get("screen");
     const navigation = useNavigation();
+    const [balance, setBalance] = useState("Loading");
+
+    useEffect(() => {
+        const fetchBal = async () => {
+            const wallet = await WalletFunctions.loadWalletFromPrivate();
+            const balance = await (
+                await WalletFunctions.getBalance(wallet)
+            ).toString();
+            setBalance(balance);
+        };
+
+        fetchBal();
+    }, []);
 
     const onLogoutPress = () => {
         Alert.alert(
@@ -66,27 +79,6 @@ export function AccountScreen(props) {
                 console.log(error);
             });
     };
-
-    async function getBalance() {
-        const provider = new ethers.providers.InfuraProvider(
-            "ropsten",
-            "298080f1923540f19af74e5baa886001"
-        );
-        const b = await provider.getBalance(props.address);
-        var bal = b.toString();
-        console.log("balance: " + b.toString());
-        bal =
-            (bal.length >= 18 ? bal.substring(0, bal.length - 18) : "0") +
-            "." +
-            bal.slice(-18);
-        bal = parseFloat(bal);
-
-        setBalance(bal.toString() + " eth");
-    }
-
-    useEffect(() => {
-        getBalance();
-    }, []);
 
     var user = firebase.auth().currentUser;
     var db = firebase.firestore();
