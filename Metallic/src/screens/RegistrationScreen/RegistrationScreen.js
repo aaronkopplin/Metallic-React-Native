@@ -108,6 +108,8 @@ export default function RegistrationScreen({ navigation }) {
                     value={fullName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="words"
+                    autoCompleteType="off"
+                    autoCorrect={false}
                 />
 
                 <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>E-Mail</Text>                
@@ -122,6 +124,8 @@ export default function RegistrationScreen({ navigation }) {
                     keyboardType="email-address"
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    autoCompleteType="off"
+                    autoCorrect={false}
                 />
 
                 <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Username</Text>
@@ -135,6 +139,8 @@ export default function RegistrationScreen({ navigation }) {
                     value={userName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    autoCompleteType="off"
+                    autoCorrect={false}
                 />
 
                 <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Password</Text>
@@ -149,6 +155,8 @@ export default function RegistrationScreen({ navigation }) {
                     value={password}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    autoCompleteType="off"
+                    autoCorrect={false}
                 />
 
                 <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Confirm Password</Text>
@@ -163,6 +171,8 @@ export default function RegistrationScreen({ navigation }) {
                     value={confirmPassword}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    autoCompleteType="off"
+                    autoCorrect={false}
                 />
                 <View
                     style={{

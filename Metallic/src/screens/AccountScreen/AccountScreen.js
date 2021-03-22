@@ -4,13 +4,18 @@ import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
-export function AccountScreen( props ) {
+export function AccountScreen(props) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
     const [userCreateDate, setCreateDate] = useState("");
     const [userName, setUserName] = useState("");
-    const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
+    const screenSize =
+        Platform.OS === "web"
+            ? Dimensions.get("window")
+            : Dimensions.get("screen");
+    const navigation = useNavigation();
 
     const onLogoutPress = () => {
         Alert.alert(
@@ -88,34 +93,37 @@ export function AccountScreen( props ) {
                             ? screenSize.height / 2.5
                             : screenSize.width - 30,
                     paddingTop: screenSize.height / 50,
+                    paddingBottom: screenSize.height / 50,
                     alignItems: "center",
                     borderRadius: 4,
                 }}
             >
-            
-            <Text style={[masterStyles.title, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>My Account</Text>
-            
-            <Image
-                style={[masterStyles.logo, {borderRadius: 50}]} 
-                source={require("../../../assets/Default_Img.png")}
-            />
-
-            <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userName}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: {userFullName}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Email: {userEmail}</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Balance:</Text>
-            <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Account Age:</Text>
-            <Text
+                <Text
                     style={[
-                        masterStyles.headingsSmall,
+                        masterStyles.title,
                         {
                             paddingBottom: screenSize.height * 0.005,
                             textAlign: "center",
                         },
                     ]}
                 >
-                    Public Key: {props.ethAccount.address}
-                    {/* Public Key: test */}
+                    My Account
+                </Text>
+                <Image
+                    style={[masterStyles.logo, { borderRadius: 50 }]}
+                    source={require("../../../assets/Default_Img.png")}
+                />
+
+                <Text
+                    style={[
+                        masterStyles.headings,
+                        {
+                            paddingBottom: screenSize.height * 0.005,
+                            textAlign: "center",
+                        },
+                    ]}
+                >
+                    {userName}
                 </Text>
                 <Text
                     style={[
@@ -126,40 +134,67 @@ export function AccountScreen( props ) {
                         },
                     ]}
                 >
-                    Private Key: {props.ethAccount.privateKey}
-                    {/* Private Key: test also */}
+                    Name: {userFullName}
                 </Text>
-            <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        {
+                            paddingBottom: screenSize.height * 0.005,
+                            textAlign: "center",
+                        },
+                    ]}
                 >
-                    <CustomButton
-                        onPress={
-                            Platform.OS === "web"
-                                ? onLogoutPressWeb
-                                : onLogoutPress
-                        }
-                        text="Logout"
-                        color="#1e1c21"
-                        width={screenSize.width - 80}
-                        height={screenSize.height / 20}
-                    />
-                    {/* <CustomButton
-                        onPress={() => {
-                            navigation.navigate("ContactSearch");
-                        }}
-                        text="To Contact Search"
-                        color="#1e1c21"
-                        width={screenSize.width - 80}
-                        height={screenSize.height / 20}
-                    /> */}
-                </View>
+                    Email: {userEmail}
+                </Text>
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        {
+                            paddingBottom: screenSize.height * 0.005,
+                            textAlign: "center",
+                        },
+                    ]}
+                >
+                    Balance: {props.balance}
+                </Text>
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        {
+                            paddingBottom: screenSize.height * 0.005,
+                            textAlign: "center",
+                        },
+                    ]}
+                >
+                    Account Age:
+                </Text>
+                <CustomButton
+                    onPress={() => {
+                        navigation.navigate("AccountDetailScreen");
+                    }}
+                    text="View Account Details"
+                    color="#1e1c21"
+                    width={screenSize.width - 80}
+                    height={screenSize.height / 20}
+                ></CustomButton>
+                <CustomButton
+                    onPress={
+                        Platform.OS === "web" ? onLogoutPressWeb : onLogoutPress
+                    }
+                    text="Logout"
+                    color="#1e1c21"
+                    width={screenSize.width - 80}
+                    height={screenSize.height / 20}
+                />
             </View>
-
-            <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
+            <View
+                style={{
+                    zIndex: 1,
+                    paddingTop: screenSize.height / 20,
+                    paddingBottom: screenSize.height / 70,
+                }}
+            />
         </View>
     );
 }

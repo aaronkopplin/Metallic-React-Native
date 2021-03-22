@@ -12,6 +12,7 @@ import { ContactsScreen } from "./src/screens/ContactsScreen/ContactsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { UserAccountScreen } from "./src/screens/UserAccountScreen/UserAccountScreen";
 import { UserSearchScreen } from "./src/screens/UserSearchScreen/UserSearchScreen";
+import { AccountDetailScreen } from "./src/screens/AccountDetailsScreen/AccountDetailScreen";
 import { masterStyles } from "./masterStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -86,23 +87,23 @@ function Tabs() {
             <Tab.Screen
                 name="UserSearch"
                 component={UserSearchScreen}
-                options={{ 
-                    headerStyle: { 
-                        backgroundColor: masterStyles.mainBackground.backgroundColor, 
-                        borderColor: masterStyles.mainBackground.backgroundColor,
+                options={{
+                    headerStyle: {
+                        backgroundColor:
+                            masterStyles.mainBackground.backgroundColor,
+                        borderColor:
+                            masterStyles.mainBackground.backgroundColor,
                         elevation: 0,
                         shadowOpacity: 0,
                         borderBottomWidth: 0,
-
                     },
-                    title: 'Search',
+                    title: "Search",
                     headerTintColor: masterStyles.headings.color,
                     headerTitleStyle: {
-                        fontWeight: 'normal',
+                        fontWeight: "normal",
                         fontSize: 24,
                     },
                 }}
-                
             />
             <Tab.Screen
                 name="Contacts"
@@ -130,7 +131,8 @@ function Tabs() {
 
 export default function App() {
     const [user, setUser] = useState(null);
-    const [ethAccount, setEthAccount] = useState("test");
+    const [ethAccount, setEthAccount] = useState(null);
+    const [balance, setBalance] = useState(null);
 
     useEffect(() => {
         const usersRef = firebase.firestore().collection("users");
@@ -152,8 +154,7 @@ export default function App() {
 
     const storeData = async (value) => {
         try {
-            const jsonValue = JSON.stringify(value);
-            await AsyncStorage.setItem("@account", jsonValue);
+            await AsyncStorage.setItem("@account", value);
         } catch (e) {
             // saving error
         }
@@ -161,24 +162,51 @@ export default function App() {
 
     const getData = async () => {
         try {
-            const jsonValue = await AsyncStorage.getItem("@account");
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
+            const value = await AsyncStorage.getItem("@account");
+            return value;
         } catch (e) {
             // error reading value
         }
     };
 
     async function fetchOrCreateAccount() {
-        const encryptedAcct = await getData();
-        if (encryptedAcct == null) {
+        const storedPrivateKey = await getData();
+        if (storedPrivateKey == null) {
             // no wallet was found, create a new one
             const newWallet = ethers.Wallet.createRandom();
             setEthAccount(newWallet);
-            storeData(newWallet);
+            storeData(newWallet.privateKey);
         } else {
             // there was an account found
-            setEthAccount(encryptedAcct);
+            console.log(storedPrivateKey);
+            const oldWallet = new ethers.Wallet(storedPrivateKey);
+            setEthAccount(oldWallet);
         }
+
+        // const newWallet = ethers.Wallet.createRandom();
+        // storeData(newWallet.privateKey);
+        // console.log(newWallet.privateKey);
+        // setEthAccount(newWallet);
+
+        getBalance();
+    }
+
+    async function getBalance() {
+        const provider = new ethers.providers.InfuraProvider(
+            "mainnet",
+            "298080f1923540f19af74e5baa886001"
+        );
+        const b = await provider.getBalance(
+            "0xB1729e2F6520Aa813cE65626Fa45fffCE7f24E48"
+        );
+        var bal = b.toString();
+        bal =
+            (bal.length >= 18 ? bal.substring(0, bal.length - 18) : "0") +
+            "." +
+            bal.slice(-18);
+        bal = parseFloat(bal);
+
+        setBalance(bal.toString() + " eth");
     }
 
     useEffect(() => {
@@ -280,46 +308,79 @@ export default function App() {
                             }}
                         >
                             {(props) => (
-                                <AccountScreen
+                                <AccountScreen {...props} balance={balance} />
+                            )}
+                        </Stack.Screen>
+                        <Stack.Screen
+                            name="AccountDetailScreen"
+                            options={{
+                                headerStyle: {
+                                    backgroundColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
+                                    borderColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0,
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: "normal",
+                                    fontSize: 24,
+                                },
+                            }}
+                        >
+                            {(props) => (
+                                <AccountDetailScreen
                                     {...props}
                                     ethAccount={ethAccount}
-                                    // ethAccount={wallet}
+                                    balance={balance}
                                 />
                             )}
                         </Stack.Screen>
                         <Stack.Screen
                             name="UserAccountScreen"
                             component={UserAccountScreen}
-                            options={{ 
-                                headerStyle: { 
-                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
-                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                            options={{
+                                headerStyle: {
+                                    backgroundColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
+                                    borderColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
                                     elevation: 0,
                                     shadowOpacity: 0,
-                                    borderBottomWidth: 0  
+                                    borderBottomWidth: 0,
                                 },
                                 headerTintColor: masterStyles.headings.color,
                                 headerTitleStyle: {
-                                    fontWeight: 'normal',
-                                    fontSize: 24
+                                    fontWeight: "normal",
+                                    fontSize: 24,
                                 },
                             }}
                         />
                         <Stack.Screen
                             name="UserSearchScreen"
                             component={UserSearchScreen}
-                            options={{ 
-                                headerStyle: { 
-                                    backgroundColor: masterStyles.mainBackground.backgroundColor, 
-                                    borderColor: masterStyles.mainBackground.backgroundColor,
+                            options={{
+                                headerStyle: {
+                                    backgroundColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
+                                    borderColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
                                     elevation: 0,
                                     shadowOpacity: 0,
-                                    borderBottomWidth: 0  
+                                    borderBottomWidth: 0,
                                 },
                                 headerTintColor: masterStyles.headings.color,
                                 headerTitleStyle: {
-                                    fontWeight: 'normal',
-                                    fontSize: 24
+                                    fontWeight: "normal",
+                                    fontSize: 24,
                                 },
                             }}
                         />
