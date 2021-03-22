@@ -29,12 +29,14 @@ export function ContactsScreen({ navigation }) {
 
     // Is there a user currently?
     if (user != null){
-        const userRef = firebase.firestore().collection("users").doc(user.uid);
+        const RefUser = firebase.firestore().collection("users").doc(user.uid);
 
-        const ContactsRef = userRef.collection("Contacts");
+        const ContactsRef = RefUser.collection("Contacts");
 
         const [contactsList, setContactsList] = useState([]); 
+        const [you, setYou] = useState();
         const titles = ["&","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
         // Get the lsit of contacts
         useEffect(() => {
             ContactsRef.onSnapshot((querySnapshot) => {
@@ -48,13 +50,31 @@ export function ContactsScreen({ navigation }) {
                 setContactsList(list);
              //   console.log(contactsList);
             });
+
+            async function getUser() {
+                const uid = user.uid;
+                const db = firebase.firestore().collection("users");
+                const snapshot = await db.where("id", "==", uid).get();
+                if (snapshot.empty) {
+                    alert("no matching");
+                }
+                else {snapshot.forEach((doc) => {
+                    setYou(doc.data().userName);
+                    });
+                }
+            }
+            getUser();
         }, []);
-          
+       
+
         const Item = ({ title }) => (
             <View style={masterStyles.contactBar}>
                 <TouchableOpacity onPress={() => {
                     contactsList.forEach((c) => {
-                        if (c.userName == title){
+                        if (you == title){
+                            navigation.navigate('Account')
+                        }
+                        else if (c.userName == title){
                             navigation.navigate('UserAccountScreen',{
                                 email: c.email,
                                 fullName: c.fullName,
