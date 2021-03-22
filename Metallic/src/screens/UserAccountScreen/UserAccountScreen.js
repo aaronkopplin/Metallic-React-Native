@@ -233,6 +233,7 @@ export function UserAccountScreen({route}) {
                         color="#1e1c21"
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}
+                        
                     />
                 </View>
             </View>

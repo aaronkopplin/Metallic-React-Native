@@ -234,6 +234,14 @@ export function AccountScreen( props ) {
                 >
                     Account Age:
                 </Text>
+                
+                <View
+                    style={{
+                        zIndex: 1,
+                        paddingTop: screenSize.height / 20,
+                        paddingBottom: screenSize.height / 70,
+                    }}
+                >
                 <CustomButton
                     onPress={() => {
                         navigation.navigate("AccountDetailScreen");
@@ -243,6 +251,9 @@ export function AccountScreen( props ) {
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
                 ></CustomButton>
+                </View>
+
+                <View style={{ zIndex: 2 }}>
                 <CustomButton
                     onPress={
                         Platform.OS === "web" ? onLogoutPressWeb : onLogoutPress
@@ -252,6 +263,8 @@ export function AccountScreen( props ) {
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
                 />
+                </View>
+                
             </View>
             <View
                 style={{
