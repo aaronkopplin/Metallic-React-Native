@@ -6,6 +6,17 @@ import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
+// Import the crypto getRandomValues shim (**BEFORE** the shims)
+import "react-native-get-random-values";
+
+// Import the the ethers shims (**BEFORE** ethers)
+import "@ethersproject/shims";
+
+// Import the ethers library
+import { ethers } from "ethers";
+import { useEffect } from "react";
+import * as WalletFunctions from "../../ethereum/loadWallet";
+
 export function AccountScreen(props) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
@@ -16,6 +27,19 @@ export function AccountScreen(props) {
             ? Dimensions.get("window")
             : Dimensions.get("screen");
     const navigation = useNavigation();
+    const [balance, setBalance] = useState("Loading");
+
+    useEffect(() => {
+        const fetchBal = async () => {
+            const wallet = await WalletFunctions.loadWalletFromPrivate();
+            const balance = await (
+                await WalletFunctions.getBalance(wallet)
+            ).toString();
+            setBalance(balance);
+        };
+
+        fetchBal();
+    }, []);
 
     const onLogoutPress = () => {
         Alert.alert(
@@ -156,7 +180,7 @@ export function AccountScreen(props) {
                         },
                     ]}
                 >
-                    Balance: {props.balance}
+                    Balance: {balance}
                 </Text>
                 <Text
                     style={[

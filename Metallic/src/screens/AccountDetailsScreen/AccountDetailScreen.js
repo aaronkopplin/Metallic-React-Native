@@ -4,12 +4,30 @@ import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as WalletFunctions from "../../ethereum/loadWallet";
+import { useEffect } from "react";
+import { Wallet } from "ethers";
 
 export function AccountDetailScreen(props) {
     const screenSize =
         Platform.OS === "web"
             ? Dimensions.get("window")
             : Dimensions.get("screen");
+    const [address, setAddress] = useState("Loading");
+    const [privateKey, setPrivateKey] = useState("Loading");
+    const [mnemonic, setMnemonic] = useState("Loading");
+
+    useEffect(() => {
+        const fetchBal = async () => {
+            const wallet = await WalletFunctions.loadWalletFromPrivate();
+            const storedMnemonic = await WalletFunctions.loadMnemonic();
+            setAddress(wallet.address);
+            setPrivateKey(wallet.privateKey);
+            setMnemonic(storedMnemonic);
+        };
+
+        fetchBal();
+    }, []);
 
     return (
         <View style={masterStyles.mainBackground}>
@@ -37,7 +55,7 @@ export function AccountDetailScreen(props) {
                         },
                     ]}
                 >
-                    address: {props.ethAccount.address}
+                    address: {address}
                 </Text>
                 <Text
                     style={[
@@ -48,7 +66,18 @@ export function AccountDetailScreen(props) {
                         },
                     ]}
                 >
-                    private Key: {props.ethAccount.privateKey}
+                    private Key: {privateKey}
+                </Text>
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        {
+                            paddingBottom: screenSize.height * 0.005,
+                            textAlign: "center",
+                        },
+                    ]}
+                >
+                    mnemonic: {mnemonic}
                 </Text>
             </View>
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>

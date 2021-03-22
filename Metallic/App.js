@@ -14,7 +14,6 @@ import { UserAccountScreen } from "./src/screens/UserAccountScreen/UserAccountSc
 import { UserSearchScreen } from "./src/screens/UserSearchScreen/UserSearchScreen";
 import { AccountDetailScreen } from "./src/screens/AccountDetailsScreen/AccountDetailScreen";
 import { masterStyles } from "./masterStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -131,8 +130,10 @@ function Tabs() {
 
 export default function App() {
     const [user, setUser] = useState(null);
-    const [ethAccount, setEthAccount] = useState(null);
-    const [balance, setBalance] = useState(null);
+    // const [ethAccount, setEthAccount] = useState(null);
+    // const [balance, setBalance] = useState("Loading");
+    // const [address, setAddress] = useState("Loading");
+    // const [mnemonic, setMnemonic] = useState("");
 
     useEffect(() => {
         const usersRef = firebase.firestore().collection("users");
@@ -152,66 +153,37 @@ export default function App() {
         });
     }, []);
 
-    const storeData = async (value) => {
-        try {
-            await AsyncStorage.setItem("@account", value);
-        } catch (e) {
-            // saving error
-        }
-    };
+    // async function InitAccount() {
+    //     const st
+    //     const newWallet = ethers.Wallet.fromMnemonic(
+    //         "panther chimney define cigar author moment holiday heart measure sugar flag degree"
+    //     );
+    //     console.log(newWallet.mnemonic.phrase);
+    //     storeData(newWallet.privateKey);
+    //     console.log(newWallet.address);
+    //     setEthAccount(newWallet);
+    //     setAddress(newWallet.address);
+    //     setMnemonic(newWallet.mnemonic.phrase);
 
-    const getData = async () => {
-        try {
-            const value = await AsyncStorage.getItem("@account");
-            return value;
-        } catch (e) {
-            // error reading value
-        }
-    };
+    //     const provider = new ethers.providers.InfuraProvider(
+    //         "ropsten",
+    //         "298080f1923540f19af74e5baa886001"
+    //     );
+    //     const b = await provider.getBalance(newWallet.address);
+    //     var bal = b.toString();
+    //     console.log("balance: " + b.toString());
+    //     bal =
+    //         (bal.length >= 18 ? bal.substring(0, bal.length - 18) : "0") +
+    //         "." +
+    //         bal.slice(-18);
+    //     bal = parseFloat(bal);
 
-    async function fetchOrCreateAccount() {
-        const storedPrivateKey = await getData();
-        if (storedPrivateKey == null) {
-            // no wallet was found, create a new one
-            const newWallet = ethers.Wallet.createRandom();
-            setEthAccount(newWallet);
-            storeData(newWallet.privateKey);
-        } else {
-            // there was an account found
-            console.log(storedPrivateKey);
-            const oldWallet = new ethers.Wallet(storedPrivateKey);
-            setEthAccount(oldWallet);
-        }
+    //     setBalance(bal.toString() + " eth");
+    // }
 
-        // const newWallet = ethers.Wallet.createRandom();
-        // storeData(newWallet.privateKey);
-        // console.log(newWallet.privateKey);
-        // setEthAccount(newWallet);
-
-        getBalance();
-    }
-
-    async function getBalance() {
-        const provider = new ethers.providers.InfuraProvider(
-            "mainnet",
-            "298080f1923540f19af74e5baa886001"
-        );
-        const b = await provider.getBalance(
-            "0xB1729e2F6520Aa813cE65626Fa45fffCE7f24E48"
-        );
-        var bal = b.toString();
-        bal =
-            (bal.length >= 18 ? bal.substring(0, bal.length - 18) : "0") +
-            "." +
-            bal.slice(-18);
-        bal = parseFloat(bal);
-
-        setBalance(bal.toString() + " eth");
-    }
-
-    useEffect(() => {
-        fetchOrCreateAccount();
-    }, []);
+    // useEffect(() => {
+    //     InitAccount();
+    // }, []);
 
     return (
         <NavigationContainer>
@@ -266,7 +238,6 @@ export default function App() {
                         />
                         <Stack.Screen
                             name="Payments"
-                            component={PaymentsScreen}
                             options={{
                                 headerStyle: {
                                     backgroundColor:
@@ -285,7 +256,9 @@ export default function App() {
                                     fontSize: 24,
                                 },
                             }}
-                        />
+                        >
+                            {(props) => <PaymentsScreen {...props} />}
+                        </Stack.Screen>
                         <Stack.Screen
                             name="Account"
                             options={{
@@ -307,9 +280,7 @@ export default function App() {
                                 },
                             }}
                         >
-                            {(props) => (
-                                <AccountScreen {...props} balance={balance} />
-                            )}
+                            {(props) => <AccountScreen {...props} />}
                         </Stack.Screen>
                         <Stack.Screen
                             name="AccountDetailScreen"
@@ -332,13 +303,7 @@ export default function App() {
                                 },
                             }}
                         >
-                            {(props) => (
-                                <AccountDetailScreen
-                                    {...props}
-                                    ethAccount={ethAccount}
-                                    balance={balance}
-                                />
-                            )}
+                            {(props) => <AccountDetailScreen {...props} />}
                         </Stack.Screen>
                         <Stack.Screen
                             name="UserAccountScreen"

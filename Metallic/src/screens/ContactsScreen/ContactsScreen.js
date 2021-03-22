@@ -64,8 +64,8 @@ export function ContactsScreen({ navigation }) {
                 }
             }
             getUser();
+
         }, []);
-       
 
         const Item = ({ title }) => (
             <View style={masterStyles.contactBar}>
