@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, Text, View, Dimensions, Platform, Alert } from "react-native";
+import { Image, Text, View, Dimensions, Platform, Alert, Button } from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
@@ -16,8 +16,11 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import * as WalletFunctions from "../../ethereum/loadWallet";
+import * as ImagePicker from 'expo-image-picker';
+import storage from '@react-native-firebase/storage';
+import 'firebase/storage';
 
-export function AccountScreen(props) {
+export function AccountScreen( props ) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
     const [userCreateDate, setCreateDate] = useState("");
@@ -40,6 +43,44 @@ export function AccountScreen(props) {
 
         fetchBal();
     }, []);
+    
+    const storageRef = firebase.storage().ref();
+    const [filePath, setFilePath] = useState({});
+ 
+    const onChooseImagePress = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync();
+    
+        if (!result.cancelled) {
+            let imageUri = result.uri
+            let imageName = result.fileName
+
+            console.log('base64 -> ', result.base64);
+            console.log('uri -> ', result.uri);
+            console.log('width -> ', result.width);
+            console.log('height -> ', result.height);
+            console.log('fileSize -> ', result.fileSize);
+            console.log('type -> ', result.type);
+            console.log('fileName -> ', result.fileName);
+            setFilePath(result);
+
+            uploadImage(imageUri, imageName);
+        }
+      };
+
+      const uploadImage = async (uri, name) => {
+        if( uri == null ) {
+            return null;
+          }
+/* 
+         const extension = filename.split('.').pop(); 
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension; */
+
+        firebase
+          .storage()
+          .ref(name)
+          .put(uri)
+      };
 
     const onLogoutPress = () => {
         Alert.alert(
@@ -137,7 +178,7 @@ export function AccountScreen(props) {
                     style={[masterStyles.logo, { borderRadius: 50 }]}
                     source={require("../../../assets/Default_Img.png")}
                 />
-
+                <Button title="Choose image..." onPress={onChooseImagePress} />
                 <Text
                     style={[
                         masterStyles.headings,
