@@ -23,3 +23,9 @@ npm install firebase
 npm install ethers  
 
 npm install --save react-native-get-random-values -- or -- expo install react-native-get-random-values  
+
+npm install expo-image-picker
+
+npm install @react-native-firebase/storage
+
+npm install @firebase/storage
