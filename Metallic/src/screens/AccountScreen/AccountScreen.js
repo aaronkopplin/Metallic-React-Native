@@ -6,7 +6,7 @@ import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import * as ImagePicker from 'expo-image-picker';
-import storage from '@react-native-firebase/storage';
+//import storage from '@react-native-firebase/storage';
 import 'firebase/storage';
 
 export function AccountScreen( props ) {
@@ -16,15 +16,15 @@ export function AccountScreen( props ) {
     const [userName, setUserName] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     
-    const storageRef = firebase.storage().ref();
-    const [filePath, setFilePath] = useState({});
+    // const storageRef = firebase.storage().ref();
+    //const [filePath, setFilePath] = useState({});
  
-    const onChooseImagePress = async () => {
+     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
     
         if (!result.cancelled) {
             let imageUri = result.uri
-            let imageName = result.fileName
+            let imageName = userName + 'ProfileImage';
 
             console.log('base64 -> ', result.base64);
             console.log('uri -> ', result.uri);
@@ -32,27 +32,13 @@ export function AccountScreen( props ) {
             console.log('height -> ', result.height);
             console.log('fileSize -> ', result.fileSize);
             console.log('type -> ', result.type);
-            console.log('fileName -> ', result.fileName);
-            setFilePath(result);
 
-            uploadImage(imageUri, imageName);
-        }
-      };
-
-      const uploadImage = async (uri, name) => {
-        if( uri == null ) {
-            return null;
-          }
-/* 
-         const extension = filename.split('.').pop(); 
-        const name = filename.split('.').slice(0, -1).join('.');
-        filename = name + Date.now() + '.' + extension; */
-
-        firebase
-          .storage()
-          .ref(name)
-          .put(uri)
-      };
+            const response = await fetch(result.uri)
+            const blob = await response.blob();
+            var ref = firebase.storage().ref().child(imageName);
+            ref.put(blob)
+        }; 
+    };
 
     const onLogoutPress = () => {
         Alert.alert(
@@ -115,7 +101,7 @@ export function AccountScreen( props ) {
             });
         }
         getUser(db, uid);
-    }
+    };
 
     return (
         <View style={masterStyles.mainBackground}>
@@ -142,7 +128,7 @@ export function AccountScreen( props ) {
                 source={require("../../../assets/Default_Img.png")}
             />
 
-<Button title="Choose image..." onPress={onChooseImagePress} />
+            <Button title="Choose image..." onPress={onChooseImagePress} />
 
             <Text style={[masterStyles.headings, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{userName}</Text>
             <Text style={[masterStyles.headingsSmall, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>Name: {userFullName}</Text>
