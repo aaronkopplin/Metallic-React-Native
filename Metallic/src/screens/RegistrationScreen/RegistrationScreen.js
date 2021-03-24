@@ -117,7 +117,7 @@ export default function RegistrationScreen({ navigation }) {
                 alert(error);
             })
             .then(() => {
-                console.log("Hoes mad");
+                // console.log("Hoes mad");
                 login(user_email, user_password);
             });
     };

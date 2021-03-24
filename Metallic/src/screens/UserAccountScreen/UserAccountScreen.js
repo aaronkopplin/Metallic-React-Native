@@ -23,11 +23,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
 import { useEffect } from "react/cjs/react.development";
 
-export function UserAccountScreen({route}) {
-
-    const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
-    const {email, fullName, userName} = route.params;
+export function UserAccountScreen({ route, navigation }) {
+    // const [userName, setUserName] = useState("");
+    // const [userFullName, setFullName] = useState("");
+    // const [userEmail, setEmail] = useState("");
+    const screenSize =
+        Platform.OS === "web"
+            ? Dimensions.get("window")
+            : Dimensions.get("screen");
+    const { email, fullName, userName, address } = route.params;
     const user = firebase.auth().currentUser;
+    
 
     const getContacts = async () => {
         const userRef = firebase.firestore().collection("users").doc(user.uid);
@@ -226,10 +232,11 @@ export function UserAccountScreen({route}) {
                                 email: email,
                                 fullName: fullName,
                                 userName: userName,
+                                address: address
                                 //uid: uid
                             });
                         }}
-                        text="Send/Receive Payment"
+                        text="Send/Request Payment"
                         color="#1e1c21"
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}

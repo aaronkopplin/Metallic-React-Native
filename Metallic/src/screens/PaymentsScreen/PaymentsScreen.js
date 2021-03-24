@@ -30,7 +30,7 @@ export function PaymentsScreen({ route }) {
             : Dimensions.get("screen");
     const [amountInput, changeAmountInput] = useState(0.0);
     const [available, changeAvailable] = useState(0.0);
-    //const { email, fullName, userName } = route.params;
+    const { email, fullName, userName, address } = route.params;
 
     const userImageSize = Platform.OS === "web" ? 75 : 50;
     var sendingMessage = "";
@@ -42,6 +42,8 @@ export function PaymentsScreen({ route }) {
 
     const navigation = useNavigation();
 
+    const [chatLog, updateChatLog] = useState([]);
+
     useEffect(() => {
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
@@ -51,8 +53,73 @@ export function PaymentsScreen({ route }) {
             changeAvailable(parseFloat(balance));
         };
 
+        // const setChats = async() => {
+        //     const userRef = firebase.firestore().collection("users").doc(user.uid);
+        //     const chatsRef = userRef.collection("chats");
+
+        //     chatsRef.onSnapshot(
+        //       (querySnapshot).forEach(doc => {
+                  
+
+        //       },
+        //       (error) => {
+        //           console.log(error);
+        //       }
+        //   );
+        // };
+
         fetchBal();
     }, []);
+
+    
+  const user = firebase.auth().currentUser;
+  const addChat = () => {
+    const userRef = firebase.firestore().collection("users").doc(user.uid);
+    const chatsRef = userRef.collection("chats");
+
+    const data = {
+        email,
+        fullName,
+        userName,
+        address,
+        chatLog,
+
+    };
+
+    chatsRef.add(data);
+  };
+
+  const updateLog = () => {
+      const userRef = firebase.firestore().collection("users").doc(user.uid);
+      const chatsRef = userRef.collection("chats");
+
+      chatsRef.doc(userName).update({
+        "chatLog" : chatLog
+      });
+  }
+
+  // async function updateLog() {
+  //   const userRef = firebase.firestore().collection("users").doc(user.uid);
+  //   const chatsRef = userRef.collection("chats");
+  //   chatsRef.doc(userName).update({
+  //     "chatLog" : chatLog
+  //   })
+  //   var users = datab.collection("users");
+  //   const snapshot = await chatsRef.where("userName", "==", userName).get();
+
+  //   if (snapshot.empty) {
+  //       alert("no matching");
+  //       return;
+  //   }
+  //   snapshot.forEach((doc) => {
+  //       // setFullName(doc.data().fullName);
+  //       // setEmail(doc.data().email);
+  //       // setCreateDate(user.metadata.creationTime);
+  //       // setUserName(doc.data().userName);
+  //       doc.update
+  //       return doc;
+  //   });
+// }
 
     return (
         <KeyboardAvoidingView
@@ -122,6 +189,11 @@ export function PaymentsScreen({ route }) {
                     }}
                 >
                     <Text>Display Chat</Text>
+                    <Text>{email}</Text>
+                    <Text>{fullName}</Text>
+                    <Text>{userName}</Text>
+                    <Text>{address}</Text>
+                    {/* <Text>{}</Text> */}
                 </View>
                 <TextInput
                     style={[
@@ -255,17 +327,17 @@ export function PaymentsScreen({ route }) {
                     >
                         <CustomButton // send button
                             onPress={() => {
-                                if (amountInput == 0.0) {
-                                    if (Platform.OS === "web") {
-                                        window.alert(
-                                            "Trying to send 0.0ETH or invalid input"
-                                        );
-                                    } else {
-                                        alert(
-                                            "Trying to send 0.0ETH or invalid input"
-                                        );
-                                    }
-                                } else {
+                                // if (amountInput == 0.0) {
+                                //     if (Platform.OS === "web") {
+                                //         window.alert(
+                                //             "Trying to send 0.0ETH or invalid input"
+                                //         );
+                                //     } else {
+                                //         alert(
+                                //             "Trying to send 0.0ETH or invalid input"
+                                //         );
+                                //     }
+                                // } else {
                                     if (Platform.OS === "web") {
                                         // web
                                         if (
@@ -282,7 +354,8 @@ export function PaymentsScreen({ route }) {
                                                         "Trying to send your full balance amount.\nDo you wish to continue?"
                                                     )
                                                 ) {
-                                                    setAmountTI("");
+                                                            // add chat if one doesn't exist
+                                                            // update chat array if it does                                                    setAmountTI("");
                                                     setMemoTI("");
 
                                                     changeAvailable(
@@ -295,9 +368,13 @@ export function PaymentsScreen({ route }) {
                                                         "\nSending: " +
                                                         amountInput +
                                                         "ETH";
+
+                                                    
                                                     alert(sendingMessage);
                                                 }
                                             } else {
+                                                            // add chat if one doesn't exist
+                                                            // update chat array if it does
                                                 setAmountTI("");
                                                 setMemoTI("");
 
@@ -336,6 +413,9 @@ export function PaymentsScreen({ route }) {
                                                                         text:
                                                                             "Yes",
                                                                         onPress: () => {
+                                                            // add chat if one doesn't exist
+                                                            // update chat array if it does
+                                                                          
                                                                             setAmountTI(
                                                                                 ""
                                                                             );
@@ -393,6 +473,10 @@ export function PaymentsScreen({ route }) {
                                                                 "\nSending: " +
                                                                 amountInput +
                                                                 "ETH";
+                                                            
+                                                            // add chat if one doesn't exist
+                                                            // update chat array if it does
+                                                            
                                                             alert(
                                                                 sendingMessage
                                                             );
@@ -412,14 +496,14 @@ export function PaymentsScreen({ route }) {
                                         );
                                     }
                                 }
-                            }}
+                            }
                             text="Send"
                             color="#1e1c21"
                             width={(screenSize.width - 50) / 2}
                             height={screenSize.height * 0.045}
                         />
 
-                        <View style={{ width: 10 }} />
+                        {/* <View style={{ width: 10 }} />
 
                         <CustomButton // request button
                             onPress={() => {
@@ -495,7 +579,7 @@ export function PaymentsScreen({ route }) {
                             color="#1e1c21"
                             width={(screenSize.width - 50) / 2}
                             height={screenSize.height * 0.045}
-                        />
+                        /> */}
                     </View>
                 </View>
             </View>
