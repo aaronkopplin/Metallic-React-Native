@@ -499,7 +499,8 @@ export function PaymentsScreen({ route }) {
                             }
                             text="Send"
                             color="#1e1c21"
-                            width={(screenSize.width - 50) / 2}
+                            // width={(screenSize.width - 50) / 2}
+                            width={screenSize.width - 40}
                             height={screenSize.height * 0.045}
                         />
 

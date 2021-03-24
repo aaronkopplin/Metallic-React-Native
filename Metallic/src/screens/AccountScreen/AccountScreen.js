@@ -16,9 +16,9 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import * as WalletFunctions from "../../ethereum/loadWallet";
-import * as ImagePicker from 'expo-image-picker';
-import storage from '@react-native-firebase/storage';
-import 'firebase/storage';
+// import * as ImagePicker from 'expo-image-picker';
+// import storage from '@react-native-firebase/storage';
+// import 'firebase/storage';
 
 export function AccountScreen( props ) {
     const [userFullName, setFullName] = useState("");
@@ -41,46 +41,55 @@ export function AccountScreen( props ) {
             setBalance(balance);
         };
 
+        // (async () => {
+        //     if (Platform.OS !== 'web') {
+        //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        //       if (status !== 'granted') {
+        //         alert('Sorry, we need camera roll permissions to make this work!');
+        //       }
+        //     }
+        //   })();
+
         fetchBal();
     }, []);
     
-    const storageRef = firebase.storage().ref();
-    const [filePath, setFilePath] = useState({});
+    // const storageRef = firebase.storage().ref();
+    // const [filePath, setFilePath] = useState({});
  
-    const onChooseImagePress = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync();
+    // const onChooseImagePress = async () => {
+    //     let result = await ImagePicker.launchImageLibraryAsync();
     
-        if (!result.cancelled) {
-            let imageUri = result.uri
-            let imageName = result.fileName
+    //     if (!result.cancelled) {
+    //         let imageUri = result.uri
+    //         let imageName = result.fileName
 
-            console.log('base64 -> ', result.base64);
-            console.log('uri -> ', result.uri);
-            console.log('width -> ', result.width);
-            console.log('height -> ', result.height);
-            console.log('fileSize -> ', result.fileSize);
-            console.log('type -> ', result.type);
-            console.log('fileName -> ', result.fileName);
-            setFilePath(result);
+    //         console.log('base64 -> ', result.base64);
+    //         console.log('uri -> ', result.uri);
+    //         console.log('width -> ', result.width);
+    //         console.log('height -> ', result.height);
+    //         console.log('fileSize -> ', result.fileSize);
+    //         console.log('type -> ', result.type);
+    //         console.log('fileName -> ', result.fileName);
+    //         setFilePath(result);
 
-            uploadImage(imageUri, imageName);
-        }
-      };
+    //         uploadImage(imageUri, imageName);
+    //     }
+    //   };
 
-      const uploadImage = async (uri, name) => {
-        if( uri == null ) {
-            return null;
-          }
-/* 
-         const extension = filename.split('.').pop(); 
-        const name = filename.split('.').slice(0, -1).join('.');
-        filename = name + Date.now() + '.' + extension; */
+//       const uploadImage = async (uri, name) => {
+//         if( uri == null ) {
+//             return null;
+//           }
+// /* 
+//          const extension = filename.split('.').pop(); 
+//         const name = filename.split('.').slice(0, -1).join('.');
+//         filename = name + Date.now() + '.' + extension; */
 
-        firebase
-          .storage()
-          .ref(name)
-          .put(uri)
-      };
+//         firebase
+//           .storage()
+//           .ref(name)
+//           .put(uri)
+//       };
 
     const onLogoutPress = () => {
         Alert.alert(
@@ -178,7 +187,7 @@ export function AccountScreen( props ) {
                     style={[masterStyles.logo, { borderRadius: 50 }]}
                     source={require("../../../assets/Default_Img.png")}
                 />
-                <Button title="Choose image..." onPress={onChooseImagePress} />
+                {/* <Button title="Choose image..." onPress={onChooseImagePress} /> */}
                 <Text
                     style={[
                         masterStyles.headings,
