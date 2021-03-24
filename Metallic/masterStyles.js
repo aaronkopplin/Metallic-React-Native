@@ -28,6 +28,11 @@ export const masterStyles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
   },
+  headingsSmallNotBold: {
+    color: '#79777d',
+    fontWeight: 'normal',
+    fontSize: 20,
+  },
   input: {
     fontSize: 18,
   },
@@ -109,5 +114,13 @@ export const masterStyles = StyleSheet.create({
   entityText: {
     fontSize: 20,
     color: "#333333",
+  },
+  contactBar: {
+    height: 40, 
+    paddingHorizontal: 10, 
+    paddingVertical: 5, 
+    marginVertical: 8, 
+    backgroundColor: '#fff', 
+    borderRadius: 4,
   },
 });
