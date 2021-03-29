@@ -7,6 +7,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import * as WalletFunctions from "../../ethereum/loadWallet";
 import { useEffect } from "react";
 import { Wallet } from "ethers";
+import QRCode from "react-native-qrcode-svg";
 
 export function AccountDetailScreen(props) {
     const screenSize =
@@ -79,6 +80,7 @@ export function AccountDetailScreen(props) {
                 >
                     mnemonic: {mnemonic}
                 </Text>
+                <QRCode value={address} size={screenSize.width / 2} />
             </View>
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
         </View>
