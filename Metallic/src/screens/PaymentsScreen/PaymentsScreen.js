@@ -20,7 +20,7 @@ import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 // import { color } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
-import * as WalletFunctions from "../../ethereum/loadWallet";
+import * as WalletFunctions from "../../ethereum/walletFunctions";
 import { useEffect } from "react";
 
 export function PaymentsScreen({ route }) {

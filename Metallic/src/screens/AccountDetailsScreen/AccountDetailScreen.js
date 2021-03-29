@@ -1,12 +1,22 @@
 import React, { useState } from "react";
-import { Image, Text, View, Dimensions, Platform, Alert } from "react-native";
+import {
+    Image,
+    Text,
+    View,
+    Dimensions,
+    Platform,
+    Alert,
+    Button,
+} from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import * as WalletFunctions from "../../ethereum/loadWallet";
+import * as WalletFunctions from "../../ethereum/walletFunctions";
 import { useEffect } from "react";
 import { Wallet } from "ethers";
+import QRCode from "react-native-qrcode-svg";
+import { useNavigation } from "@react-navigation/native";
 
 export function AccountDetailScreen(props) {
     const screenSize =
@@ -16,6 +26,7 @@ export function AccountDetailScreen(props) {
     const [address, setAddress] = useState("Loading");
     const [privateKey, setPrivateKey] = useState("Loading");
     const [mnemonic, setMnemonic] = useState("Loading");
+    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchBal = async () => {
@@ -79,6 +90,30 @@ export function AccountDetailScreen(props) {
                 >
                     mnemonic: {mnemonic}
                 </Text>
+                <QRCode value={address} size={screenSize.width / 2} />
+                <CustomButton
+                    onPress={() => {
+                        Alert.alert(
+                            "Warning",
+                            "Recovering another account will erase the account data from this device." +
+                                "\n\nDO NOT proceed unless you have written down the mnemonic for this account and stored it in a safe location." +
+                                "\n\nThe current mnemonic is:\n\n" +
+                                mnemonic,
+                            [
+                                {
+                                    text: "Ok",
+                                    onPress: () => {},
+                                    style: "Cancel",
+                                },
+                            ]
+                        );
+                        navigation.navigate("AccountRecoveryScreen");
+                    }}
+                    text="Recover Account From Mnemonic"
+                    color="#1e1c21"
+                    width={screenSize.width - 80}
+                    height={screenSize.height / 20}
+                ></CustomButton>
             </View>
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
         </View>
