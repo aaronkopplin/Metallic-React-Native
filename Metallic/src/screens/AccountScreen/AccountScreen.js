@@ -6,7 +6,6 @@ import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import * as ImagePicker from 'expo-image-picker';
-//import storage from '@react-native-firebase/storage';
 import 'firebase/storage';
 
 export function AccountScreen( props ) {
@@ -15,9 +14,6 @@ export function AccountScreen( props ) {
     const [userCreateDate, setCreateDate] = useState("");
     const [userName, setUserName] = useState("");
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
-    
-    // const storageRef = firebase.storage().ref();
-    //const [filePath, setFilePath] = useState({});
  
      const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
