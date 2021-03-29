@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Image, Text, View, Dimensions, Platform, Alert, Button } from "react-native";
+import {
+    Image,
+    Text,
+    View,
+    Dimensions,
+    Platform,
+    Alert,
+    Button,
+} from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
@@ -15,12 +23,12 @@ import "@ethersproject/shims";
 // Import the ethers library
 import { ethers } from "ethers";
 import { useEffect } from "react";
-import * as WalletFunctions from "../../ethereum/loadWallet";
-import * as ImagePicker from 'expo-image-picker';
-import storage from '@react-native-firebase/storage';
-import 'firebase/storage';
+import * as WalletFunctions from "../../ethereum/walletFunctions";
+import * as ImagePicker from "expo-image-picker";
+import storage from "@react-native-firebase/storage";
+import "firebase/storage";
 
-export function AccountScreen( props ) {
+export function AccountScreen(props) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
     const [userCreateDate, setCreateDate] = useState("");
@@ -43,46 +51,44 @@ export function AccountScreen( props ) {
 
         fetchBal();
     }, []);
-    
+
     const storageRef = firebase.storage().ref();
     const [filePath, setFilePath] = useState({});
- 
+
     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
-    
-        if (!result.cancelled) {
-            let imageUri = result.uri
-            let imageName = result.fileName
 
-            console.log('base64 -> ', result.base64);
-            console.log('uri -> ', result.uri);
-            console.log('width -> ', result.width);
-            console.log('height -> ', result.height);
-            console.log('fileSize -> ', result.fileSize);
-            console.log('type -> ', result.type);
-            console.log('fileName -> ', result.fileName);
+        if (!result.cancelled) {
+            let imageUri = result.uri;
+            let imageName = result.fileName;
+
+            console.log("base64 -> ", result.base64);
+            console.log("uri -> ", result.uri);
+            console.log("width -> ", result.width);
+            console.log("height -> ", result.height);
+            console.log("fileSize -> ", result.fileSize);
+            console.log("type -> ", result.type);
+            console.log("fileName -> ", result.fileName);
             setFilePath(result);
 
             uploadImage(imageUri, imageName);
         }
-      };
+    };
 
-      const uploadImage = async (uri, name) => {
-        if( uri == null ) {
+    const uploadImage = async (uri, name) => {
+        if (uri == null) {
             return null;
-          }
-/* 
+        }
+        /* 
          const extension = filename.split('.').pop(); 
         const name = filename.split('.').slice(0, -1).join('.');
         filename = name + Date.now() + '.' + extension; */
 
-        firebase
-          .storage()
-          .ref(name)
-          .put(uri)
-      };
+        firebase.storage().ref(name).put(uri);
+    };
 
     const onLogoutPress = () => {
+        console.log("logout?");
         Alert.alert(
             "Logout",
             "Are you sure you want to logout?",
@@ -234,14 +240,6 @@ export function AccountScreen( props ) {
                 >
                     Account Age:
                 </Text>
-                
-                <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
-                >
                 <CustomButton
                     onPress={() => {
                         navigation.navigate("AccountDetailScreen");
@@ -251,9 +249,6 @@ export function AccountScreen( props ) {
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
                 ></CustomButton>
-                </View>
-
-                <View style={{ zIndex: 2 }}>
                 <CustomButton
                     onPress={
                         Platform.OS === "web" ? onLogoutPressWeb : onLogoutPress
@@ -263,8 +258,8 @@ export function AccountScreen( props ) {
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
                 />
-                </View>
-                
+
+                <View style={{ zIndex: 2 }}></View>
             </View>
             <View
                 style={{

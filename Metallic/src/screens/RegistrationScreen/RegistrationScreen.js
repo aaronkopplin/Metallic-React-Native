@@ -11,7 +11,7 @@ import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -35,20 +35,25 @@ export default function RegistrationScreen({ navigation }) {
             ? Dimensions.get("window")
             : Dimensions.get("screen");
     const onFooterLinkPress = () => {
-        console.log("Already Have Account Pressed");
         navigation.navigate("Login");
     };
 
-    const storeData = async (key, value) => {
-        try {
-            await AsyncStorage.setItem(key, value);
-        } catch (e) {
-            // saving error
-        }
-    };
+    // const storeData = async (key, value) => {
+    //     try {
+    //         var user = firebase.auth().currentUser;
+    //         var doc = await firebase
+    //             .firestore()
+    //             .collection("users")
+    //             .doc(user.uid)
+    //             .get();
+    //         var userName = doc.data().userName;
+    //         await AsyncStorage.setItem(userName + key, value);
+    //     } catch (e) {
+    //         // saving error
+    //     }
+    // };
 
     const onRegisterPress = async () => {
-        console.log("Create Account Pressed.");
         const db = firebase.firestore();
 
         if (user_password !== confirmPassword) {
@@ -66,11 +71,7 @@ export default function RegistrationScreen({ navigation }) {
             return;
         }
 
-        // create the eth account
         const newWallet = ethers.Wallet.createRandom();
-        console.log("created new account from random");
-        storeData("mnemonic", newWallet.mnemonic.phrase);
-        storeData("privateKey", newWallet.privateKey);
 
         firebase
             .auth()
@@ -114,11 +115,11 @@ export default function RegistrationScreen({ navigation }) {
                 }
             })
             .catch((error) => {
+                console.log(error);
                 alert(error);
             })
             .then(() => {
-                console.log("Hoes mad");
-                login(user_email, user_password);
+                login(user_email, user_password, newWallet);
             });
     };
 

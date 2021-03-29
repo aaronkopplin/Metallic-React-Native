@@ -14,6 +14,7 @@ import { UserAccountScreen } from "./src/screens/UserAccountScreen/UserAccountSc
 import { UserSearchScreen } from "./src/screens/UserSearchScreen/UserSearchScreen";
 import { AccountDetailScreen } from "./src/screens/AccountDetailsScreen/AccountDetailScreen";
 import { masterStyles } from "./masterStyles";
+import { AccountRecoveryScreen } from "./src/screens/AccountRecoveryScreen/AccountRecoverScreen";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -304,6 +305,29 @@ export default function App() {
                             }}
                         >
                             {(props) => <AccountDetailScreen {...props} />}
+                        </Stack.Screen>
+                        <Stack.Screen
+                            name="AccountRecoveryScreen"
+                            options={{
+                                headerStyle: {
+                                    backgroundColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
+                                    borderColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0,
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: "normal",
+                                    fontSize: 24,
+                                },
+                            }}
+                        >
+                            {(props) => <AccountRecoveryScreen {...props} />}
                         </Stack.Screen>
                         <Stack.Screen
                             name="UserAccountScreen"
