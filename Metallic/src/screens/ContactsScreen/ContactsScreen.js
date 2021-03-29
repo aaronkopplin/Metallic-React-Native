@@ -78,7 +78,8 @@ export function ContactsScreen({ navigation }) {
                             navigation.navigate('UserAccountScreen',{
                                 email: c.email,
                                 fullName: c.fullName,
-                                userName: c.userName
+                                userName: c.userName,
+                                address: c.address,
                             })
                         }})}}>
                     <Text style={masterStyles.headings}>{title}</Text>

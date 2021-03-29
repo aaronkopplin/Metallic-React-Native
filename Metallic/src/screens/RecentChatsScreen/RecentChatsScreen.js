@@ -24,8 +24,7 @@ export function RecentChatsScreen({ navigation }) {
                         email: currUser.email,
                         fullName: currUser.fullName,
                         userName: currUser.userName,
-                        address: currUser.address
-                        //uid: uid
+                        address: currUser.address,
                     });
                 }}
             >

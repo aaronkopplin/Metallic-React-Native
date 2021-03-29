@@ -57,7 +57,7 @@ export function UserSearchScreen(props) {
                     console.log(error);
                 }
             );
-    }, [users]);
+    });
 
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {

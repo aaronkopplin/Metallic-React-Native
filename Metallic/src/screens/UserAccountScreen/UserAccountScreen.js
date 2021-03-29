@@ -40,14 +40,15 @@ export function UserAccountScreen({ route }) {
         async function getUser(dbRef, name) {
             var contacts = dbRef.collection("Contacts");
             const snapshot = await contacts.where("userName", "==", name).get();
-
             // Already a contact?
             if (snapshot.empty) {
                 const data = {
                     email: email,
                     fullName: fullName,
                     userName: userName,
+                    address: address,
                 };
+
                 ContactsRef.doc(userName).set(data);
                 console.log("Contact Added");
                 return;
@@ -233,8 +234,7 @@ export function UserAccountScreen({ route }) {
                                 email: email,
                                 fullName: fullName,
                                 userName: userName,
-                                address: address
-                                //uid: uid
+                                address: address,
                             });
                         }}
                         text="Send/Request Payment"
