@@ -13,21 +13,22 @@ export function AccountScreen( props ) {
     const [userEmail, setEmail] = useState("");
     const [userCreateDate, setCreateDate] = useState("");
     const [userName, setUserName] = useState("");
+    const [imageUrl, setImageUrl] = useState(undefined);
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
+
+    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    ref.getDownloadURL()
+        .then( (url) => {setImageUrl(url)})
+
+/*     if (imageUrl == null){
+        setImageUrl("../../../assets/Default_Img.png")
+    } */
  
      const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
     
         if (!result.cancelled) {
-            let imageUri = result.uri
             let imageName = userName + 'ProfileImage';
-
-            console.log('base64 -> ', result.base64);
-            console.log('uri -> ', result.uri);
-            console.log('width -> ', result.width);
-            console.log('height -> ', result.height);
-            console.log('fileSize -> ', result.fileSize);
-            console.log('type -> ', result.type);
 
             const response = await fetch(result.uri)
             const blob = await response.blob();
@@ -121,7 +122,8 @@ export function AccountScreen( props ) {
             
             <Image
                 style={[masterStyles.logo, {borderRadius: 50}]} 
-                source={require("../../../assets/Default_Img.png")}
+                //source={require("../../../assets/Default_Img.png")}
+                source={{ uri: imageUrl }}
             />
 
             <Button title="Choose image..." onPress={onChooseImagePress} />
