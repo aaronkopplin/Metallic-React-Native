@@ -59,7 +59,7 @@ export function PaymentsScreen({ route }) {
 
         //     chatsRef.onSnapshot(
         //       (querySnapshot).forEach(doc => {
-                  
+
 
         //       },
         //       (error) => {
@@ -71,55 +71,55 @@ export function PaymentsScreen({ route }) {
         fetchBal();
     }, []);
 
-    
-  const user = firebase.auth().currentUser;
-  const addChat = () => {
-    const userRef = firebase.firestore().collection("users").doc(user.uid);
-    const chatsRef = userRef.collection("chats");
 
-    const data = {
-        email,
-        fullName,
-        userName,
-        address,
-        chatLog,
+    const user = firebase.auth().currentUser;
+    const addChat = () => {
+        const userRef = firebase.firestore().collection("users").doc(user.uid);
+        const chatsRef = userRef.collection("chats");
 
+        const data = {
+            email,
+            fullName,
+            userName,
+            address,
+            chatLog,
+
+        };
+
+        chatsRef.add(data);
     };
 
-    chatsRef.add(data);
-  };
+    const updateLog = () => {
+        const userRef = firebase.firestore().collection("users").doc(user.uid);
+        const chatsRef = userRef.collection("chats");
 
-  const updateLog = () => {
-      const userRef = firebase.firestore().collection("users").doc(user.uid);
-      const chatsRef = userRef.collection("chats");
+        chatsRef.doc(userName).update({
+            "chatLog": chatLog
+        });
+    }
 
-      chatsRef.doc(userName).update({
-        "chatLog" : chatLog
-      });
-  }
+    // async function updateLog() {
+    //   const userRef = firebase.firestore().collection("users").doc(user.uid);
+    //   const chatsRef = userRef.collection("chats");
+    //   chatsRef.doc(userName).update({
+    //     "chatLog" : chatLog
+    //   })
+    //   var users = datab.collection("users");
+    //   const snapshot = await chatsRef.where("userName", "==", userName).get();
 
-  // async function updateLog() {
-  //   const userRef = firebase.firestore().collection("users").doc(user.uid);
-  //   const chatsRef = userRef.collection("chats");
-  //   chatsRef.doc(userName).update({
-  //     "chatLog" : chatLog
-  //   })
-  //   var users = datab.collection("users");
-  //   const snapshot = await chatsRef.where("userName", "==", userName).get();
-
-  //   if (snapshot.empty) {
-  //       alert("no matching");
-  //       return;
-  //   }
-  //   snapshot.forEach((doc) => {
-  //       // setFullName(doc.data().fullName);
-  //       // setEmail(doc.data().email);
-  //       // setCreateDate(user.metadata.creationTime);
-  //       // setUserName(doc.data().userName);
-  //       doc.update
-  //       return doc;
-  //   });
-// }
+    //   if (snapshot.empty) {
+    //       alert("no matching");
+    //       return;
+    //   }
+    //   snapshot.forEach((doc) => {
+    //       // setFullName(doc.data().fullName);
+    //       // setEmail(doc.data().email);
+    //       // setCreateDate(user.metadata.creationTime);
+    //       // setUserName(doc.data().userName);
+    //       doc.update
+    //       return doc;
+    //   });
+    // }
 
     return (
         <KeyboardAvoidingView
@@ -128,8 +128,8 @@ export function PaymentsScreen({ route }) {
                 Platform.OS === "ios"
                     ? "position"
                     : "height" || Platform.OS === "android"
-                    ? "position"
-                    : "height"
+                        ? "position"
+                        : "height"
             }
             style={{
                 backgroundColor: "#1e1c21",
@@ -182,8 +182,8 @@ export function PaymentsScreen({ route }) {
                             Platform.OS === "web"
                                 ? screenSize.height / 1.4 - 160
                                 : Platform.OS === "android"
-                                ? screenSize.height / 1.54 - 140
-                                : screenSize.height / 1.54 - 120,
+                                    ? screenSize.height / 1.54 - 140
+                                    : screenSize.height / 1.54 - 120,
                         alignItems: "center",
                         justifyContent: "center",
                     }}
@@ -338,30 +338,98 @@ export function PaymentsScreen({ route }) {
                                 //         );
                                 //     }
                                 // } else {
-                                    if (Platform.OS === "web") {
-                                        // web
-                                        if (
-                                            window.confirm(
-                                                "You are trying to send ETH\nDo you wish to continue?"
-                                            )
-                                        ) {
-                                            if (
-                                                available == amountInput &&
-                                                available > 0.0
-                                            ) {
-                                                if (
-                                                    window.confirm(
-                                                        "Trying to send your full balance amount.\nDo you wish to continue?"
-                                                    )
-                                                ) {
-                                                            // add chat if one doesn't exist
-                                                            // update chat array if it does                                                    setAmountTI("");
+                                if (Platform.OS === "web") {
+                                    // web
+                                    if (window.confirm("You are trying to send ETH\nDo you wish to continue?")) {
+                                        if (available == amountInput && available > 0.0) {
+                                            if (window.confirm("Trying to send your full balance amount.\nDo you wish to continue?")) {
+                                                // add chat if one doesn't exist
+                                                // update chat array if it does                                                    setAmountTI("");
+                                                setMemoTI("");
+
+                                                changeAvailable(available - amountInput);
+                                                changeAmountInput(0.0);
+                                                sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
+
+                                                alert(sendingMessage);
+                                            }
+                                        } else {
+                                            // add chat if one doesn't exist
+                                            // update chat array if it does
+                                            setAmountTI("");
+                                            setMemoTI("");
+
+                                            changeAvailable(available - amountInput);
+                                            changeAmountInput(0.0);
+                                            sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
+                                            alert(sendingMessage);
+                                        }
+                                    }
+                                } else {
+                                    // mobile
+                                    Alert.alert(
+                                        "You are trying to send ETH",
+                                        "Do you wish to continue?",
+                                        [{
+                                            text: "Yes",
+                                            onPress: () => {
+                                                if (available == amountInput && available > 0.0) {
+                                                    Alert.alert(
+                                                        "Trying to send your full balance amount.",
+                                                        "Do you wish to continue?",
+                                                        [{
+                                                            text: "Yes",
+                                                            onPress: () => {
+                                                                // add chat if one doesn't exist
+                                                                // update chat array if it does
+
+                                                                setAmountTI("");
+                                                                setMemoTI("");
+
+                                                                changeAvailable(
+                                                                    available -
+                                                                    amountInput
+                                                                );
+                                                                changeAmountInput(
+                                                                    0.0
+                                                                );
+                                                                sendingMessage =
+                                                                    "Message: " +
+                                                                    memo +
+                                                                    "\nSending: " +
+                                                                    amountInput +
+                                                                    "ETH";
+                                                                alert(
+                                                                    sendingMessage
+                                                                );
+                                                            },
+                                                        },
+                                                        {
+                                                            text:
+                                                                "No",
+                                                            onPress: () =>
+                                                                console.log(
+                                                                    "Cancel Pressed"
+                                                                ),
+                                                            style:
+                                                                "cancel",
+                                                        },
+                                                        ],
+                                                        {
+                                                            cancelable: true,
+                                                        }
+                                                    );
+                                                } else {
+                                                    setAmountTI("");
                                                     setMemoTI("");
 
                                                     changeAvailable(
-                                                        available - amountInput
+                                                        available -
+                                                        amountInput
                                                     );
-                                                    changeAmountInput(0.0);
+                                                    changeAmountInput(
+                                                        0.0
+                                                    );
                                                     sendingMessage =
                                                         "Message: " +
                                                         memo +
@@ -369,133 +437,28 @@ export function PaymentsScreen({ route }) {
                                                         amountInput +
                                                         "ETH";
 
-                                                    
-                                                    alert(sendingMessage);
+                                                    // add chat if one doesn't exist
+                                                    // update chat array if it does
+
+                                                    alert(
+                                                        sendingMessage
+                                                    );
                                                 }
-                                            } else {
-                                                            // add chat if one doesn't exist
-                                                            // update chat array if it does
-                                                setAmountTI("");
-                                                setMemoTI("");
-
-                                                changeAvailable(
-                                                    available - amountInput
-                                                );
-                                                changeAmountInput(0.0);
-                                                sendingMessage =
-                                                    "Message: " +
-                                                    memo +
-                                                    "\nSending: " +
-                                                    amountInput +
-                                                    "ETH";
-                                                alert(sendingMessage);
-                                            }
-                                        }
-                                    } else {
-                                        // mobile
-                                        Alert.alert(
-                                            "You are trying to send ETH",
-                                            "Do you wish to continue?",
-                                            [
-                                                {
-                                                    text: "Yes",
-                                                    onPress: () => {
-                                                        if (
-                                                            available ==
-                                                                amountInput &&
-                                                            available > 0.0
-                                                        ) {
-                                                            Alert.alert(
-                                                                "Trying to send your full balance amount.",
-                                                                "Do you wish to continue?",
-                                                                [
-                                                                    {
-                                                                        text:
-                                                                            "Yes",
-                                                                        onPress: () => {
-                                                            // add chat if one doesn't exist
-                                                            // update chat array if it does
-                                                                          
-                                                                            setAmountTI(
-                                                                                ""
-                                                                            );
-                                                                            setMemoTI(
-                                                                                ""
-                                                                            );
-
-                                                                            changeAvailable(
-                                                                                available -
-                                                                                    amountInput
-                                                                            );
-                                                                            changeAmountInput(
-                                                                                0.0
-                                                                            );
-                                                                            sendingMessage =
-                                                                                "Message: " +
-                                                                                memo +
-                                                                                "\nSending: " +
-                                                                                amountInput +
-                                                                                "ETH";
-                                                                            alert(
-                                                                                sendingMessage
-                                                                            );
-                                                                        },
-                                                                    },
-                                                                    {
-                                                                        text:
-                                                                            "No",
-                                                                        onPress: () =>
-                                                                            console.log(
-                                                                                "Cancel Pressed"
-                                                                            ),
-                                                                        style:
-                                                                            "cancel",
-                                                                    },
-                                                                ],
-                                                                {
-                                                                    cancelable: true,
-                                                                }
-                                                            );
-                                                        } else {
-                                                            setAmountTI("");
-                                                            setMemoTI("");
-
-                                                            changeAvailable(
-                                                                available -
-                                                                    amountInput
-                                                            );
-                                                            changeAmountInput(
-                                                                0.0
-                                                            );
-                                                            sendingMessage =
-                                                                "Message: " +
-                                                                memo +
-                                                                "\nSending: " +
-                                                                amountInput +
-                                                                "ETH";
-                                                            
-                                                            // add chat if one doesn't exist
-                                                            // update chat array if it does
-                                                            
-                                                            alert(
-                                                                sendingMessage
-                                                            );
-                                                        }
-                                                    },
-                                                },
-                                                {
-                                                    text: "No",
-                                                    onPress: () =>
-                                                        console.log(
-                                                            "Cancel Pressed"
-                                                        ),
-                                                    style: "cancel",
-                                                },
-                                            ],
-                                            { cancelable: true }
-                                        );
-                                    }
+                                            },
+                                        },
+                                        {
+                                            text: "No",
+                                            onPress: () =>
+                                                console.log(
+                                                    "Cancel Pressed"
+                                                ),
+                                            style: "cancel",
+                                        },
+                                        ],
+                                        { cancelable: true }
+                                    );
                                 }
+                            }
                             }
                             text="Send"
                             color="#1e1c21"
