@@ -91,7 +91,7 @@ export function AccountDetailScreen(props) {
                     mnemonic: {mnemonic}
                 </Text>
                 <QRCode value={address} size={screenSize.width / 2} />
-                <CustomButton
+                {/* <CustomButton
                     onPress={() => {
                         Alert.alert(
                             "Warning",
@@ -113,7 +113,7 @@ export function AccountDetailScreen(props) {
                     color="#1e1c21"
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
-                ></CustomButton>
+                ></CustomButton> */}
             </View>
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
         </View>
