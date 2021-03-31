@@ -41,7 +41,7 @@ export function PaymentsScreen({ route }) {
     const [chatLog, updateChatLog] = useState([]);
 
     const user = firebase.auth().currentUser;
-    
+
 
     useEffect(() => {
         const fetchBal = async () => {
@@ -66,9 +66,11 @@ export function PaymentsScreen({ route }) {
         const chatsRef = userRef.collection("chats");
         const chats = await chatsRef.get();
 
+        
+
         async function getUser(dbRef, name) {
             var chats = dbRef.collection("chats");
-            const snapshot = await chats.where("userName", "==", name).get();
+            const snapshot = await chats.where("userName", "==", userName).get();
 
             const data = {
                 chatLog,
@@ -347,6 +349,7 @@ export function PaymentsScreen({ route }) {
 
                                                         // add chat if one doesn't exist
                                                         // update chat array if it does
+                                                        alert(chatLog);
                                                         var ch = chatLog;
                                                         ch.push(sendingMessage);
                                                         updateChatLog(ch);
