@@ -28,6 +28,11 @@ export function UserAccountScreen({route}) {
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     const {email, fullName, userName} = route.params;
     const user = firebase.auth().currentUser;
+    const [userImage, setImageUrl] = useState(undefined);
+
+    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    ref.getDownloadURL()
+        .then( (url) => {setImageUrl(url)})
 
     const getContacts = async () => {
         const userRef = firebase.firestore().collection("users").doc(user.uid);
@@ -108,7 +113,7 @@ export function UserAccountScreen({route}) {
 
                 <Image
                     style={[masterStyles.logo, { borderRadius: 50 }]}
-                    source={require("../../../assets/Default_Img.png")}
+                    source={{ uri: userImage}}
                 />
                 <Text
                     style={[

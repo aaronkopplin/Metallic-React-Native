@@ -17,7 +17,6 @@ import { ethers } from "ethers";
 import { useEffect } from "react";
 import * as WalletFunctions from "../../ethereum/loadWallet";
 import * as ImagePicker from 'expo-image-picker';
-import storage from '@react-native-firebase/storage';
 import 'firebase/storage';
 
 export function AccountScreen( props ) {
@@ -44,43 +43,28 @@ export function AccountScreen( props ) {
         fetchBal();
     }, []);
     
-    const storageRef = firebase.storage().ref();
-    const [filePath, setFilePath] = useState({});
+    const [imageUrl, setImageUrl] = useState(undefined);
+
+    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    ref.getDownloadURL()
+        .then( (url) => {setImageUrl(url)})
+
+/*     if (imageUrl == null){
+        setImageUrl("../../../assets/Default_Img.png")
+    } */
  
-    const onChooseImagePress = async () => {
+     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
     
         if (!result.cancelled) {
-            let imageUri = result.uri
-            let imageName = result.fileName
+            let imageName = userName + 'ProfileImage';
 
-            console.log('base64 -> ', result.base64);
-            console.log('uri -> ', result.uri);
-            console.log('width -> ', result.width);
-            console.log('height -> ', result.height);
-            console.log('fileSize -> ', result.fileSize);
-            console.log('type -> ', result.type);
-            console.log('fileName -> ', result.fileName);
-            setFilePath(result);
-
-            uploadImage(imageUri, imageName);
-        }
-      };
-
-      const uploadImage = async (uri, name) => {
-        if( uri == null ) {
-            return null;
-          }
-/* 
-         const extension = filename.split('.').pop(); 
-        const name = filename.split('.').slice(0, -1).join('.');
-        filename = name + Date.now() + '.' + extension; */
-
-        firebase
-          .storage()
-          .ref(name)
-          .put(uri)
-      };
+            const response = await fetch(result.uri)
+            const blob = await response.blob();
+            var ref = firebase.storage().ref().child(imageName);
+            ref.put(blob)
+        }; 
+    };
 
     const onLogoutPress = () => {
         Alert.alert(
@@ -143,7 +127,7 @@ export function AccountScreen( props ) {
             });
         }
         getUser(db, uid);
-    }
+    };
 
     return (
         <View style={masterStyles.mainBackground}>
@@ -176,7 +160,7 @@ export function AccountScreen( props ) {
                 </Text>
                 <Image
                     style={[masterStyles.logo, { borderRadius: 50 }]}
-                    source={require("../../../assets/Default_Img.png")}
+                    source={{ uri: imageUrl }}
                 />
                 <Button title="Choose image..." onPress={onChooseImagePress} />
                 <Text
