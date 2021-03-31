@@ -91,6 +91,7 @@ export default function RegistrationScreen({ navigation }) {
                     userName,
                     fullName,
                     email: user_email,
+                    address: newWallet.address
                 };
 
                 const usersRef = firebase.firestore().collection("users");

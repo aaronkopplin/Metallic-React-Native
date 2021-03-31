@@ -52,14 +52,30 @@ export function AccountScreen(props) {
             }
         };
 
+        // (async () => {
+        //     if (Platform.OS !== 'web') {
+        //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        //       if (status !== 'granted') {
+        //         alert('Sorry, we need camera roll permissions to make this work!');
+        //       }
+        //     }
+        //   })();
+
         fetchBal();
         return () => (mounted = false);
     }, []);
+    
+    const [imageUrl, setImageUrl] = useState(undefined);
 
-    const storageRef = firebase.storage().ref();
-    const [filePath, setFilePath] = useState({});
+    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    ref.getDownloadURL()
+        .then( (url) => {setImageUrl(url)})
 
-    const onChooseImagePress = async () => {
+/*     if (imageUrl == null){
+        setImageUrl("../../../assets/Default_Img.png")
+    } */
+ 
+     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
 
         if (!result.cancelled) {
@@ -153,11 +169,11 @@ export function AccountScreen(props) {
             });
         }
         getUser(db, uid);
-    }
+    };
 
     return (
         <View style={masterStyles.mainBackground}>
-            <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
+            <View style={(masterStyles.mainBackground, { flex: 0.5 })} />
             <View
                 style={{
                     flex: 4,
@@ -186,9 +202,9 @@ export function AccountScreen(props) {
                 </Text>
                 <Image
                     style={[masterStyles.logo, { borderRadius: 50 }]}
-                    source={require("../../../assets/Default_Img.png")}
+                    source={{ uri: imageUrl }}
                 />
-                <Button title="Choose image..." onPress={onChooseImagePress} />
+                {/* <Button title="Choose image..." onPress={onChooseImagePress} /> */}
                 <Text
                     style={[
                         masterStyles.headings,
@@ -244,6 +260,14 @@ export function AccountScreen(props) {
                 >
                     Account Age:
                 </Text>
+                
+                <View
+                    style={{
+                        zIndex: 1,
+                        paddingTop: screenSize.height / 20,
+                        paddingBottom: screenSize.height / 70,
+                    }}
+                >
                 <CustomButton
                     onPress={() => {
                         navigation.navigate("AccountDetailScreen");
@@ -252,7 +276,10 @@ export function AccountScreen(props) {
                     color="#1e1c21"
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
-                ></CustomButton>
+                />
+                </View>
+
+                <View style={{ zIndex: 2 }} />
                 <CustomButton
                     onPress={
                         Platform.OS === "web" ? onLogoutPressWeb : onLogoutPress
@@ -263,7 +290,7 @@ export function AccountScreen(props) {
                     height={screenSize.height / 20}
                 />
 
-                <View style={{ zIndex: 2 }}></View>
+                <View style={{ zIndex: 2 }} />
             </View>
             <View
                 style={{

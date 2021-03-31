@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Image,
     Text,
@@ -18,19 +18,14 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
-// import { color } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
-import { useEffect } from "react";
 
 export function PaymentsScreen({ route }) {
-    const screenSize =
-        Platform.OS === "web"
-            ? Dimensions.get("window")
-            : Dimensions.get("screen");
+    const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
     const [amountInput, changeAmountInput] = useState(0.0);
     const [available, changeAvailable] = useState(0.0);
-    //const { email, fullName, userName } = route.params;
+    const { email, fullName, userName, address } = route.params;
 
     const userImageSize = Platform.OS === "web" ? 75 : 50;
     var sendingMessage = "";
@@ -42,6 +37,14 @@ export function PaymentsScreen({ route }) {
 
     const navigation = useNavigation();
 
+    const [chatLog, updateChatLog] = useState([]);
+
+    const user = firebase.auth().currentUser;
+    const [myUserName, setMyUserName] = useState("");
+    const db = firebase.firestore();
+    const chatRef = db.collection("users").doc(user.uid).collection("chats").doc(String(userName));
+
+    var exists = false;
     useEffect(() => {
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
@@ -52,18 +55,72 @@ export function PaymentsScreen({ route }) {
         };
 
         fetchBal();
+
+        db.collection("users").doc(user.uid).onSnapshot((snap) => {
+            setMyUserName(snap.data().userName);
+        })
+
+        chatRef.onSnapshot((snapshot) => {
+            if (snapshot.exists) {
+                updateChatLog(snapshot.data().chatLog);
+                exists = true;
+            }
+        })
+        
     }, []);
+
+    
+    // var myMessage = {
+    //     message: "",
+    //     amount: 0.0,
+    //     side: "right"
+    // }
+    // var otherMessage = {
+    //     message: "",
+    //     amount: 0.0,
+    //     side: "left"
+    // }
+    const addChat = async (message, amount) => {
+        const otherRef = db.collection("users");
+        const snapshot = otherRef.where("userName", "==", userName).get();
+        var otherId;
+        (await snapshot).forEach((doc) => {
+            otherId = doc.data().id;
+        })
+
+        const otherChat = db.collection("users").doc(otherId).collection("chats").doc(String(myUserName));
+
+        const otherChatLog = [];
+
+        chatLog.forEach(x => {
+            otherChatLog.push(x);
+        });
+
+        const myData = {
+            message,
+            amount,
+            side: "right"
+        };
+        const otherData = {
+            message,
+            amount,
+            side: "left"
+        };
+
+        if (exists) {
+            chatRef.update(myData);
+            otherChat.update(otherData);
+        } else {
+            chatRef.set(myData);
+            otherChat.set(otherData);
+            exists = true;
+        }
+    };
 
     return (
         <KeyboardAvoidingView
             keyboardVerticalOffset={Platform.OS === "android" ? 40 : 0}
-            behavior={
-                Platform.OS === "ios"
-                    ? "position"
-                    : "height" || Platform.OS === "android"
-                    ? "position"
-                    : "height"
-            }
+            behavior={Platform.OS === "ios" ? "position" : "height" || Platform.OS === "android" ? "position" : "height"}
             style={{
                 backgroundColor: "#1e1c21",
                 alignItems: "center",
@@ -111,26 +168,24 @@ export function PaymentsScreen({ route }) {
                         paddingBottom: 15,
                         backgroundColor: "#fff",
                         width: screenSize.width - 30,
-                        height:
-                            Platform.OS === "web"
-                                ? screenSize.height / 1.4 - 160
-                                : Platform.OS === "android"
-                                ? screenSize.height / 1.54 - 140
-                                : screenSize.height / 1.54 - 120,
+                        height: Platform.OS === "web" ? screenSize.height / 1.4 - 160 : Platform.OS === "android" ? screenSize.height / 1.54 - 140 : screenSize.height / 1.54 - 120,
                         alignItems: "center",
                         justifyContent: "center",
                     }}
                 >
                     <Text>Display Chat</Text>
+                    <Text>{email}</Text>
+                    <Text>{fullName}</Text>
+                    <Text>{userName}</Text>
+                    <Text>{address}</Text>
                 </View>
                 <TextInput
-                    style={[
-                        masterStyles.input,
-                        {
-                            width: screenSize.width - 40,
-                            paddingRight: 5,
-                            marginTop: 29,
-                        },
+                    style={[masterStyles.input,
+                    {
+                        width: screenSize.width - 40,
+                        paddingRight: 5,
+                        marginTop: 29,
+                    },
                     ]}
                     placeholder="Enter memo for transaction..."
                     keyboardType="default"
@@ -163,29 +218,13 @@ export function PaymentsScreen({ route }) {
                     }}
                 >
                     <View style={{ justifyContent: "flex-start" }}>
-                        <Text
-                            style={[
-                                masterStyles.headingsSmallNotBold,
-                                { paddingBottom: 5, fontSize: 18 },
-                            ]}
-                        >
-                            {" "}
-                            Available: {available}{" "}
+                        <Text style={[masterStyles.headingsSmallNotBold, { paddingBottom: 5, fontSize: 18 }]}>
+                            Available: {available}
                         </Text>
                     </View>
                     <View style={{ justifyContent: "flex-end" }}>
-                        <Text
-                            style={[
-                                masterStyles.headingsSmallNotBold,
-                                {
-                                    paddingBottom: 5,
-                                    fontSize: 18,
-                                    textAlign: "right",
-                                },
-                            ]}
-                        >
-                            {" "}
-                            Sending: {amountInput}{" "}
+                        <Text style={[masterStyles.headingsSmallNotBold, { paddingBottom: 5, fontSize: 18, textAlign: "right" }]}>
+                            Sending: {amountInput}
                         </Text>
                     </View>
                 </View>
@@ -255,63 +294,51 @@ export function PaymentsScreen({ route }) {
                     >
                         <CustomButton // send button
                             onPress={() => {
-                                if (amountInput == 0.0) {
-                                    if (Platform.OS === "web") {
-                                        window.alert(
-                                            "Trying to send 0.0ETH or invalid input"
-                                        );
-                                    } else {
-                                        alert(
-                                            "Trying to send 0.0ETH or invalid input"
-                                        );
-                                    }
-                                } else {
+                                // if (amountInput == 0.0) {
+                                //     if (Platform.OS === "web") {
+                                //         window.alert(
+                                //             "Trying to send 0.0ETH or invalid input"
+                                //         );
+                                //     } else {
+                                //         alert(
+                                //             "Trying to send 0.0ETH or invalid input"
+                                //         );
+                                //     }
+                                // } else {
                                     if (Platform.OS === "web") {
                                         // web
-                                        if (
-                                            window.confirm(
-                                                "You are trying to send ETH\nDo you wish to continue?"
-                                            )
-                                        ) {
-                                            if (
-                                                available == amountInput &&
-                                                available > 0.0
-                                            ) {
-                                                if (
-                                                    window.confirm(
-                                                        "Trying to send your full balance amount.\nDo you wish to continue?"
-                                                    )
-                                                ) {
+                                        if (window.confirm("You are trying to send ETH\nDo you wish to continue?")) {
+                                            if (available == amountInput && available > 0.0) {
+                                                if (window.confirm("Trying to send your full balance amount.\nDo you wish to continue?")) {
+                                                    // add chat if one doesn't exist
+                                                    // update chat array if it does                                                    
                                                     setAmountTI("");
                                                     setMemoTI("");
 
-                                                    changeAvailable(
-                                                        available - amountInput
-                                                    );
+                                                    changeAvailable(available - amountInput);
                                                     changeAmountInput(0.0);
-                                                    sendingMessage =
-                                                        "Message: " +
-                                                        memo +
-                                                        "\nSending: " +
-                                                        amountInput +
-                                                        "ETH";
+                                                    sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
+
                                                     alert(sendingMessage);
                                                 }
                                             } else {
+                                                // add chat if one doesn't exist
+                                                // update chat array if it does
                                                 setAmountTI("");
                                                 setMemoTI("");
 
-                                                changeAvailable(
-                                                    available - amountInput
-                                                );
+                                                changeAvailable(available - amountInput);
                                                 changeAmountInput(0.0);
-                                                sendingMessage =
-                                                    "Message: " +
-                                                    memo +
-                                                    "\nSending: " +
-                                                    amountInput +
-                                                    "ETH";
-                                                alert(sendingMessage);
+                                                sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
+                                                
+
+                                                // chatLog.push(sendingMessage);
+                                                // myMessage.message = memo;
+                                                // myMessage.amount = amountInput;
+                                                // myMessage.side = "right";
+                                                // chatLog.push(myMessage);
+                                                addChat(memo, amountInput);
+                                                alert(chatLog)
                                             }
                                         }
                                     } else {
@@ -319,107 +346,74 @@ export function PaymentsScreen({ route }) {
                                         Alert.alert(
                                             "You are trying to send ETH",
                                             "Do you wish to continue?",
-                                            [
-                                                {
-                                                    text: "Yes",
-                                                    onPress: () => {
-                                                        if (
-                                                            available ==
-                                                                amountInput &&
-                                                            available > 0.0
-                                                        ) {
-                                                            Alert.alert(
-                                                                "Trying to send your full balance amount.",
-                                                                "Do you wish to continue?",
-                                                                [
-                                                                    {
-                                                                        text:
-                                                                            "Yes",
-                                                                        onPress: () => {
-                                                                            setAmountTI(
-                                                                                ""
-                                                                            );
-                                                                            setMemoTI(
-                                                                                ""
-                                                                            );
+                                            [{
+                                                text: "Yes",
+                                                onPress: () => {
+                                                    if (available == amountInput && available > 0.0) {
+                                                        Alert.alert(
+                                                            "Trying to send your full balance amount.",
+                                                            "Do you wish to continue?",
+                                                            [{
+                                                                text: "Yes",
+                                                                onPress: () => {
+                                                                    // add chat if one doesn't exist
+                                                                    // update chat array if it does
 
-                                                                            changeAvailable(
-                                                                                available -
-                                                                                    amountInput
-                                                                            );
-                                                                            changeAmountInput(
-                                                                                0.0
-                                                                            );
-                                                                            sendingMessage =
-                                                                                "Message: " +
-                                                                                memo +
-                                                                                "\nSending: " +
-                                                                                amountInput +
-                                                                                "ETH";
-                                                                            alert(
-                                                                                sendingMessage
-                                                                            );
-                                                                        },
-                                                                    },
-                                                                    {
-                                                                        text:
-                                                                            "No",
-                                                                        onPress: () =>
-                                                                            console.log(
-                                                                                "Cancel Pressed"
-                                                                            ),
-                                                                        style:
-                                                                            "cancel",
-                                                                    },
-                                                                ],
-                                                                {
-                                                                    cancelable: true,
-                                                                }
-                                                            );
-                                                        } else {
-                                                            setAmountTI("");
-                                                            setMemoTI("");
+                                                                    setAmountTI("");
+                                                                    setMemoTI("");
 
-                                                            changeAvailable(
-                                                                available -
-                                                                    amountInput
-                                                            );
-                                                            changeAmountInput(
-                                                                0.0
-                                                            );
-                                                            sendingMessage =
-                                                                "Message: " +
-                                                                memo +
-                                                                "\nSending: " +
-                                                                amountInput +
-                                                                "ETH";
-                                                            alert(
-                                                                sendingMessage
-                                                            );
-                                                        }
-                                                    },
+                                                                    changeAvailable(available - amountInput);
+                                                                    changeAmountInput(0.0);
+                                                                    sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
+                                                                    alert(sendingMessage);
+                                                                },
+                                                            },
+                                                            {
+                                                                text: "No",
+                                                                onPress: () =>
+                                                                    console.log("Cancel Pressed"),
+                                                                style: "cancel",
+                                                            }],
+                                                            { cancelable: true, }
+                                                        );
+                                                    } else {
+                            // do all testing for sending messages here for mobile
+                                                        setAmountTI("");
+                                                        setMemoTI("");
+
+                                                        changeAvailable(available - amountInput);
+                                                        changeAmountInput(0.0);
+                                                        sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
+
+                                                        // add chat if one doesn't exist
+                                                        // update chat array if it does
+                                                        alert(chatLog);
+                                                    }
                                                 },
-                                                {
-                                                    text: "No",
-                                                    onPress: () =>
-                                                        console.log(
-                                                            "Cancel Pressed"
-                                                        ),
-                                                    style: "cancel",
-                                                },
-                                            ],
+                                            },
+                                            {
+                                                text: "No",
+                                                onPress: () =>
+                                                    console.log("Cancel Pressed"),
+                                                style: "cancel",
+                                            }],
                                             { cancelable: true }
                                         );
                                     }
-                                }
+                                // }
                             }}
                             text="Send"
                             color="#1e1c21"
-                            width={(screenSize.width - 50) / 2}
+
+                            // for when there is also a request button
+                            // width={(screenSize.width - 50) / 2}
+
+                            width={screenSize.width - 40}
                             height={screenSize.height * 0.045}
                         />
 
-                        <View style={{ width: 10 }} />
+                        {/** request button */}
+                        {/* <View style={{ width: 10 }} />
 
                         <CustomButton // request button
                             onPress={() => {
@@ -495,7 +489,7 @@ export function PaymentsScreen({ route }) {
                             color="#1e1c21"
                             width={(screenSize.width - 50) / 2}
                             height={screenSize.height * 0.045}
-                        />
+                        /> */}
                     </View>
                 </View>
             </View>

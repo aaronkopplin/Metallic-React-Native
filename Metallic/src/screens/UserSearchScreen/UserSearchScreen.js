@@ -57,7 +57,7 @@ export function UserSearchScreen(props) {
                     console.log(error);
                 }
             );
-    }, [users]);
+    });
 
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {
@@ -68,7 +68,7 @@ export function UserSearchScreen(props) {
                         email: item.email,
                         fullName: item.fullName,
                         userName: item.userName,
-                        uid: item.uid
+                        address: item.address,
                     });
                 }}>
                     <View>
