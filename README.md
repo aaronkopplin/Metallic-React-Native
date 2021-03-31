@@ -24,8 +24,15 @@ npm install ethers
 
 npm install --save react-native-get-random-values -- or -- expo install react-native-get-random-values  
 
+<<<<<<< HEAD
 npm install @react-native-firebase/storage
 
 npm install expo-image-picker
 
+=======
+npm install expo-image-picker
+
+npm install @react-native-firebase/storage
+
+>>>>>>> origin/recent-chats-screen
 npm install @firebase/storage

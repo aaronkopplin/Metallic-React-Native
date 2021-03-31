@@ -9,9 +9,11 @@ import {
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
-import { masterStyles } from '../../../../Metallic/masterStyles';
+import { masterStyles } from "../../../../Metallic/masterStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as WalletFunctions from "../../ethereum/walletFunctions";
 
-export function login(email, password) {
+export function login(email, password, wallet) {
     firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
@@ -27,6 +29,16 @@ export function login(email, password) {
                         return;
                     }
                     const user = firestoreDocument.data();
+                    if (wallet) {
+                        WalletFunctions.storeData(
+                            "mnemonic",
+                            wallet.mnemonic.phrase
+                        );
+                        WalletFunctions.storeData(
+                            "privateKey",
+                            wallet.privateKey
+                        );
+                    }
                 })
                 .catch((error) => {
                     alert(error);
@@ -40,24 +52,24 @@ export function login(email, password) {
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
+    const screenSize =
+        Platform.OS === "web"
+            ? Dimensions.get("window")
+            : Dimensions.get("screen");
     const onFooterLinkPress = () => {
-        console.log("Don't Have Account Pressed");
         navigation.navigate("Registration");
     };
 
     const onLoginPress = () => {
         console.log("Login Button Pressed.");
-        login(email, password);
+        login(email, password, null);
     };
 
     return (
         <View style={masterStyles.mainBackground}>
-            
             <Image
-                style={[masterStyles.logo, {flex: .75}]} 
+                style={[masterStyles.logo, { flex: 0.75 }]}
                 source={require("../../../assets/metalliclogo.png")}
-                
             />
 
             <View
@@ -65,18 +77,32 @@ export default function LoginScreen({ navigation }) {
                     flex: 3,
                     backgroundColor: "#2e2b30",
                     width: screenSize.width - 20,
-                    height: Platform.OS === "web" ? screenSize.height/2.5 : screenSize.width - 30,
+                    height:
+                        Platform.OS === "web"
+                            ? screenSize.height / 2.5
+                            : screenSize.width - 30,
                     paddingTop: screenSize.height / 50,
                     paddingLeft: 20,
                     borderRadius: 4,
                 }}
             >
-
-                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>E-Mail</Text>
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        {
+                            paddingTop: screenSize.height * 0.01,
+                            paddingBottom: screenSize.height * 0.005,
+                        },
+                    ]}
+                >
+                    E-Mail
+                </Text>
 
                 <TextInput
-                    style={[masterStyles.input,
-                        {width: screenSize.width - 60}]}
+                    style={[
+                        masterStyles.input,
+                        { width: screenSize.width - 60 },
+                    ]}
                     placeholder="Enter your e-mail"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
@@ -85,14 +111,26 @@ export default function LoginScreen({ navigation }) {
                     autoCapitalize="none"
                     autoCompleteType="off"
                     autoCorrect={false}
-                    keyboardType={'email-address'}
+                    keyboardType={"email-address"}
                 />
 
-                <Text style={[masterStyles.headingsSmall, {paddingTop: screenSize.height * .01, paddingBottom: screenSize.height * .005}]}>Password</Text>
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        {
+                            paddingTop: screenSize.height * 0.01,
+                            paddingBottom: screenSize.height * 0.005,
+                        },
+                    ]}
+                >
+                    Password
+                </Text>
 
                 <TextInput
-                    style={[masterStyles.input,
-                        {width: screenSize.width - 60}]}
+                    style={[
+                        masterStyles.input,
+                        { width: screenSize.width - 60 },
+                    ]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder="Enter your password"
@@ -131,11 +169,7 @@ export default function LoginScreen({ navigation }) {
                 </View>
             </View>
 
-            <View style={
-                masterStyles.mainBackground,
-                {flex: 2}
-            }></View>
-
+            <View style={(masterStyles.mainBackground, { flex: 2 })}></View>
         </View>
     );
 }

@@ -94,20 +94,23 @@ export function ContactsScreen({ navigation }) {
                     // Check First letter of our contacts userName.
                     if (contact.userName.substring(0,1).toUpperCase() == letter){
                         // If we share this letter add them to this part of our data
-                        contactData[i].data.push(contact.userName);
+                        firstLetterList[i].data.push(contact.userName);
                     }
                     i++;
                 })
             });
+            
         };
 
         // Map out letter to the title of our list.
-        const contactData = titles.map((item) => ({
+        const firstLetterList = titles.map((item) => ({
             title: item,
             data: []
         }));
 
         populateData();
+
+        var contactData = firstLetterList.filter(eixisting => eixisting.data.length != 0);
 
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center'}}>
