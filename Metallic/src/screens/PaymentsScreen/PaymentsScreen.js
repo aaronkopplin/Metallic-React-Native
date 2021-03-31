@@ -43,7 +43,7 @@ export function PaymentsScreen({ route }) {
     const [myUserName, setMyUserName] = useState("");
     const db = firebase.firestore();
     const chatRef = db.collection("users").doc(user.uid).collection("chats").doc(String(userName));
-    
+
     var exists = false;
     useEffect(() => {
         const fetchBal = async () => {
@@ -61,7 +61,6 @@ export function PaymentsScreen({ route }) {
         })
 
         chatRef.onSnapshot((snapshot) => {
-            
             if (snapshot.exists) {
                 updateChatLog(snapshot.data().chatLog);
                 exists = true;
@@ -82,7 +81,15 @@ export function PaymentsScreen({ route }) {
     //     side: "left"
     // }
     const addChat = async (message, amount) => {
-        const otherRef = db.collection("users").doc(userName).collection("chats").doc(String(myUserName));
+        const otherRef = db.collection("users");
+        const snapshot = otherRef.where("userName", "==", userName).get();
+        var otherId;
+        (await snapshot).forEach((doc) => {
+            otherId = doc.data().id;
+        })
+
+        const otherChat = db.collection("users").doc(otherId).collection("chats").doc(String(myUserName));
+
         const otherChatLog = [];
 
         chatLog.forEach(x => {
@@ -102,10 +109,10 @@ export function PaymentsScreen({ route }) {
 
         if (exists) {
             chatRef.update(myData);
-            otherRef.update(otherData);
+            otherChat.update(otherData);
         } else {
             chatRef.set(myData);
-            otherRef.set(otherData);
+            otherChat.set(otherData);
             exists = true;
         }
     };

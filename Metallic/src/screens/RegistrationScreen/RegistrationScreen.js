@@ -98,7 +98,7 @@ export default function RegistrationScreen({ navigation }) {
                     alert("Username already taken.");
                 } else {
                     usersRef
-                        .doc(userName)
+                        .doc(uid)
                         .set(data)
                         .then(() => {
                             console.log("Attempting to navigate to home");
@@ -109,7 +109,7 @@ export default function RegistrationScreen({ navigation }) {
                         });
 
                     usersRef
-                        .doc(userName)
+                        .doc(uid)
                         .collection("Contacts")
                         .doc(data.fullName)
                         .set(data2);
