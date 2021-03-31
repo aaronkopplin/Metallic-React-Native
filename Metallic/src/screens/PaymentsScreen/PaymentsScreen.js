@@ -83,6 +83,12 @@ export function PaymentsScreen({ route }) {
     // }
     const addChat = async (message, amount) => {
         const otherRef = db.collection("users").doc(userName).collection("chats").doc(String(myUserName));
+        const otherChatLog = [];
+
+        chatLog.forEach(x => {
+            otherChatLog.push(x);
+        });
+
         const myData = {
             message,
             amount,
@@ -320,6 +326,10 @@ export function PaymentsScreen({ route }) {
                                                 
 
                                                 // chatLog.push(sendingMessage);
+                                                // myMessage.message = memo;
+                                                // myMessage.amount = amountInput;
+                                                // myMessage.side = "right";
+                                                // chatLog.push(myMessage);
                                                 addChat(memo, amountInput);
                                                 alert(chatLog)
                                             }
