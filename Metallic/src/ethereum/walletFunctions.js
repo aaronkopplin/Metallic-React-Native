@@ -11,7 +11,6 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 
 export async function storeData(key, value) {
-    console.log("storing data....");
     try {
         var user = firebase.auth().currentUser;
         var doc = await firebase
@@ -20,6 +19,7 @@ export async function storeData(key, value) {
             .doc(user.uid)
             .get();
         var userName = doc.data().userName;
+        console.log("storing data for " + userName);
         await AsyncStorage.setItem(userName + key, value);
     } catch (e) {
         console.log("ERROR STORING DATA");
@@ -34,6 +34,7 @@ export async function getData(key) {
         .doc(user.uid)
         .get();
     var userName = doc.data().userName;
+    console.log("getting data for " + userName);
     const storedPrivate = await AsyncStorage.getItem(userName + key);
     return storedPrivate;
 }
@@ -44,7 +45,7 @@ export async function loadWalletFromPrivate() {
         const loadedWallet = new ethers.Wallet(storedPrivate);
         return loadedWallet;
     } catch (exception) {
-        console.log("ERROR LOADING WALLET");
+        console.log("error loading wallet from private");
     }
 }
 
@@ -53,7 +54,7 @@ export async function loadMnemonic() {
         const storedMnemonic = await getData("mnemonic");
         return storedMnemonic;
     } catch (exception) {
-        console.log("ERROR LOADING WALLET");
+        console.log("error loading wallet from mnemonic");
     }
 }
 

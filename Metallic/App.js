@@ -41,6 +41,7 @@ function Tabs() {
 
     useEffect(() => {
         async function grabAccount() {
+            console.log("tabs getting wallet");
             var existingAccount = await WalletFunctions.loadWalletFromPrivate();
             if (existingAccount != null) {
                 setAccount(true);
@@ -163,10 +164,14 @@ export default function App() {
                     .get()
                     .then((document) => {
                         const userData = document.data();
+                        console.log("setting user " + (userData != null));
                         setUser(userData);
                     })
-                    .catch((error) => {});
+                    .catch((error) => {
+                        console.log(error);
+                    });
             } else {
+                console.log("setting user to NULL");
                 setUser(null);
             }
         });
