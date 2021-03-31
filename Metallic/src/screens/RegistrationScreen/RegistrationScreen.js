@@ -71,6 +71,7 @@ export default function RegistrationScreen({ navigation }) {
             return;
         }
 
+        alert("Please wait while we create your account.");
         const newWallet = ethers.Wallet.createRandom();
 
         firebase

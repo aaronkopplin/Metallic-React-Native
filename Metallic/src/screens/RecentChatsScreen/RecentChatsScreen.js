@@ -23,29 +23,31 @@ export function RecentChatsScreen({ navigation }) {
 
     var [chats, setChats] = useState([]);
     const user = firebase.auth().currentUser;
-    if (user == null) {
-        return <View />;
+    var chatReference = null;
+    if (user != null) {
+        chatReference = firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .collection("chats");
     }
-    const chatReference = firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .collection("chats");
 
     useEffect(() => {
-        chatReference.onSnapshot(
-            (querySnapshot) => {
-                var newEntities = [];
-                querySnapshot.forEach((doc) => {
-                    const entity = doc.id;
-                    newEntities.push(entity);
-                });
-                setChats(newEntities);
-            },
-            (error) => {
-                console.log(error);
-            }
-        );
+        if (chatReference != null) {
+            chatReference.onSnapshot(
+                (querySnapshot) => {
+                    var newEntities = [];
+                    querySnapshot.forEach((doc) => {
+                        const entity = doc.id;
+                        newEntities.push(entity);
+                    });
+                    setChats(newEntities);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+        }
     }, [chats]);
 
     const goToPayments = (userName) => {

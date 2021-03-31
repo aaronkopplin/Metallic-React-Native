@@ -41,15 +41,19 @@ export function AccountScreen(props) {
     const [balance, setBalance] = useState("Loading");
 
     useEffect(() => {
+        var mounted = true;
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
-            const balance = await (
+            const bal = await (
                 await WalletFunctions.getBalance(wallet)
             ).toString();
-            setBalance(balance);
+            if (mounted) {
+                setBalance(bal);
+            }
         };
 
         fetchBal();
+        return () => (mounted = false);
     }, []);
 
     const storageRef = firebase.storage().ref();
