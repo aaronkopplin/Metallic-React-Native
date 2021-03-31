@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { firebase } from "../firebase/config";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -9,11 +10,38 @@ import "@ethersproject/shims";
 // Import the ethers library
 import { ethers } from "ethers";
 
+export async function storeData(key, value) {
+    console.log("storing data....");
+    try {
+        var user = firebase.auth().currentUser;
+        var doc = await firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .get();
+        var userName = doc.data().userName;
+        await AsyncStorage.setItem(userName + key, value);
+    } catch (e) {
+        console.log("ERROR STORING DATA");
+    }
+}
+
+export async function getData(key) {
+    var user = firebase.auth().currentUser;
+    var doc = await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
+    var userName = doc.data().userName;
+    const storedPrivate = await AsyncStorage.getItem(userName + key);
+    return storedPrivate;
+}
+
 export async function loadWalletFromPrivate() {
     try {
-        const storedPrivate = await AsyncStorage.getItem("privateKey");
+        const storedPrivate = await getData("privateKey");
         const loadedWallet = new ethers.Wallet(storedPrivate);
-
         return loadedWallet;
     } catch (exception) {
         console.log("ERROR LOADING WALLET");
@@ -22,7 +50,7 @@ export async function loadWalletFromPrivate() {
 
 export async function loadMnemonic() {
     try {
-        const storedMnemonic = await AsyncStorage.getItem("mnemonic");
+        const storedMnemonic = await getData("mnemonic");
         return storedMnemonic;
     } catch (exception) {
         console.log("ERROR LOADING WALLET");

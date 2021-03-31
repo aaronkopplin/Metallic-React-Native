@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import React, { Text, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { LoginScreen, HomeScreen, RegistrationScreen } from "./src/screens";
+import { LoginScreen, RegistrationScreen } from "./src/screens";
 import { decode, encode } from "base-64";
 import { firebase } from "./src/firebase/config";
 import { RecentChatsScreen } from "./src/screens/RecentChatsScreen/RecentChatsScreen";
@@ -14,6 +14,8 @@ import { UserAccountScreen } from "./src/screens/UserAccountScreen/UserAccountSc
 import { UserSearchScreen } from "./src/screens/UserSearchScreen/UserSearchScreen";
 import { AccountDetailScreen } from "./src/screens/AccountDetailsScreen/AccountDetailScreen";
 import { masterStyles } from "./masterStyles";
+import { AccountRecoveryScreen } from "./src/screens/AccountRecoveryScreen/AccountRecoverScreen";
+import * as WalletFunctions from "./src/ethereum/walletFunctions";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -35,7 +37,22 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Tabs() {
-    return (
+    const [account, setAccount] = useState(false);
+
+    useEffect(() => {
+        async function grabAccount() {
+            var existingAccount = await WalletFunctions.loadWalletFromPrivate();
+            if (existingAccount != null) {
+                setAccount(true);
+            } else {
+                setAccount(false);
+            }
+        }
+
+        grabAccount();
+    }, []);
+
+    return account ? (
         <Tab.Navigator
             tabBarOptions={{
                 activeTintColor: "#1e1c21",
@@ -125,6 +142,8 @@ function Tabs() {
                 }}
             />
         </Tab.Navigator>
+    ) : (
+        <AccountRecoveryScreen />
     );
 }
 
@@ -306,6 +325,29 @@ export default function App() {
                             {(props) => <AccountDetailScreen {...props} />}
                         </Stack.Screen>
                         <Stack.Screen
+                            name="AccountRecoveryScreen"
+                            options={{
+                                headerStyle: {
+                                    backgroundColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
+                                    borderColor:
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0,
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: "normal",
+                                    fontSize: 24,
+                                },
+                            }}
+                        >
+                            {(props) => <AccountRecoveryScreen {...props} />}
+                        </Stack.Screen>
+                        <Stack.Screen
                             name="UserAccountScreen"
                             component={UserAccountScreen}
                             options={{
@@ -395,13 +437,7 @@ export default function App() {
                                 },
                             }}
                         >
-                            {(props) => (
-                                <Tabs
-                                    {...props}
-                                    extraData={user}
-                                    component={HomeScreen}
-                                />
-                            )}
+                            {(props) => <Tabs {...props} extraData={user} />}
                         </Stack.Screen>
                     </>
                 ) : (

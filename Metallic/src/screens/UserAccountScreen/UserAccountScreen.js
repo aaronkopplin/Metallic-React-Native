@@ -23,16 +23,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
 import { useEffect } from "react/cjs/react.development";
 
-export function UserAccountScreen({route}) {
-
-    const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
-    const {email, fullName, userName} = route.params;
+export function UserAccountScreen({ route }) {
+    const screenSize =
+        Platform.OS === "web"
+            ? Dimensions.get("window")
+            : Dimensions.get("screen");
+    const { email, fullName, userName } = route.params;
     const user = firebase.auth().currentUser;
     const [userImage, setImageUrl] = useState(undefined);
 
     const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
     ref.getDownloadURL()
         .then( (url) => {setImageUrl(url)})
+    const navigation = useNavigation();
 
     const getContacts = async () => {
         const userRef = firebase.firestore().collection("users").doc(user.uid);
@@ -49,42 +52,47 @@ export function UserAccountScreen({route}) {
                     email: email,
                     fullName: fullName,
                     userName: userName,
-                }
+                };
                 ContactsRef.doc(userName).set(data);
                 console.log("Contact Added");
                 return;
             }
             // If already a contact confirm delete?
-            else{
+            else {
                 snapshot.forEach((doc) => {
-                    Platform.OS === 
-                    "web" ? 
-                    firebase.firestore()
-                    .collection("users").doc(user.uid)
-                    .collection("Contacts").doc(userName)
-                    .delete()
-                    
-                    : Alert.alert(
-                        "Remove Contact",
-                        "Would you like to remove the contact?",
-                        [
-                            { 
-                                text: "Cancel",
-                                onPress: () => console.log("Cancel removal"),
-                                style: "cancel"
-                            },
-                            {
-                                text: "Confirm", onPress: () => 
-                                {
-                                    console.log("OK preseed")
-                                    firebase.firestore()
-                                    .collection("users").doc(user.uid)
-                                    .collection("Contacts").doc(userName)
-                                    .delete();
-                                }
-                            }
-                        ]
-                    )
+                    Platform.OS === "web"
+                        ? firebase
+                              .firestore()
+                              .collection("users")
+                              .doc(user.uid)
+                              .collection("Contacts")
+                              .doc(userName)
+                              .delete()
+                        : Alert.alert(
+                              "Remove Contact",
+                              "Would you like to remove the contact?",
+                              [
+                                  {
+                                      text: "Cancel",
+                                      onPress: () =>
+                                          console.log("Cancel removal"),
+                                      style: "cancel",
+                                  },
+                                  {
+                                      text: "Confirm",
+                                      onPress: () => {
+                                          console.log("OK preseed");
+                                          firebase
+                                              .firestore()
+                                              .collection("users")
+                                              .doc(user.uid)
+                                              .collection("Contacts")
+                                              .doc(userName)
+                                              .delete();
+                                      },
+                                  },
+                              ]
+                          );
                 });
             }
         }
@@ -216,7 +224,6 @@ export function UserAccountScreen({route}) {
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}
                     />
-
                 </View>
                 <View
                     style={{
