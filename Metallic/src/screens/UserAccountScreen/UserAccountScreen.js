@@ -28,7 +28,7 @@ export function UserAccountScreen({ route }) {
         Platform.OS === "web"
             ? Dimensions.get("window")
             : Dimensions.get("screen");
-    const { email, fullName, userName } = route.params;
+    const { email, fullName, userName, address } = route.params;
     const user = firebase.auth().currentUser;
     const [userImage, setImageUrl] = useState(undefined);
 
@@ -45,14 +45,15 @@ export function UserAccountScreen({ route }) {
         async function getUser(dbRef, name) {
             var contacts = dbRef.collection("Contacts");
             const snapshot = await contacts.where("userName", "==", name).get();
-
             // Already a contact?
             if (snapshot.empty) {
                 const data = {
                     email: email,
                     fullName: fullName,
                     userName: userName,
+                    address: address,
                 };
+
                 ContactsRef.doc(userName).set(data);
                 console.log("Contact Added");
                 return;
@@ -238,10 +239,10 @@ export function UserAccountScreen({ route }) {
                                 email: email,
                                 fullName: fullName,
                                 userName: userName,
-                                //uid: uid
+                                address: address,
                             });
                         }}
-                        text="Send/Receive Payment"
+                        text="Send/Request Payment"
                         color="#1e1c21"
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}
