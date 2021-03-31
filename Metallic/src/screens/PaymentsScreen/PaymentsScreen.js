@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Image,
     Text,
@@ -20,7 +20,6 @@ import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { useNavigation } from "@react-navigation/native";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
-import { useEffect } from "react";
 
 export function PaymentsScreen({ route }) {
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
@@ -41,8 +40,11 @@ export function PaymentsScreen({ route }) {
     const [chatLog, updateChatLog] = useState([]);
 
     const user = firebase.auth().currentUser;
-
-
+    const [myUserName, setMyUserName] = useState("");
+    const db = firebase.firestore();
+    const chatRef = db.collection("users").doc(user.uid).collection("chats").doc(String(userName));
+    
+    var exists = false;
     useEffect(() => {
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
@@ -53,35 +55,53 @@ export function PaymentsScreen({ route }) {
         };
 
         fetchBal();
+
+        db.collection("users").doc(user.uid).onSnapshot((snap) => {
+            setMyUserName(snap.data().userName);
+        })
+
+        chatRef.onSnapshot((snapshot) => {
+            
+            if (snapshot.exists) {
+                updateChatLog(snapshot.data().chatLog);
+                exists = true;
+            }
+        })
+        
     }, []);
 
-    // var message = {
-    //     text: "",
+    
+    // var myMessage = {
+    //     message: "",
     //     amount: 0.0,
-    //     isRightSide: true
-    // };
+    //     side: "right"
+    // }
+    // var otherMessage = {
+    //     message: "",
+    //     amount: 0.0,
+    //     side: "left"
+    // }
+    const addChat = async (message, amount) => {
+        const otherRef = db.collection("users").doc(userName).collection("chats").doc(String(myUserName));
+        const myData = {
+            message,
+            amount,
+            side: "right"
+        };
+        const otherData = {
+            message,
+            amount,
+            side: "left"
+        };
 
-    const addChat = async () => {
-        const userRef = firebase.firestore().collection("users").doc(user.uid);
-        const chatsRef = userRef.collection("chats");
-        const chats = await chatsRef.get();
-
-        
-
-        async function getUser(dbRef, name) {
-            var chats = dbRef.collection("chats");
-            const snapshot = await chats.where("userName", "==", userName).get();
-
-            const data = {
-                chatLog,
-            };
-
-            chatsRef.doc(userName).set(data);
-            
+        if (exists) {
+            chatRef.update(myData);
+            otherRef.update(otherData);
+        } else {
+            chatRef.set(myData);
+            otherRef.set(otherData);
+            exists = true;
         }
-
-        getUser(userRef, userName);
-        
     };
 
     return (
@@ -297,7 +317,11 @@ export function PaymentsScreen({ route }) {
                                                 changeAvailable(available - amountInput);
                                                 changeAmountInput(0.0);
                                                 sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
-                                                alert(sendingMessage);
+                                                
+
+                                                // chatLog.push(sendingMessage);
+                                                addChat(memo, amountInput);
+                                                alert(chatLog)
                                             }
                                         }
                                     } else {
@@ -343,19 +367,10 @@ export function PaymentsScreen({ route }) {
                                                         changeAvailable(available - amountInput);
                                                         changeAmountInput(0.0);
                                                         sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
-                                                        // message = {
-
-                                                        // }
 
                                                         // add chat if one doesn't exist
                                                         // update chat array if it does
                                                         alert(chatLog);
-                                                        var ch = chatLog;
-                                                        ch.push(sendingMessage);
-                                                        updateChatLog(ch);
-                                                        addChat();
-
-                                                        alert(sendingMessage);
                                                     }
                                                 },
                                             },
