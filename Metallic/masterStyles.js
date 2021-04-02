@@ -115,6 +115,12 @@ export const masterStyles = StyleSheet.create({
     fontSize: 20,
     color: "#333333",
   },
+  paymentFlatListContainer: {
+    marginTop: 6,
+    borderBottomWidth: 0,
+    paddingVertical: 8,
+    borderRadius: 10
+  },
   contactBar: {
     height: 40, 
     paddingHorizontal: 10, 

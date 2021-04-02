@@ -30,11 +30,11 @@ export function UserAccountScreen({ route }) {
             : Dimensions.get("screen");
     const { email, fullName, userName, address } = route.params;
     const user = firebase.auth().currentUser;
-    const [userImage, setImageUrl] = useState(undefined);
+    // const [userImage, setImageUrl] = useState(undefined);
 
-    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
-    ref.getDownloadURL()
-        .then( (url) => {setImageUrl(url)})
+    // const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    // ref.getDownloadURL()
+    //     .then( (url) => {setImageUrl(url)})
     const navigation = useNavigation();
 
     const getContacts = async () => {
@@ -122,7 +122,7 @@ export function UserAccountScreen({ route }) {
 
                 <Image
                     style={[masterStyles.logo, { borderRadius: 50 }]}
-                    source={{ uri: userImage}}
+                    // source={{ uri: userImage}}
                 />
                 <Text
                     style={[
