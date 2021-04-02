@@ -61,8 +61,9 @@ export function UserSearchScreen(props) {
 
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {
+        var imageSize = Platform.OS === "web" ? 50 : 35;
         return (
-            <View style={[masterStyles.entityContainer, { paddingBottom: 20 }]}>
+            <View style={[masterStyles.entityContainer]}>
                 <TouchableOpacity onPress={() => {
                     navigation.navigate('UserAccountScreen', {
                         email: item.email,
@@ -71,16 +72,14 @@ export function UserSearchScreen(props) {
                         address: item.address,
                     });
                 }}>
-                    <View>
-                        <Text>
-                            <View style={{ justifyContent: "center", flex: 1 }}>
-                                <Image style={{ height: 35, width: 20 }} source={require("../../../assets/Default_Img.png")}></Image>
-                            </View>
-                            <View style={{ justifyContent: "center", flex: 1 }}>
-                                <Text style={[masterStyles.headingsSmall]} >{'\t'}{item.email}</Text>
-                                <Text style={[masterStyles.headingsSmallNotBold]} >{'\t'}{item.userName}</Text>
-                            </View>
-                        </Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <View style={{height: imageSize, width: imageSize, borderRadius: 50, backgroundColor: "#000"}}>
+                            <Image style={{flex: 1, width: undefined, height: undefined, borderRadius: 50}} resizeMode={'contain'} resizeMethod={'scale'}  source={require("../../../assets/Default_Img.png")}></Image>
+                        </View>
+                        <View style={{paddingLeft: 10}}>
+                            <Text style={[masterStyles.headingsSmall]} >{item.email}</Text>
+                            <Text style={[masterStyles.headingsSmallNotBold]} >{item.userName}</Text>
+                        </View>
                     </View>
                 </TouchableOpacity>
 
