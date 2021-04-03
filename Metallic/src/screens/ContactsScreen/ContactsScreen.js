@@ -160,7 +160,7 @@ export function ContactsScreen({ navigation }) {
                     backgroundColor: "#ffffff", 
                     borderRadius: 5, 
                     maxWidth: screenSize.width * .75,
-                    maxHeight: screenSize.height * .1,
+                    maxHeight: screenSize.height * .07,
                     overflow: "hidden",
                     textAlign: "center",
                     bottom: 

@@ -39,7 +39,8 @@ export function AccountScreen(props) {
             : Dimensions.get("screen");
     const navigation = useNavigation();
     const [balance, setBalance] = useState("Loading");
-
+    const [imageUrl, setImageUrl] = useState(undefined);
+    
     useEffect(() => {
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
@@ -61,7 +62,7 @@ export function AccountScreen(props) {
         fetchBal();
     }, []);
     
-    const [imageUrl, setImageUrl] = useState(undefined);
+
 
     const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
     ref.getDownloadURL()
