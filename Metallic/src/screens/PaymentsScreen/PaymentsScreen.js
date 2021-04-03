@@ -20,6 +20,7 @@ import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { useNavigation } from "@react-navigation/native";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
+import {AutoScrollFlatList} from "react-native-autoscroll-flatlist";
 
 export function PaymentsScreen({ route }) {
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
@@ -38,12 +39,17 @@ export function PaymentsScreen({ route }) {
     const navigation = useNavigation();
 
     const [chatLog, updateChatLog] = useState([]);
+    const [otherChatLog, updateOtherChatLog] = useState([]);
+    const [chatExists, setChatExists] = useState(Boolean);
 
     const user = firebase.auth().currentUser;
     const [myUserName, setMyUserName] = useState("");
+    const [otherUserUID, setOtherUserUID] = useState("");
+    const [otherChatRef, setOtherChatRef] = useState();
     const db = firebase.firestore();
     const chatRef = db.collection("users").doc(user.uid).collection("chats").doc(String(userName));
-
+    const otherRef = db.collection("users").where("userName", "==", userName).get();
+    var otherChat;
     var exists = false;
     useEffect(() => {
         const fetchBal = async () => {
@@ -60,66 +66,147 @@ export function PaymentsScreen({ route }) {
             setMyUserName(snap.data().userName);
         })
 
-        chatRef.onSnapshot((snapshot) => {
-            if (snapshot.exists) {
-                updateChatLog(snapshot.data().chatLog);
-                exists = true;
-            }
-        })
         
+
+        const otherID = async () => {
+            (await otherRef).forEach((doc) => {
+                setOtherUserUID(doc.data().id);
+                // updateOtherChatLog(otherChat);
+                return;
+            })
+            
+            return;
+        }
+        otherID();
+
+        // const otherUserChat = async () => {
+            
+        //     if (otherUserUID != "") {
+        //         const newOtherRef = db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName));
+        //         alert(newOtherRef);
+        //         newOtherRef.onSnapshot((snapshot) => {
+        //             alert("in it");
+        //             updateOtherChatLog(snapshot.data().chatLog);
+        //         })
+        //         // updateOtherChatLog(db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName)).get())
+        //     }
+        //     return;
+        // }
+        // otherUserChat();
     }, []);
 
-    
-    // var myMessage = {
-    //     message: "",
-    //     amount: 0.0,
-    //     side: "right"
-    // }
-    // var otherMessage = {
-    //     message: "",
-    //     amount: 0.0,
-    //     side: "left"
-    // }
+    useEffect(() => {
+        // alert(otherUserUID);
+        // alert(myUserName);
+
+        if (otherUserUID != "" && myUserName != "") {
+            otherChat = db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName));
+            // setOtherChatRef(otherChat);
+            otherChat.onSnapshot((snapshot) => {
+                if (snapshot.exists) {
+                    setOtherChatRef(snapshot.ref);
+                    // snapshot.
+                    updateOtherChatLog(snapshot.data().chatLog);
+                    exists = true;
+                    setChatExists(true);
+                    return;
+                }
+                
+            })
+            // otherChat = otherChat.get();
+
+            chatRef.onSnapshot((snapshot) => {
+                if (snapshot.exists) {
+                    updateChatLog(snapshot.data().chatLog);
+                    exists = true;
+                    setChatExists(true);
+                    return;
+                }
+            })
+        }
+    }, [otherUserUID, myUserName])
+
     const addChat = async (message, amount) => {
-        const otherRef = db.collection("users");
-        const snapshot = otherRef.where("userName", "==", userName).get();
-        var otherId;
-        (await snapshot).forEach((doc) => {
-            otherId = doc.data().id;
-        })
 
-        const otherChat = db.collection("users").doc(otherId).collection("chats").doc(String(myUserName));
-
-        const otherChatLog = [];
-
-        chatLog.forEach(x => {
-            otherChatLog.push(x);
-        });
+        var rightSideMessage = "Message: " + message + " Sending: " + amount + "ETHr";
+        chatLog.unshift(rightSideMessage);
+        // chatLog.push(rightSideMessage);
+        var leftSideMessage = "Message: " + message + " Sending: " + amount + "ETHl";
+        otherChatLog.unshift(leftSideMessage);
+        // otherChatLog.push(leftSideMessage);
 
         const myData = {
-            message,
-            amount,
-            side: "right"
+            chatLog: chatLog,
         };
+        
         const otherData = {
-            message,
-            amount,
-            side: "left"
+            chatLog: otherChatLog,
         };
 
-        if (exists) {
-            chatRef.update(myData);
-            otherChat.update(otherData);
+        chatRef.set(myData, (error) => {
+            if (error) {
+                alert("error writing to my chatLog");
+            } else {
+                alert("wrote to my chatLog");
+            }
+        });
+        otherChatRef.set(otherData, (error) => {
+            if (error) {
+                alert("error writing to other chatLog");
+            } else {
+                alert("wrote to other chatLog");
+            }
+        });
+        return;
+    };
+
+    const renderChats = ({ item }) => {
+        var justifySide = "center";
+        var bgColor = "#000fff";
+        var fontColor = "#1e1c21";
+        var sendingIndexStart = 14;
+        var amountIndexStart = 5;
+        var imageSize = Platform.OS === "web" ? 50 : 25;
+        
+        if (String(item).charAt(String(item).length - 1) == "r") {
+            justifySide = "flex-end";
+            bgColor = "#5c555e";
+            fontColor = "#1e1c21";
+            sendingIndexStart = 14;
+            amountIndexStart = 5;
         } else {
-            chatRef.set(myData);
-            otherChat.set(otherData);
-            exists = true;
+            justifySide = "flex-start";
+            bgColor = "#1e1c21";
+            fontColor = '#79777d';
+            sendingIndexStart = 14;
+            amountIndexStart = 5;
         }
+
+
+        return (
+            <View style={[masterStyles.paymentFlatListContainer, { width: screenSize.width / 1.8, alignSelf: justifySide, backgroundColor: bgColor, flexDirection: "row", paddingLeft: 5}]}>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                    <View style={{height: imageSize, width: imageSize, borderRadius: 50, backgroundColor: "#000"}}>
+                        <Image style={{flex: 1, width: undefined, height: undefined, borderRadius: 50}} resizeMode={'contain'} resizeMethod={'scale'} source={require("../../../assets/Default_Img.png")} />
+                    </View>
+                    <View style={{ justifyContent: "center", paddingLeft: 5}}>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={[masterStyles.headingsSmall, {color: fontColor, fontSize: 14}]} >{" "}{String(item).substring(String(item).length - sendingIndexStart, String(item).length - amountIndexStart)}</Text>
+                            <Text style={[masterStyles.headingsSmallNotBold, {paddingLeft: 5, color: fontColor, fontSize: 14}]} >{String(item).substring(String(item).length - amountIndexStart, String(item).length - 1)}</Text>
+                        </View>
+                        <View style={{width: screenSize.width/ 2 - 20, flexGrow: 1, flexDirection: 'row'}}>
+                            {/* <Text style={[masterStyles.headingsSmall, {flexShrink: 1, paddingTop: 15, color: fontColor, fontSize: 14}]} >{String(item).substring(0, 9)}</Text> */}
+                            <Text style={[masterStyles.headingsSmallNotBold, {flexShrink: 1, paddingLeft: 5, paddingTop: 15, color: fontColor, fontSize: 14}]} >{String(item).substring(9, String(item).length - 14)}</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        );
     };
 
     return (
         <KeyboardAvoidingView
-            keyboardVerticalOffset={Platform.OS === "android" ? 40 : 0}
+            keyboardVerticalOffset={Platform.OS === "web" ? 0 : 40}
             behavior={Platform.OS === "ios" ? "position" : "height" || Platform.OS === "android" ? "position" : "height"}
             style={{
                 backgroundColor: "#1e1c21",
@@ -141,7 +228,12 @@ export function PaymentsScreen({ route }) {
             >
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Account");
+                        navigation.navigate("UserAccountScreen", {
+                            email: email,
+                            fullName: fullName,
+                            userName: userName,
+                            address: address,
+                        });
                     }}
                 >
                     <Image
@@ -166,18 +258,30 @@ export function PaymentsScreen({ route }) {
                     style={{
                         top: 20,
                         paddingBottom: 15,
-                        backgroundColor: "#fff",
                         width: screenSize.width - 30,
                         height: Platform.OS === "web" ? screenSize.height / 1.4 - 160 : Platform.OS === "android" ? screenSize.height / 1.54 - 140 : screenSize.height / 1.54 - 120,
                         alignItems: "center",
                         justifyContent: "center",
                     }}
                 >
-                    <Text>Display Chat</Text>
-                    <Text>{email}</Text>
-                    <Text>{fullName}</Text>
-                    <Text>{userName}</Text>
-                    <Text>{address}</Text>
+                    <AutoScrollFlatList
+                        data={chatLog}
+                        renderItem={renderChats}
+                        key={(item, index) => item + index}
+                        keyExtractor={(item, index) => item + index}
+                        removeClippedSubviews={true}
+                        // key={(item) => item}
+                        
+                        contentContainerStyle={{flexDirection: 'column-reverse'}}
+                        // inverted={true}
+
+                        style={{
+                            width: screenSize.width - 30,
+
+                            backgroundColor: masterStyles.container.backgroundColor,
+                            
+                        }}
+                    />
                 </View>
                 <TextInput
                     style={[masterStyles.input,
@@ -305,13 +409,12 @@ export function PaymentsScreen({ route }) {
                                 //         );
                                 //     }
                                 // } else {
+                                    Keyboard.dismiss();
                                     if (Platform.OS === "web") {
                                         // web
                                         if (window.confirm("You are trying to send ETH\nDo you wish to continue?")) {
                                             if (available == amountInput && available > 0.0) {
-                                                if (window.confirm("Trying to send your full balance amount.\nDo you wish to continue?")) {
-                                                    // add chat if one doesn't exist
-                                                    // update chat array if it does                                                    
+                                                if (window.confirm("Trying to send your full balance amount.\nDo you wish to continue?")) {                                               
                                                     setAmountTI("");
                                                     setMemoTI("");
 
@@ -319,24 +422,17 @@ export function PaymentsScreen({ route }) {
                                                     changeAmountInput(0.0);
                                                     sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
 
-                                                    alert(sendingMessage);
+                                                    addChat(memo, amountInput);
+                                                    alert(chatLog)
                                                 }
                                             } else {
-                                                // add chat if one doesn't exist
-                                                // update chat array if it does
                                                 setAmountTI("");
                                                 setMemoTI("");
 
                                                 changeAvailable(available - amountInput);
                                                 changeAmountInput(0.0);
-                                                sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
+                                                sendingMessage = "Message: " + memo + " Sending: " + amountInput + "ETHr";
                                                 
-
-                                                // chatLog.push(sendingMessage);
-                                                // myMessage.message = memo;
-                                                // myMessage.amount = amountInput;
-                                                // myMessage.side = "right";
-                                                // chatLog.push(myMessage);
                                                 addChat(memo, amountInput);
                                                 alert(chatLog)
                                             }
@@ -356,16 +452,15 @@ export function PaymentsScreen({ route }) {
                                                             [{
                                                                 text: "Yes",
                                                                 onPress: () => {
-                                                                    // add chat if one doesn't exist
-                                                                    // update chat array if it does
-
                                                                     setAmountTI("");
                                                                     setMemoTI("");
 
                                                                     changeAvailable(available - amountInput);
                                                                     changeAmountInput(0.0);
                                                                     sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
-                                                                    alert(sendingMessage);
+
+                                                                    addChat(memo, amountInput);
+                                                                    alert(chatLog)
                                                                 },
                                                             },
                                                             {
@@ -385,8 +480,7 @@ export function PaymentsScreen({ route }) {
                                                         changeAmountInput(0.0);
                                                         sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
 
-                                                        // add chat if one doesn't exist
-                                                        // update chat array if it does
+                                                        addChat(memo, amountInput);
                                                         alert(chatLog);
                                                     }
                                                 },
