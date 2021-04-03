@@ -46,7 +46,7 @@ export function RecentChatsScreen({ navigation }) {
                 console.log(error);
             }
         );
-    }, [chats]);
+    }, []);
 
     const goToPayments = (userName) => {
         async function getData() {
