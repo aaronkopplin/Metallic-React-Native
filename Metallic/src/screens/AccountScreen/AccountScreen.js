@@ -39,41 +39,39 @@ export function AccountScreen(props) {
             : Dimensions.get("screen");
     const navigation = useNavigation();
     const [balance, setBalance] = useState("Loading");
-    const [imageUrl, setImageUrl] = useState(undefined);
-    
+
     useEffect(() => {
-        var mounted = true;
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
-            const bal = await (
+            const balance = await (
                 await WalletFunctions.getBalance(wallet)
             ).toString();
-            if (mounted) {
-                setBalance(bal);
-            }
+            setBalance(balance);
         };
 
-        (async () => {
-            if (Platform.OS !== 'web') {
-              const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-              if (status !== 'granted') {
-                alert('Sorry, we need camera roll permissions to make this work!');
-              }
-            }
-          })();
+        // (async () => {
+        //     if (Platform.OS !== 'web') {
+        //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        //       if (status !== 'granted') {
+        //         alert('Sorry, we need camera roll permissions to make this work!');
+        //       }
+        //     }
+        //   })();
 
         fetchBal();
-        return () => (mounted = false);
     }, []);
+    
+    const [imageUrl, setImageUrl] = useState(undefined);
 
     const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
     ref.getDownloadURL()
         .then( (url) => {setImageUrl(url)})
-    
-    // if (imageUrl == null){
-    //     setImageUrl("../../../assets/Default_Img.png")
-    // } 
- 
+
+/*     if (imageUrl == null){
+        setImageUrl("../../../assets/Default_Img.png")
+    } */
+
+
     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
     
@@ -86,6 +84,39 @@ export function AccountScreen(props) {
             ref.put(blob)
         }; 
     };
+
+ 
+/*      const onChooseImagePress = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync();
+
+        if (!result.cancelled) {
+            let imageUri = result.uri;
+            let imageName = result.fileName;
+
+            console.log("base64 -> ", result.base64);
+            console.log("uri -> ", result.uri);
+            console.log("width -> ", result.width);
+            console.log("height -> ", result.height);
+            console.log("fileSize -> ", result.fileSize);
+            console.log("type -> ", result.type);
+            console.log("fileName -> ", result.fileName);
+            setFilePath(result);
+
+            uploadImage(imageUri, imageName);
+        }
+    };
+
+    const uploadImage = async (uri, name) => {
+        if (uri == null) {
+            return null;
+        }
+        /* 
+         const extension = filename.split('.').pop(); 
+        const name = filename.split('.').slice(0, -1).join('.');
+        filename = name + Date.now() + '.' + extension;
+
+        firebase.storage().ref(name).put(uri);
+    }; */
 
     const onLogoutPress = () => {
         console.log("logout?");
@@ -184,7 +215,6 @@ export function AccountScreen(props) {
                     style={[masterStyles.logo, { borderRadius: 50 }]}
                     source={{ uri: imageUrl }}
                 />
-                <Button title="Choose image..." onPress={onChooseImagePress}/>
                 <Text
                     style={[
                         masterStyles.headings,
@@ -253,6 +283,23 @@ export function AccountScreen(props) {
                         navigation.navigate("AccountDetailScreen");
                     }}
                     text="View Account Details"
+                    color="#1e1c21"
+                    width={screenSize.width - 80}
+                    height={screenSize.height / 20}
+                />
+                </View>
+                
+                <View
+                    style={{
+                        zIndex: 1,
+                        paddingBottom: screenSize.height / 70,
+                    }}
+                >
+                <CustomButton
+                    onPress={
+                        onChooseImagePress
+                    }
+                    text="Change Profile Picture"
                     color="#1e1c21"
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
