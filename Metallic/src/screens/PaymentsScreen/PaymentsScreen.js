@@ -40,11 +40,14 @@ export function PaymentsScreen({ route }) {
 
     const [chatLog, updateChatLog] = useState([]);
     const [otherChatLog, updateOtherChatLog] = useState([]);
+    const [chatExists, setChatExists] = useState(Boolean);
 
     const user = firebase.auth().currentUser;
     const [myUserName, setMyUserName] = useState("");
+    const [otherUserUID, setOtherUserUID] = useState("");
     const db = firebase.firestore();
     const chatRef = db.collection("users").doc(user.uid).collection("chats").doc(String(userName));
+    const otherRef = db.collection("users").where("userName", "==", userName).get();
 
     var exists = false;
     useEffect(() => {
@@ -66,61 +69,44 @@ export function PaymentsScreen({ route }) {
             if (snapshot.exists) {
                 updateChatLog(snapshot.data().chatLog);
                 exists = true;
+                setChatExists(true);
                 // return;
             }
         })
-        
+
+        const otherID = async () => {
+            (await otherRef).forEach((doc) => {
+                setOtherUserUID(doc.data().id);
+                return;
+            })
+        }
+        otherID();
     }, []);
 
-    const otherChatRef = async () => {
-        const otherRef = db.collection("users").where("userName", "==", userName).get();
-        (await otherRef).forEach((doc) => {
-            if (doc.exists) {
-                updateOtherChatLog(doc.data().chatLog);
-                exists = true;
-                return;
-            }
-        })
-    }
 
     const addChat = async (message, amount) => {
-        // const otherRef = db.collection("users");
         
-        // const snapshot = otherRef.where("userName", "==", userName).get();
-        // var otherId;
-        // var otherChat;
-        // (await snapshot).forEach((doc) => {
-        //     otherId = doc.data().id;
-        //     otherChat = db.collection("users").doc(otherId).collection("chats").doc(String(myUserName));
-        //     otherChat.onSnapshot((snap) => {
-        //         if (snap.exists) {
-        //             updateOtherChatLog(snap.data().chatLog);
-        //             exists = true;
-        //         }
-        //     })
-        //     return;
-        // })
+        const otherChat = db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName));
 
-        const otherRef = db.collection("users").where("userName", "==", userName).get();
-        var otherID;
-        (await otherRef).forEach((doc) => {
-            if (doc.exists) {
-                updateOtherChatLog(doc.data().chatLog);
-                otherID = doc.data().uid;
-                exists = true;
-                return;
-            }
-        })
-        const otherChat = db.collection("users").doc(otherID).collection("chats").doc(String(myUserName));
-
+        const otherCh = async () => {
+            otherChat.onSnapshot((doc) => {
+                // if (doc.data().) {
+                    updateOtherChatLog(doc.data().chatLog);
+                    return;
+                // }
+                
+            })
+            return;
+        }
+        otherCh();
         
 
         var rightSideMessage = "Message: " + message + " Sending: " + amount + "ETHr";
-        // chatLog.unshift(rightSideMessage);
-        chatLog.push(rightSideMessage);
+        chatLog.unshift(rightSideMessage);
+        // chatLog.push(rightSideMessage);
         var leftSideMessage = "Message: " + message + " Sending: " + amount + "ETHl";
-        // otherChatLog.unshift(leftSideMessage);
-        otherChatLog.push(leftSideMessage);
+        otherChatLog.unshift(leftSideMessage);
+        // otherChatLog.push(leftSideMessage);
 
         const myData = {
             chatLog: chatLog,
@@ -130,23 +116,43 @@ export function PaymentsScreen({ route }) {
             chatLog: otherChatLog,
         };
 
-        // if (exists) {
+        // if (chatExists) {
         //     chatRef.update(myData, (error) => {
-        //         console.log(error)
+        //         if (error) {
+        //             console.log("error writing to my chatLog");
+        //         } else {
+        //             console.log("wrote to my chatLog");
+        //         }
         //     });
         //     otherChat.update(otherData, (error) => {
-        //         console.log(error)
+        //         if (error) {
+        //             console.log("error writing to other chatLog");
+        //         } else {
+        //             console.log("wrote to other chatLog");
+        //         }
         //     });
+        //     return;
         // } else {
+            alert("setting");
             chatRef.set(myData, (error) => {
-                console.log(error)
+                if (error) {
+                    alert("error writing to my chatLog");
+                } else {
+                    alert("wrote to my chatLog");
+                }
             });
             otherChat.set(otherData, (error) => {
-                console.log(error)
+                if (error) {
+                    alert("error writing to other chatLog");
+                } else {
+                    alert("wrote to other chatLog");
+                }
             });
             exists = true;
+            setChatExists(true);
+            // return;
         // }
-        return;
+        
     };
 
     const renderChats = ({ item }) => {
@@ -262,7 +268,7 @@ export function PaymentsScreen({ route }) {
                         // key={(item) => item}
 
                         contentContainerStyle={{flexDirection: 'column-reverse'}}
-                        inverted={true}
+                        // inverted={true}
 
                         style={{
                             width: screenSize.width - 30,
