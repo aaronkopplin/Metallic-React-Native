@@ -13,7 +13,7 @@ import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import { check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+// import { check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -64,18 +64,21 @@ export function AccountScreen(props) {
         fetchBal();
     }, []);
     
-    check(PERMISSIONS.IOS.PHOTO_LIBRARY)
-    .then((result) => {
-        switch(result) {
-            case RESULTS.GRANTED:
-                console.log('This feature has been granted');
-                break;
-            case RESULTS.DENIED:
-                console.log("This feature has been denied");
-                break;
-        }
-    })
+    // var perm = check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+    // .then((result) => {
+    //     switch(result) {
+    //         case RESULTS.GRANTED:
+    //             console.log('This feature has been granted');
+    //             break;
+    //         case RESULTS.DENIED:
+    //             console.log("This feature has been denied");
+    //             break;
+    //     }
+    // })
 
+    // if (perm && Platform.OS == "ios") {
+        
+    // }
     const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
     ref.getDownloadURL()
         .then( (url) => {setImageUrl(url)})

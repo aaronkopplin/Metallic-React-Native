@@ -15,7 +15,7 @@ import { UserSearchScreen } from "./src/screens/UserSearchScreen/UserSearchScree
 import { AccountDetailScreen } from "./src/screens/AccountDetailsScreen/AccountDetailScreen";
 import { masterStyles } from "./masterStyles";
 import { AccountRecoveryScreen } from "./src/screens/AccountRecoveryScreen/AccountRecoverScreen";
-import {check, PERMISSIONS, RESULTS} from 'react-native-permissions'
+// import {check, PERMISSIONS, RESULTS} from 'react-native-permissions'
 import * as WalletFunctions from "./src/ethereum/walletFunctions";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
@@ -34,18 +34,17 @@ if (!global.atob) {
     global.atob = decode;
 }
 
-check(PERMISSIONS.IOS.PHOTO_LIBRARY)
-.then((result) => {
-    switch(result) {
-        case RESULTS.GRANTED:
-            console.log('This feature has been granted');
-            break;
-        case RESULTS.DENIED:
-            console.log("This feature has been denied");
-            break;
-    }
-})
-
+//  var permCheck = check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+// .then((result) => {
+//     switch(result) {
+//         case RESULTS.GRANTED:
+//             console.log('This feature has been granted');
+//             break;
+//         case RESULTS.DENIED:
+//             console.log("This feature has been denied");
+//             break;
+//     }
+// })
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 

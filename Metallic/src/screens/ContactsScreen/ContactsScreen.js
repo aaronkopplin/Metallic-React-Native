@@ -85,13 +85,15 @@ export function ContactsScreen({ navigation }) {
         
         <View
             style={{
-                flexDirection: "row"
+                flexDirection: 'row', alignItems: 'center', paddingTop: Platform.OS == "web" ? 5 : 0, paddingLeft: Platform.OS == 'web' ? screenSize.width * 0.008 : screenSize.width * .022
             }}
         >
-            <Image
-                style={[masterStyles.contactsLogo, {borderRadius: 50}]}
-                source={{ uri: getImage(title)}}
-            />
+            <View style={[ masterStyles.contactsLogo, {height: Platform.OS == "web" ? 50 : 40, width: Platform.OS == "web" ? 50 : 40, borderRadius: 50, backgroundColor: "#000"}]}>
+                <Image
+                    style={[{flex: 1, width: undefined, height: undefined, borderRadius: 50}]}
+                    source={{ uri: getImage(title)}}
+                />
+            </View>
             <View style={masterStyles.contactBar}>
 
                 <TouchableOpacity onPress={() => {
@@ -146,16 +148,18 @@ export function ContactsScreen({ navigation }) {
             alignContent: 'center', 
             alignItems: 'center',}}>
 
-                <View style={{    
+            <View style={{    
                 backgroundColor: "#1e1c21", 
                 height: Platform.OS == "web" ? screenSize.height * 0.01 : 0, 
                 width: screenSize.width
                 }}/>
-            <View style={{flexDirection: "row"}}>
-                <Image
-                    style={[masterStyles.contactsUserLogo, {borderRadius: 50}]}
-                    source={{ uri: getImage(you)}}
-                />
+            <View style={{flexDirection: 'row', alignItems: 'center', bottom: Platform.OS == "web" ? 0 : 10}}>
+                <View style={[ masterStyles.contactsUserLogo, {height: 50, width: 50, borderRadius: 50, backgroundColor: "#000"}]}>
+                    <Image
+                        style={[{flex: 1, width: undefined, height: undefined, borderRadius: 50}]}
+                        source={{ uri: getImage(you)}}
+                    />
+                </View>
                 <View style={{
                     backgroundColor: "#ffffff", 
                     borderRadius: 5, 
@@ -163,10 +167,10 @@ export function ContactsScreen({ navigation }) {
                     maxHeight: screenSize.height * .07,
                     overflow: "hidden",
                     textAlign: "center",
-                    bottom: 
-                        Platform.OS == "web" 
-                        ? 0
-                        : screenSize.height * .01,
+                    // bottom: 
+                    //     Platform.OS == "web" 
+                    //     ? 0
+                    //     : screenSize.height * .01,
                     }}>
                     <TouchableOpacity onPress={() => {
                             navigation.navigate('Account')
@@ -177,10 +181,11 @@ export function ContactsScreen({ navigation }) {
                                 {
                                     paddingHorizontal: 10,
                                     color: "#000000",
+                                    alignItems: 'flex-end'
                                 },
                             ]}
                         > {you} </Text>
-                </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={{
@@ -203,10 +208,10 @@ export function ContactsScreen({ navigation }) {
                 : (screenSize.height * 0.65), 
                 width: screenSize.width - 20}}>
                 <SectionList
-                sections={contactData}
-                keyExtractor={(item, index) => item + index}
-                renderItem={({ item }) => <Item title={item} />}
-                renderSectionHeader={({ section: { title } }) => (
+                    sections={contactData}
+                    keyExtractor={(item, index) => item + index}
+                    renderItem={({ item }) => <Item title={item} />}
+                    renderSectionHeader={({ section: { title } }) => (
                     <Text style={masterStyles.contactTitle}>{title}</Text>
                 )}
                 />

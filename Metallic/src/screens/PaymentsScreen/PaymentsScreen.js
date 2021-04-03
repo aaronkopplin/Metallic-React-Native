@@ -106,6 +106,7 @@ export function PaymentsScreen({ route }) {
             // setOtherChatRef(otherChat);
             otherChat.onSnapshot((snapshot) => {
                 if (snapshot.exists) {
+                    alert("help")
                     setOtherChatRef(snapshot.ref);
                     // snapshot.
                     updateOtherChatLog(snapshot.data().chatLog);
