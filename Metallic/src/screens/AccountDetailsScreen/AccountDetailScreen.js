@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { Wallet } from "ethers";
 import QRCode from "react-native-qrcode-svg";
 import { useNavigation } from "@react-navigation/native";
+import Clipboard from "@react-native-community/clipboard";
 
 export function AccountDetailScreen(props) {
     const screenSize =
@@ -58,6 +59,7 @@ export function AccountDetailScreen(props) {
                 }}
             >
                 <Text
+                    onPress={() => Clipboard.setString(address)}
                     style={[
                         masterStyles.headingsSmall,
                         {
@@ -91,29 +93,6 @@ export function AccountDetailScreen(props) {
                     mnemonic: {mnemonic}
                 </Text>
                 <QRCode value={address} size={screenSize.width / 2} />
-                {/* <CustomButton
-                    onPress={() => {
-                        Alert.alert(
-                            "Warning",
-                            "Recovering another account will erase the account data from this device." +
-                                "\n\nDO NOT proceed unless you have written down the mnemonic for this account and stored it in a safe location." +
-                                "\n\nThe current mnemonic is:\n\n" +
-                                mnemonic,
-                            [
-                                {
-                                    text: "Ok",
-                                    onPress: () => {},
-                                    style: "Cancel",
-                                },
-                            ]
-                        );
-                        navigation.navigate("AccountRecoveryScreen");
-                    }}
-                    text="Recover Account From Mnemonic"
-                    color="#1e1c21"
-                    width={screenSize.width - 80}
-                    height={screenSize.height / 20}
-                ></CustomButton> */}
             </View>
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
         </View>

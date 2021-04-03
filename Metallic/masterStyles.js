@@ -151,4 +151,10 @@ export const masterStyles = StyleSheet.create({
     right: screenSize.width * 0.01,
     top: Platform.OS == 'web' ? screenSize.height * 0.01 : -screenSize.height * 0.005
   },
+  paymentFlatListContainer: {
+    marginTop: 6,
+    borderBottomWidth: 0,
+    paddingVertical: 8,
+    borderRadius: 10
+  },
 });

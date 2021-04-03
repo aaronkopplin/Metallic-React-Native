@@ -14,6 +14,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 
 export function login(email, password, wallet) {
+    async function storeDataAsync(key, value) {
+        await WalletFunctions.storeData(key, value);
+    }
+
+    if (wallet) {
+        storeDataAsync("mnemonic", wallet.mnemonic.phrase);
+        storeDataAsync("privateKey", wallet.privateKey);
+    }
+
     firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
@@ -29,16 +38,6 @@ export function login(email, password, wallet) {
                         return;
                     }
                     const user = firestoreDocument.data();
-                    if (wallet) {
-                        WalletFunctions.storeData(
-                            "mnemonic",
-                            wallet.mnemonic.phrase
-                        );
-                        WalletFunctions.storeData(
-                            "privateKey",
-                            wallet.privateKey
-                        );
-                    }
                 })
                 .catch((error) => {
                     alert(error);

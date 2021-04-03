@@ -24,9 +24,9 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
-import * as ImagePicker from "expo-image-picker";
-import storage from "@react-native-firebase/storage";
-import "firebase/storage";
+// import * as ImagePicker from "expo-image-picker";
+// import storage from "@react-native-firebase/storage";
+// import "firebase/storage";
 
 export function AccountScreen(props) {
     const [userFullName, setFullName] = useState("");
@@ -41,12 +41,15 @@ export function AccountScreen(props) {
     const [balance, setBalance] = useState("Loading");
 
     useEffect(() => {
+        var mounted = true;
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
-            const balance = await (
+            const bal = await (
                 await WalletFunctions.getBalance(wallet)
             ).toString();
-            setBalance(balance);
+            if (mounted) {
+                setBalance(bal);
+            }
         };
 
         // (async () => {
@@ -59,49 +62,50 @@ export function AccountScreen(props) {
         //   })();
 
         fetchBal();
+        return () => (mounted = false);
     }, []);
     
-    const [imageUrl, setImageUrl] = useState(undefined);
+    // const [imageUrl, setImageUrl] = useState(undefined);
 
-    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
-    ref.getDownloadURL()
-        .then( (url) => {setImageUrl(url)})
+    // const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    // ref.getDownloadURL()
+    //     .then( (url) => {setImageUrl(url)})
 
 /*     if (imageUrl == null){
         setImageUrl("../../../assets/Default_Img.png")
     } */
  
-     const onChooseImagePress = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync();
+    //  const onChooseImagePress = async () => {
+    //     let result = await ImagePicker.launchImageLibraryAsync();
 
-        if (!result.cancelled) {
-            let imageUri = result.uri;
-            let imageName = result.fileName;
+    //     if (!result.cancelled) {
+    //         let imageUri = result.uri;
+    //         let imageName = result.fileName;
 
-            console.log("base64 -> ", result.base64);
-            console.log("uri -> ", result.uri);
-            console.log("width -> ", result.width);
-            console.log("height -> ", result.height);
-            console.log("fileSize -> ", result.fileSize);
-            console.log("type -> ", result.type);
-            console.log("fileName -> ", result.fileName);
-            setFilePath(result);
+    //         console.log("base64 -> ", result.base64);
+    //         console.log("uri -> ", result.uri);
+    //         console.log("width -> ", result.width);
+    //         console.log("height -> ", result.height);
+    //         console.log("fileSize -> ", result.fileSize);
+    //         console.log("type -> ", result.type);
+    //         console.log("fileName -> ", result.fileName);
+    //         setFilePath(result);
 
-            uploadImage(imageUri, imageName);
-        }
-    };
+    //         uploadImage(imageUri, imageName);
+    //     }
+    // };
 
-    const uploadImage = async (uri, name) => {
-        if (uri == null) {
-            return null;
-        }
-        /* 
-         const extension = filename.split('.').pop(); 
-        const name = filename.split('.').slice(0, -1).join('.');
-        filename = name + Date.now() + '.' + extension; */
+    // const uploadImage = async (uri, name) => {
+    //     if (uri == null) {
+    //         return null;
+    //     }
+    //     /* 
+    //      const extension = filename.split('.').pop(); 
+    //     const name = filename.split('.').slice(0, -1).join('.');
+    //     filename = name + Date.now() + '.' + extension; */
 
-        firebase.storage().ref(name).put(uri);
-    };
+    //     firebase.storage().ref(name).put(uri);
+    // };
 
     const onLogoutPress = () => {
         console.log("logout?");
@@ -196,10 +200,10 @@ export function AccountScreen(props) {
                 >
                     My Account
                 </Text>
-                <Image
+                {/* <Image
                     style={[masterStyles.logo, { borderRadius: 50 }]}
                     source={{ uri: imageUrl }}
-                />
+                /> */}
                 {/* <Button title="Choose image..." onPress={onChooseImagePress} /> */}
                 <Text
                     style={[
