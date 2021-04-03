@@ -45,6 +45,7 @@ check(PERMISSIONS.IOS.PHOTO_LIBRARY)
             break;
     }
 })
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
