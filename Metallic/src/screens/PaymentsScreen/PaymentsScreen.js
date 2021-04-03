@@ -137,7 +137,7 @@ export function PaymentsScreen({ route }) {
         var leftSideMessage = "Message: " + message + " Sending: " + amount + "ETHl";
         otherChatLog.unshift(leftSideMessage);
         // otherChatLog.push(leftSideMessage);
-
+        
         const myData = {
             chatLog: chatLog,
         };

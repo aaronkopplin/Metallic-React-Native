@@ -85,15 +85,14 @@ export function ContactsScreen({ navigation }) {
         
         <View
             style={{
-                flexDirection: 'row', alignItems: 'center', paddingTop: Platform.OS == "web" ? 5 : 0, paddingLeft: Platform.OS == 'web' ? screenSize.width * 0.008 : screenSize.width * .022
+                flexDirection: 'row'
             }}
-        >
-            <View style={[ masterStyles.contactsLogo, {height: Platform.OS == "web" ? 50 : 40, width: Platform.OS == "web" ? 50 : 40, borderRadius: 50, backgroundColor: "#000"}]}>
+            >
                 <Image
-                    style={[{flex: 1, width: undefined, height: undefined, borderRadius: 50}]}
-                    source={{ uri: getImage(title)}}
+                style={[masterStyles.contactsLogo, {borderRadius: 50}]}
+                source={{ uri: getImage(title)}}
                 />
-            </View>
+            
             <View style={masterStyles.contactBar}>
 
                 <TouchableOpacity onPress={() => {
@@ -153,24 +152,22 @@ export function ContactsScreen({ navigation }) {
                 height: Platform.OS == "web" ? screenSize.height * 0.01 : 0, 
                 width: screenSize.width
                 }}/>
-            <View style={{flexDirection: 'row', alignItems: 'center', bottom: Platform.OS == "web" ? 0 : 10}}>
-                <View style={[ masterStyles.contactsUserLogo, {height: 50, width: 50, borderRadius: 50, backgroundColor: "#000"}]}>
-                    <Image
-                        style={[{flex: 1, width: undefined, height: undefined, borderRadius: 50}]}
-                        source={{ uri: getImage(you)}}
-                    />
-                </View>
+            <View style={{flexDirection: "row"}}>
+                <Image
+                    style={[masterStyles.contactsUserLogo, {borderRadius: 50}]}
+                    source={{ uri: getImage(you)}}
+                />
                 <View style={{
                     backgroundColor: "#ffffff", 
                     borderRadius: 5, 
                     maxWidth: screenSize.width * .75,
-                    maxHeight: screenSize.height * .07,
+                    maxHeight: screenSize.height * .08,
                     overflow: "hidden",
                     textAlign: "center",
-                    // bottom: 
-                    //     Platform.OS == "web" 
-                    //     ? 0
-                    //     : screenSize.height * .01,
+                    bottom: 
+                        Platform.OS == "web" 
+                        ? 0
+                        : screenSize.height * .01,
                     }}>
                     <TouchableOpacity onPress={() => {
                             navigation.navigate('Account')
@@ -181,7 +178,6 @@ export function ContactsScreen({ navigation }) {
                                 {
                                     paddingHorizontal: 10,
                                     color: "#000000",
-                                    alignItems: 'flex-end'
                                 },
                             ]}
                         > {you} </Text>
