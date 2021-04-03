@@ -73,10 +73,27 @@ export function ContactsScreen({ navigation }) {
 
     // TODO: Once image storage is setup for users actually search for it.
     const getImage = (userName) => {
-        var ref = firebase.storage().ref('/DefaultImage.png');
-        ref.getDownloadURL()
-        .then( (url) => {setImageUrl(url)})
+        var [iUrl, setIURL] = useState(undefined);
 
+        var DefaultRef = firebase.storage().ref('/DefaultImage.png');
+        DefaultRef.getDownloadURL()
+        .then( (url) => {setImageUrl(url)});
+
+        var ref = undefined;
+        // check if image exists?
+        ref = firebase.storage().ref('/' + userName + "ProfileImage");
+        ref.getDownloadURL().then(onResolve,onReject);
+
+        function onResolve(foundURL){
+            setIURL(foundURL);
+        }
+        function onReject(error) {
+            //console.log(error.code);
+        }
+
+        if (iUrl != undefined){
+            return iUrl;
+        }
         return userImage;
     }
 
