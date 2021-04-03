@@ -73,7 +73,7 @@ export function ContactsScreen({ navigation }) {
 
     // TODO: Once image storage is setup for users actually search for it.
     const getImage = (userName) => {
-        var ref = firebase.storage().ref('/RainbowProfileImage');
+        var ref = firebase.storage().ref('/DefaultImage.png');
         ref.getDownloadURL()
         .then( (url) => {setImageUrl(url)})
 
@@ -83,13 +83,17 @@ export function ContactsScreen({ navigation }) {
     // Set up navigation and touchable components for each contact.
     const Item = ({ title }) => (
         
-        <View>
+        <View
+            style={{
+                flexDirection: "row"
+            }}
+        >
             <Image
-                style={[masterStyles.logo, {borderRadius: 50}]}
+                style={[masterStyles.contactsLogo, {borderRadius: 50}]}
                 source={{ uri: getImage(title)}}
             />
-
             <View style={masterStyles.contactBar}>
+
                 <TouchableOpacity onPress={() => {
                     contactsList.forEach((c) => {
                         if (you == title){
@@ -147,32 +151,38 @@ export function ContactsScreen({ navigation }) {
                 height: Platform.OS == "web" ? screenSize.height * 0.01 : 0, 
                 width: screenSize.width
                 }}/>
-
-            <View style={{
-                backgroundColor: "#240aa3", 
-                borderRadius: 45, 
-                maxWidth: screenSize.width * .75,
-                maxHeight: screenSize.height * .1,
-                overflow: "hidden",
-                textAlign: "center",
-                bottom: 
-                    Platform.OS == "web" 
-                    ? 0
-                    : screenSize.height * .01,
-                }}>
-                <Text
-                    style={[
-                        masterStyles.title,
-                        {
-                            paddingHorizontal: 10,
-                            color: "#ffffff",
-                        },
-                    ]}
-                >
-                    {you}
-                </Text>
+            <View style={{flexDirection: "row"}}>
+                <Image
+                    style={[masterStyles.contactsUserLogo, {borderRadius: 50}]}
+                    source={{ uri: getImage(you)}}
+                />
+                <View style={{
+                    backgroundColor: "#ffffff", 
+                    borderRadius: 5, 
+                    maxWidth: screenSize.width * .75,
+                    maxHeight: screenSize.height * .1,
+                    overflow: "hidden",
+                    textAlign: "center",
+                    bottom: 
+                        Platform.OS == "web" 
+                        ? 0
+                        : screenSize.height * .01,
+                    }}>
+                    <TouchableOpacity onPress={() => {
+                            navigation.navigate('Account')
+                        }}>
+                        <Text
+                            style={[
+                                masterStyles.title,
+                                {
+                                    paddingHorizontal: 10,
+                                    color: "#000000",
+                                },
+                            ]}
+                        > {you} </Text>
+                </TouchableOpacity>
+                </View>
             </View>
-                    
             <View style={{
                 
                 backgroundColor: "#1e1c21", 

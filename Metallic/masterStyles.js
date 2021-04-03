@@ -121,10 +121,10 @@ export const masterStyles = StyleSheet.create({
     paddingLeft: 10, 
     paddingVertical: 5,
     marginBottom: 3,
-    borderRadius: 90,
+    borderRadius: 5,
     backgroundColor: '#fff', 
     width: Platform.OS == "web" ? screenSize.width * 0.95 : screenSize.width * 0.8,
-    left: Platform.OS == "web" ? screenSize.width * 0.05 : screenSize.width * 0.1,
+    left: Platform.OS == "web" ? screenSize.width * 0.05 : screenSize.width * 0.02,
   },
   contactNames: {
     color: '#000000',
@@ -132,9 +132,22 @@ export const masterStyles = StyleSheet.create({
     fontSize: 25,
   },
   contactTitle: {
-    color: '#6706AD',
+    color: '#9448CC',
     textDecorationLine: "underline",
     fontWeight: 'bold',
     fontSize: 40,
-  }
+    left: Platform.OS == "web" ? 0 : 3,
+    paddingLeft: Platform.OS == "web" ? screenSize.width * .02 : 0
+  },
+  contactsLogo: {
+    height: 30,
+    width: 30,
+    left: Platform.OS == "web" ? screenSize.width * .02 : 0
+  },
+  contactsUserLogo: {
+    height: 40,
+    width: 40,
+    right: screenSize.width * 0.01,
+    top: Platform.OS == 'web' ? screenSize.height * 0.01 : -screenSize.height * 0.005
+  },
 });
