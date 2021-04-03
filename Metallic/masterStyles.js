@@ -122,8 +122,8 @@ export const masterStyles = StyleSheet.create({
     paddingVertical: 5,
     marginBottom: 3,
     borderRadius: 5,
-    backgroundColor: '#fff', 
-    width: Platform.OS == "web" ? screenSize.width * 0.95 : screenSize.width * 0.8,
+    backgroundColor: '#ffffff', 
+    width: Platform.OS == "web" ? screenSize.width * 0.8 : screenSize.width * 0.8,
     left: Platform.OS == "web" ? screenSize.width * 0.05 : screenSize.width * 0.02,
   },
   contactNames: {
@@ -142,7 +142,8 @@ export const masterStyles = StyleSheet.create({
   contactsLogo: {
     height: 30,
     width: 30,
-    left: Platform.OS == "web" ? screenSize.width * .02 : 0
+    left: Platform.OS == "web" ? screenSize.width * .02 : 0,
+    top: Platform.OS == 'web' ? screenSize.height * 0.01 : screenSize.height * 0.005
   },
   contactsUserLogo: {
     height: 40,
