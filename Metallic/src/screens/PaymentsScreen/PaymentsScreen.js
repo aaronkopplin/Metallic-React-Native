@@ -101,6 +101,8 @@ export function PaymentsScreen({ route }) {
 
         if (otherUserUID != "" && myUserName != "") {
             otherChat = db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName));
+            
+            
             // setOtherChatRef(otherChat);
             otherChat.onSnapshot((snapshot) => {
                 if (snapshot.exists) {
@@ -143,6 +145,7 @@ export function PaymentsScreen({ route }) {
             chatLog: otherChatLog,
         };
 
+        alert(otherData)
         chatRef.set(myData, (error) => {
             if (error) {
                 alert("error writing to my chatLog");

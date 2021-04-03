@@ -10,7 +10,6 @@ import {
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 
 export function login(email, password, wallet) {
