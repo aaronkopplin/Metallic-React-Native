@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
+
+const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
 
 export const masterStyles = StyleSheet.create({
   mainBackground: {
@@ -115,12 +117,24 @@ export const masterStyles = StyleSheet.create({
     fontSize: 20,
     color: "#333333",
   },
-  contactBar: {
-    height: 40, 
-    paddingHorizontal: 10, 
-    paddingVertical: 5, 
-    marginVertical: 8, 
+  contactBar: { 
+    paddingLeft: 10, 
+    paddingVertical: 5,
+    marginBottom: 3,
+    borderRadius: 90,
     backgroundColor: '#fff', 
-    borderRadius: 4,
+    width: Platform.OS == "web" ? screenSize.width * 0.95 : screenSize.width * 0.8,
+    left: Platform.OS == "web" ? screenSize.width * 0.05 : screenSize.width * 0.1,
   },
+  contactNames: {
+    color: '#000000',
+    fontWeight: 'bold',
+    fontSize: 25,
+  },
+  contactTitle: {
+    color: '#6706AD',
+    textDecorationLine: "underline",
+    fontWeight: 'bold',
+    fontSize: 40,
+  }
 });

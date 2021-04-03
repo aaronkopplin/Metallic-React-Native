@@ -28,46 +28,67 @@ export function ContactsScreen({ navigation }) {
     const user = firebase.auth().currentUser
 
     // Is there a user currently?
-    if (user != null){
-        const RefUser = firebase.firestore().collection("users").doc(user.uid);
+    if (user == null){
+        return;
+    }
+    const RefUser = firebase.firestore().collection("users").doc(user.uid);
 
-        const ContactsRef = RefUser.collection("Contacts");
+    const ContactsRef = RefUser.collection("Contacts");
 
-        const [contactsList, setContactsList] = useState([]); 
-        const [you, setYou] = useState();
-        const titles = ["&","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+    const [userImage, setImageUrl] = useState(undefined);
+    const [contactsList, setContactsList] = useState([]); 
+    const [you, setYou] = useState();
+    const titles = ["&","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
-        // Get the lsit of contacts
-        useEffect(() => {
-            ContactsRef.onSnapshot((querySnapshot) => {
-                // Variable for holding each contacts data
-                var list = [];
-                querySnapshot.forEach(doc => {
-                    const entity = doc.data();
-                    
-                    list.push(entity);
-                });
-                setContactsList(list);
-             //   console.log(contactsList);
+    // Get the list of contacts
+    useEffect(() => {
+        ContactsRef.onSnapshot((querySnapshot) => {
+            // Variable for holding each contacts data
+            var list = [];
+            querySnapshot.forEach(doc => {
+                const entity = doc.data();
+                
+                list.push(entity);
             });
+            setContactsList(list);
+            //   console.log(contactsList);
+        });
 
-            async function getUser() {
-                const uid = user.uid;
-                const db = firebase.firestore().collection("users");
-                const snapshot = await db.where("id", "==", uid).get();
-                if (snapshot.empty) {
-                    alert("no matching");
-                }
-                else {snapshot.forEach((doc) => {
-                    setYou(doc.data().userName);
-                    });
-                }
+        // Get the username for the current user
+        async function getUser() {
+            const uid = user.uid;
+            const db = firebase.firestore().collection("users");
+            const snapshot = await db.where("id", "==", uid).get();
+            if (snapshot.empty) {
+                alert("no matching");
             }
-            getUser();
+            else {snapshot.forEach((doc) => {
+                setYou(doc.data().userName);
+                });
+            }
+        }
+        getUser();
 
-        }, []);
+    }, []);
 
-        const Item = ({ title }) => (
+    // TODO: Once image storage is setup for users actually search for it.
+    const getImage = (userName) => {
+        var ref = firebase.storage().ref('/RainbowProfileImage');
+        ref.getDownloadURL()
+        .then( (url) => {setImageUrl(url)})
+
+        return userImage;
+    }
+
+    // Set up navigation and touchable components for each contact.
+    const Item = ({ title }) => (
+        
+        <View>
+            <Image
+                style={[masterStyles.logo, {borderRadius: 50}]}
+                source={{ uri: getImage(title)}}
+            />
+
             <View style={masterStyles.contactBar}>
                 <TouchableOpacity onPress={() => {
                     contactsList.forEach((c) => {
@@ -82,50 +103,105 @@ export function ContactsScreen({ navigation }) {
                                 address: c.address,
                             })
                         }})}}>
-                    <Text style={masterStyles.headings}>{title}</Text>
+                    <Text style={masterStyles.contactNames}>{title}</Text>
                 </TouchableOpacity>
             </View>
-          );
-
-        const populateData = () => {
-            contactsList.forEach((contact) => {
-                var i = 0;
-                titles.forEach((letter) => {
-                    // Check First letter of our contacts userName.
-                    if (contact.userName.substring(0,1).toUpperCase() == letter){
-                        // If we share this letter add them to this part of our data
-                        firstLetterList[i].data.push(contact.userName);
-                    }
-                    i++;
-                })
-            });
-            
-        };
-
-        // Map out letter to the title of our list.
-        const firstLetterList = titles.map((item) => ({
-            title: item,
-            data: []
-        }));
-
-        populateData();
-
-        var contactData = firstLetterList.filter(eixisting => eixisting.data.length != 0);
-
-        return (
-            <SafeAreaView style={{flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center'}}>
-                <View style={{backgroundColor: "#2e2b30", paddingBottom: 40, borderRadius: 4, height: screenSize.height * 0.75, width: screenSize.width - 20}}>
-                    <SectionList
-                    sections={contactData}
-                    keyExtractor={(item, index) => item + index}
-                    renderItem={({ item }) => <Item title={item} />}
-                    renderSectionHeader={({ section: { title } }) => (
-                        <Text style={masterStyles.title}>{title}</Text>
-                    )}
-                    />
-                </View>
-            
-            </SafeAreaView>
+        </View>
         );
-    }
+
+    // Go through our list of contacts and add them to the map.
+    const populateData = () => {
+        contactsList.forEach((contact) => {
+            var i = 0;
+            titles.forEach((letter) => {
+                // Check First letter of our contacts userName.
+                if (contact.userName.substring(0,1).toUpperCase() == letter){
+                    // If we share this letter add them to this part of our data
+                    firstLetterList[i].data.push(contact.userName);
+                }
+                i++;
+            })
+        });
+        
+    };
+
+    // Map out letter to the title of our list.
+    const firstLetterList = titles.map((item) => ({
+        title: item,
+        data: []
+    }));
+
+    populateData();
+
+    // Filter out any letter that do not have a contact
+    var contactData = firstLetterList.filter(eixisting => eixisting.data.length != 0);
+
+    return (
+        <SafeAreaView style={{
+            flex: 1, backgroundColor: "#1e1c21", 
+            alignContent: 'center', 
+            alignItems: 'center',}}>
+
+                <View style={{    
+                backgroundColor: "#1e1c21", 
+                height: Platform.OS == "web" ? screenSize.height * 0.01 : 0, 
+                width: screenSize.width
+                }}/>
+
+            <View style={{
+                backgroundColor: "#240aa3", 
+                borderRadius: 45, 
+                maxWidth: screenSize.width * .75,
+                maxHeight: screenSize.height * .1,
+                overflow: "hidden",
+                textAlign: "center",
+                bottom: 
+                    Platform.OS == "web" 
+                    ? 0
+                    : screenSize.height * .01,
+                }}>
+                <Text
+                    style={[
+                        masterStyles.title,
+                        {
+                            paddingHorizontal: 10,
+                            color: "#ffffff",
+                        },
+                    ]}
+                >
+                    {you}
+                </Text>
+            </View>
+                    
+            <View style={{
+                
+                backgroundColor: "#1e1c21", 
+                height: Platform.OS == "web" ? screenSize.height * 0.01 : 0, 
+                width: screenSize.width
+                }}/>
+
+            <View style={{
+                backgroundColor: "#2e2b30", 
+                paddingBottom: 10, 
+                borderRadius: 4, 
+                height: Platform.OS == "web" 
+                ? (screenSize.height * 0.75)
+                : screenSize.height
+                ,
+                maxHeight: Platform.OS == "web" 
+                ? screenSize.height
+                : (screenSize.height * 0.65), 
+                width: screenSize.width - 20}}>
+                <SectionList
+                sections={contactData}
+                keyExtractor={(item, index) => item + index}
+                renderItem={({ item }) => <Item title={item} />}
+                renderSectionHeader={({ section: { title } }) => (
+                    <Text style={masterStyles.contactTitle}>{title}</Text>
+                )}
+                />
+            </View>
+
+        </SafeAreaView>
+    );
 }
