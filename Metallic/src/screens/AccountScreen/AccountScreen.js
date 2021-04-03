@@ -13,6 +13,7 @@ import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -27,6 +28,7 @@ import * as WalletFunctions from "../../ethereum/walletFunctions";
 import * as ImagePicker from "expo-image-picker";
 import storage from "@react-native-firebase/storage";
 import "firebase/storage";
+import { formatBytes32String } from "@ethersproject/strings";
 
 export function AccountScreen(props) {
     const [userFullName, setFullName] = useState("");
@@ -40,7 +42,7 @@ export function AccountScreen(props) {
     const navigation = useNavigation();
     const [balance, setBalance] = useState("Loading");
     const [imageUrl, setImageUrl] = useState(undefined);
-    
+
     useEffect(() => {
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
@@ -62,7 +64,17 @@ export function AccountScreen(props) {
         fetchBal();
     }, []);
     
-
+    check(PERMISSIONS.IOS.PHOTO_LIBRARY)
+    .then((result) => {
+        switch(result) {
+            case RESULTS.GRANTED:
+                console.log('This feature has been granted');
+                break;
+            case RESULTS.DENIED:
+                console.log("This feature has been denied");
+                break;
+        }
+    })
 
     const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
     ref.getDownloadURL()
