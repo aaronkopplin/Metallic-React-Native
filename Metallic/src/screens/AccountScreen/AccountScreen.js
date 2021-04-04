@@ -61,19 +61,30 @@ export function AccountScreen(props) {
         //   })();
 
         fetchBal();
+
+
     }, []);
 
     // if (perm && Platform.OS == "ios") {
         
     // }
+
+    // Stutters to load correct image probably from multiple function calls?
     const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
-    ref.getDownloadURL()
-        .then( (url) => {setImageUrl(url)})
-
-/*     if (imageUrl == null){
-        setImageUrl("../../../assets/Default_Img.png")
-    } */
-
+    ref.getDownloadURL().then(onResolve, onReject);
+            
+    // Found image for user
+    function onResolve(foundUrl) {
+        setImageUrl(foundUrl);
+    }
+    
+    // Failed to find Image for user
+    function onReject(error) {
+        //console.log(error.code)
+        var def = firebase.storage().ref('/DefaultImage.png');
+        def.getDownloadURL().then((url) => {
+            setImageUrl(url)}); 
+    }
 
     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
@@ -85,41 +96,10 @@ export function AccountScreen(props) {
             const blob = await response.blob();
             var ref = firebase.storage().ref().child(imageName);
             ref.put(blob)
+
+            setImageUrl(ref.getDownloadURL());
         }; 
     };
-
- 
-/*      const onChooseImagePress = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync();
-
-        if (!result.cancelled) {
-            let imageUri = result.uri;
-            let imageName = result.fileName;
-
-            console.log("base64 -> ", result.base64);
-            console.log("uri -> ", result.uri);
-            console.log("width -> ", result.width);
-            console.log("height -> ", result.height);
-            console.log("fileSize -> ", result.fileSize);
-            console.log("type -> ", result.type);
-            console.log("fileName -> ", result.fileName);
-            setFilePath(result);
-
-            uploadImage(imageUri, imageName);
-        }
-    };
-
-    const uploadImage = async (uri, name) => {
-        if (uri == null) {
-            return null;
-        }
-        /* 
-         const extension = filename.split('.').pop(); 
-        const name = filename.split('.').slice(0, -1).join('.');
-        filename = name + Date.now() + '.' + extension;
-
-        firebase.storage().ref(name).put(uri);
-    }; */
 
     const onLogoutPress = () => {
         console.log("logout?");
@@ -207,7 +187,6 @@ export function AccountScreen(props) {
                     style={[
                         masterStyles.title,
                         {
-                            paddingBottom: screenSize.height * 0.005,
                             textAlign: "center",
                         },
                     ]}
@@ -215,14 +194,14 @@ export function AccountScreen(props) {
                     My Account
                 </Text>
                 <Image
-                    style={[masterStyles.logo, { borderRadius: 50 }]}
+                    style={[masterStyles.logo, { borderRadius: 30 }]}
                     source={{ uri: imageUrl }}
                 />
                 <Text
                     style={[
                         masterStyles.headings,
                         {
-                            paddingBottom: screenSize.height * 0.005,
+                            bottom: screenSize.height * 0.005,
                             textAlign: "center",
                         },
                     ]}
@@ -233,7 +212,7 @@ export function AccountScreen(props) {
                     style={[
                         masterStyles.headingsSmall,
                         {
-                            paddingBottom: screenSize.height * 0.005,
+                            bottom: screenSize.height * 0.005,
                             textAlign: "center",
                         },
                     ]}
@@ -244,7 +223,7 @@ export function AccountScreen(props) {
                     style={[
                         masterStyles.headingsSmall,
                         {
-                            paddingBottom: screenSize.height * 0.005,
+                            bottom: screenSize.height * 0.005,
                             textAlign: "center",
                         },
                     ]}
@@ -255,7 +234,7 @@ export function AccountScreen(props) {
                     style={[
                         masterStyles.headingsSmall,
                         {
-                            paddingBottom: screenSize.height * 0.005,
+                            bottom: screenSize.height * 0.005,
                             textAlign: "center",
                         },
                     ]}
@@ -266,7 +245,7 @@ export function AccountScreen(props) {
                     style={[
                         masterStyles.headingsSmall,
                         {
-                            paddingBottom: screenSize.height * 0.005,
+                            bottom: screenSize.height * 0.005,
                             textAlign: "center",
                         },
                     ]}
@@ -277,8 +256,8 @@ export function AccountScreen(props) {
                 <View
                     style={{
                         zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
+                        paddingTop: Platform.OS == "web" ? screenSize.height / 20 : 0,
+                        paddingBottom: screenSize.height * .01,
                     }}
                 >
                 <CustomButton
@@ -295,7 +274,7 @@ export function AccountScreen(props) {
                 <View
                     style={{
                         zIndex: 1,
-                        paddingBottom: screenSize.height / 70,
+                        paddingBottom: screenSize.height * .01,
                     }}
                 >
                 <CustomButton
@@ -326,7 +305,7 @@ export function AccountScreen(props) {
                 style={{
                     zIndex: 1,
                     paddingTop: screenSize.height / 20,
-                    paddingBottom: screenSize.height / 70,
+                    paddingBottom: screenSize.height *.01,
                 }}
             />
         </View>

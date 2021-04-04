@@ -15,8 +15,8 @@ export const masterStyles = StyleSheet.create({
     fontSize: 40,
   },
   logo: {
-    height: 150,
-    width: 150,
+    height: Platform.OS == "web" ? 150 : 100,
+    width: Platform.OS == "web" ? 150 : 100,
     alignSelf: "center",
     margin: 30,
   },

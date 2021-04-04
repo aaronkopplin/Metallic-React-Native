@@ -30,11 +30,25 @@ export function UserAccountScreen({ route }) {
             : Dimensions.get("screen");
     const { email, fullName, userName, address } = route.params;
     const user = firebase.auth().currentUser;
-    // const [userImage, setImageUrl] = useState(undefined);
+    const [userImage, setImageUrl] = useState(undefined);
 
-    // const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
-    // ref.getDownloadURL()
-    //     .then( (url) => {setImageUrl(url)})
+    // Same code as Account Screen but doesn't stutter?
+    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    ref.getDownloadURL().then(onResolve, onReject);
+            
+    // Found image for user
+    function onResolve(foundUrl) {
+        setImageUrl(foundUrl);
+    }
+    
+    // Failed to find Image for user
+    function onReject(error) {
+        //console.log(error.code)
+        var def = firebase.storage().ref('/DefaultImage.png');
+        def.getDownloadURL().then((url) => {
+            setImageUrl(url)}); 
+    }
+
     const navigation = useNavigation();
 
     const getContacts = async () => {
@@ -122,7 +136,7 @@ export function UserAccountScreen({ route }) {
 
                 <Image
                     style={[masterStyles.logo, { borderRadius: 50 }]}
-                    // source={{ uri: userImage}}
+                    source={{ uri: userImage}}
                 />
                 <Text
                     style={[
