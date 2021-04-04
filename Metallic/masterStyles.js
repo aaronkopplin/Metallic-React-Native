@@ -108,14 +108,17 @@ export const masterStyles = StyleSheet.create({
     padding: 20,
   },
   entityContainer: {
-    marginTop: 16,
+    marginTop: 10,
     borderBottomColor: "#cccccc",
     borderBottomWidth: 1,
-    paddingBottom: 16,
+    paddingBottom: 10,
+    paddingLeft: 0,
   },
   entityText: {
-    fontSize: 20,
-    color: "#333333",
+    fontSize: 25,
+    paddingLeft: 10,
+    color: "#ffffff",
+    fontWeight: "normal",
   },
   contactBar: { 
     paddingLeft: 5, 
@@ -163,5 +166,16 @@ export const masterStyles = StyleSheet.create({
   searchLogo: {
     height: 50, 
     width: 50,
+  },
+  recentChatsLogo: {
+    height: 40,
+    width: 40,
+  },
+  recentChat: {
+    fontSize: 15,
+    maxWidth: screenSize.width,
+    color: "#79777d",
+    paddingLeft: 25,
+    overflow: "hidden",
   },
 });
