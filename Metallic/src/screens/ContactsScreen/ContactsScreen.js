@@ -106,7 +106,7 @@ export function ContactsScreen({ navigation }) {
             }}
             >
                 <Image
-                style={[masterStyles.contactsLogo, {borderRadius: 50}]}
+                style={[masterStyles.contactsLogo, {borderRadius: 45, resizeMode: "cover"}]}
                 source={{ uri: getImage(title)}}
                 />
             
@@ -171,7 +171,7 @@ export function ContactsScreen({ navigation }) {
                 }}/>
             <View style={{flexDirection: "row"}}>
                 <Image
-                    style={[masterStyles.contactsUserLogo, {borderRadius: 50}]}
+                    style={[masterStyles.contactsUserLogo, {borderRadius: 45, resizeMode: "cover"}]}
                     source={{ uri: getImage(you)}}
                 />
                 <View style={{
@@ -193,7 +193,6 @@ export function ContactsScreen({ navigation }) {
                             style={[
                                 masterStyles.title,
                                 {
-                                    paddingHorizontal: 10,
                                     color: "#000000",
                                 },
                             ]}

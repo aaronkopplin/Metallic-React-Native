@@ -72,10 +72,10 @@ export function UserSearchScreen(props) {
                         address: item.address,
                     });
                 }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <View style={{height: imageSize, width: imageSize, borderRadius: 50, backgroundColor: "#000"}}>
-                            <Image style={{flex: 1, width: undefined, height: undefined, borderRadius: 50}} resizeMode={'contain'} resizeMethod={'scale'}  source={require("../../../assets/Default_Img.png")}></Image>
-                        </View>
+                    <View style={{flexDirection: 'row'}}>
+                        <Image 
+                            style={[masterStyles.searchLogo,{borderRadius: 45, resizeMode: "contain" }]}
+                            source={require("../../../assets/Default_Img.png")}></Image>
                         <View style={{paddingLeft: 10}}>
                             <Text style={[masterStyles.headingsSmall]} >{item.email}</Text>
                             <Text style={[masterStyles.headingsSmallNotBold]} >{item.userName}</Text>

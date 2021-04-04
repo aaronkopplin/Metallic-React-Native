@@ -124,8 +124,8 @@ export const masterStyles = StyleSheet.create({
     
     borderRadius: 5,
     backgroundColor: '#ffffff', 
-    width: Platform.OS == 'web' ? screenSize.width * 0.8 : screenSize.width * 0.8,
-    left: Platform.OS == "web" ? screenSize.width * 0.05 : screenSize.width * 0.02,
+    width: Platform.OS == 'web' ? screenSize.width * 0.9 : screenSize.width * 0.8,
+    left: Platform.OS == "web" ? screenSize.width * 0.02 : screenSize.width * 0.02,
   },
   contactNames: {
     color: '#000000',
@@ -138,26 +138,30 @@ export const masterStyles = StyleSheet.create({
     color: '#9448CC',
     textDecorationLine: "underline",
     fontWeight: 'bold',
-    fontSize: 40,
+    fontSize: 20,
     left: Platform.OS == "web" ? 0 : 3,
-    paddingLeft: Platform.OS == "web" ? screenSize.width * .022 : 0,
+    paddingLeft: Platform.OS == "web" ? screenSize.width * .01 : 0,
   },
   contactsLogo: {
-    height: 30,
-    width: 30,
-    left: Platform.OS == "web" ? screenSize.width * .02 : 0,
-    top: Platform.OS == 'web' ? screenSize.height * .01 : Platform.OS == 'android' ? screenSize.height * 0.01 : 0,
-  },
-  contactsUserLogo: {
     height: 40,
     width: 40,
+    left: Platform.OS == "web" ? screenSize.width * .01 : 0,
+    top: Platform.OS == 'web' ? screenSize.height * .0075 : screenSize.height * 0.005,
+  },
+  contactsUserLogo: {
+    height: 50,
+    width: 50,
     right: screenSize.width * 0.01,
-    top: Platform.OS == 'web' ? screenSize.height * 0.01 : -screenSize.height * 0.005,
+    top: Platform.OS == 'web' ? 0 : screenSize.height * -.01
   },
   paymentFlatListContainer: {
     marginTop: 6,
     borderBottomWidth: 0,
     paddingVertical: 8,
     borderRadius: 10
+  },
+  searchLogo: {
+    height: 50, 
+    width: 50,
   },
 });
