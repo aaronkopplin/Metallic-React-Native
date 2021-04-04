@@ -14,6 +14,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
+import { UserSearchScreen } from "../UserSearchScreen/UserSearchScreen";
+import { Message } from "react-native-gifted-chat";
 
 export function RecentChatsScreen({ navigation }) {
     const screenSize =
@@ -22,6 +24,7 @@ export function RecentChatsScreen({ navigation }) {
             : Dimensions.get("screen");
 
     var [chats, setChats] = useState([]);
+    var [contentLogs, setContentLogs] = useState([]);
     const user = firebase.auth().currentUser;
     var chatReference = null;
     if (user != null) {
@@ -32,15 +35,22 @@ export function RecentChatsScreen({ navigation }) {
             .collection("chats");
     }
 
+    // For Chat logs we can't query a specific index only the entire array
+    // Can probably be optimized
+    // Could Also just filter manipulate the string in the output.
     useEffect(() => {
         chatReference.onSnapshot(
             (querySnapshot) => {
                 var newEntities = [];
+                var newLogs = [];
                 querySnapshot.forEach((doc) => {
                     const entity = doc.id;
+                    const log = doc.data().chatLog;
                     newEntities.push(entity);
+                    newLogs.push(log);
                 });
                 setChats(newEntities);
+                setContentLogs(newLogs);
             },
             (error) => {
                 console.log(error);
@@ -77,17 +87,24 @@ export function RecentChatsScreen({ navigation }) {
         getData();
     };
 
+
     const renderChat = ({ item, index }) => {
         return (
-            <View style={[masterStyles.entityContainer, { paddingBottom: 20 }]}>
+            <View style={[masterStyles.entityContainer, {flexDirection: "row"}]}>
+                <Image
+                    style={[masterStyles.recentChatsLogo, {borderRadius: 45, resizeMode: "contain"}]}
+                    source={require("../../../assets/Default_Img.png")}
+                />
                 <TouchableOpacity
                     onPress={() => {
                         goToPayments(item);
                     }}
                 >
-                    <Text style={[masterStyles.headingsSmall]}>
-                        {"\t"}
+                    <Text style={[masterStyles.entityText]}>
                         {item}
+                    </Text>
+                    <Text style={[masterStyles.recentChat]}>
+                        {(contentLogs[index])}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -97,6 +114,7 @@ export function RecentChatsScreen({ navigation }) {
     return (
         <View style={masterStyles.mainBackground}>
             <View style={(masterStyles.mainBackground, { flex: 0.1 })}></View>
+            <Text style={[masterStyles.entityText, {alignSelf: "flex-start", paddingLeft: screenSize.width * .01}]}> Recent Chats </Text>
             <View
                 style={{
                     flex: 3,
