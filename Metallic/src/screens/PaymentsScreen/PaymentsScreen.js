@@ -98,25 +98,22 @@ export function PaymentsScreen({ route }) {
     useEffect(() => {
         // alert(otherUserUID);
         // alert(myUserName);
-
+        
         if (otherUserUID != "" && myUserName != "") {
             otherChat = db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName));
-            
-            
-            // setOtherChatRef(otherChat);
-            otherChat.onSnapshot((snapshot) => {
-                if (snapshot.exists) {
-                    alert("help")
-                    setOtherChatRef(snapshot.ref);
-                    // snapshot.
-                    updateOtherChatLog(snapshot.data().chatLog);
-                    exists = true;
+            const oc = db.collection("users").doc(otherUserUID).collection("chats");
+            oc.doc(myUserName).onSnapshot((snap) => {
+
+                if (snap.exists) {
+                    setOtherChatRef(snap.ref);
+                    updateOtherChatLog(snap.data().chatLog);
                     setChatExists(true);
-                    return;
+                } else {
+                    oc.doc(myUserName).set({chatLog: []});
+                    setOtherChatRef(snap.ref);
                 }
-                
+
             })
-            // otherChat = otherChat.get();
 
             chatRef.onSnapshot((snapshot) => {
                 if (snapshot.exists) {
@@ -127,7 +124,7 @@ export function PaymentsScreen({ route }) {
                 }
             })
         }
-    }, [otherUserUID, myUserName])
+    }, [otherUserUID, myUserName, chatExists])
 
     const addChat = async (message, amount) => {
 
@@ -135,6 +132,7 @@ export function PaymentsScreen({ route }) {
         chatLog.unshift(rightSideMessage);
         // chatLog.push(rightSideMessage);
         var leftSideMessage = "Message: " + message + " Sending: " + amount + "ETHl";
+        
         otherChatLog.unshift(leftSideMessage);
         // otherChatLog.push(leftSideMessage);
         
@@ -154,6 +152,7 @@ export function PaymentsScreen({ route }) {
                 alert("wrote to my chatLog");
             }
         });
+        // otherCh
         otherChatRef.set(otherData, (error) => {
             if (error) {
                 alert("error writing to other chatLog");
