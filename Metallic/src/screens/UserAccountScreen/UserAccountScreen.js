@@ -234,7 +234,7 @@ export function UserAccountScreen({ route }) {
                 >
                     <CustomButton
                         onPress={getContacts}
-                        text="Add Contact"
+                        text="Add/Remove Contact"
                         color="#1e1c21"
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}

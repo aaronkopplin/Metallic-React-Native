@@ -23,6 +23,7 @@ export function UserSearchScreen(props) {
 
 
     var [users, setUsers] = useState([]);
+    const thisUser = firebase.auth().currentUser;
     const userRef = firebase.firestore().collection("users");
 
     useEffect(() => {
@@ -65,12 +66,18 @@ export function UserSearchScreen(props) {
         return (
             <View style={[masterStyles.entityContainer]}>
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate('UserAccountScreen', {
-                        email: item.email,
-                        fullName: item.fullName,
-                        userName: item.userName,
-                        address: item.address,
-                    });
+                    
+                    if (thisUser.uid == item.id) {
+                        navigation.navigate('Account')
+                    }
+                    else {
+                        navigation.navigate('UserAccountScreen', {
+                            email: item.email,
+                            fullName: item.fullName,
+                            userName: item.userName,
+                            address: item.address,
+                        });
+                    }
                 }}>
                     <View style={{flexDirection: 'row'}}>
                         <Image 
