@@ -35,9 +35,6 @@ export function RecentChatsScreen({ navigation }) {
             .collection("chats");
     }
 
-    // For Chat logs we can't query a specific index only the entire array
-    // Can probably be optimized
-    // Could Also just filter manipulate the string in the output.
     useEffect(() => {
         chatReference.onSnapshot(
             (querySnapshot) => {
@@ -86,7 +83,6 @@ export function RecentChatsScreen({ navigation }) {
 
         getData();
     };
-
 
     const renderChat = ({ item, index }) => {
         return (

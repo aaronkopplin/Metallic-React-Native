@@ -245,7 +245,9 @@ export function PaymentsScreen({ route }) {
                             backgroundColor: "#000",
                             height: userImageSize,
                             width: userImageSize,
+                            resizeMode: "contain",
                         }}
+                        source={require("../../../assets/Default_Img.png")}
                     />
                 </TouchableOpacity>
 
