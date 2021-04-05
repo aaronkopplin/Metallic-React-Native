@@ -44,7 +44,18 @@ export function RecentChatsScreen({ navigation }) {
                     const entity = doc.id;
                     const log = doc.data().chatLog;
                     newEntities.push(entity);
-                    newLogs.push(log[0]);
+                    if ( !(log[0] == undefined) && Platform.OS != "web" && (log[0].length > 35))
+                        {         
+                            newLogs.push(log[0].substring(0,35) + "...")
+                        }
+                    else if (!(log[0] == undefined) && Platform.OS == "web" && (log[0].length > 100))
+                        {
+                            newLogs.push(log[0].substring(0,100) + "...");
+                        }
+                    else
+                        {
+                            newLogs.push(log[0]);
+                        }
                 });
                 setChats(newEntities);
                 setContentLogs(newLogs);
@@ -99,7 +110,7 @@ export function RecentChatsScreen({ navigation }) {
                     <Text style={[masterStyles.entityText]}>
                         {item}
                     </Text>
-                    <Text style={[masterStyles.recentChat]}>
+                    <Text style={[masterStyles.recentChat, {maxWidth: screenSize.width * .75, }]}>
                         {(contentLogs[index])}
                     </Text>
                 </TouchableOpacity>

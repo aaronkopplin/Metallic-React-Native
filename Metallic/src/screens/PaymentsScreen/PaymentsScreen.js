@@ -199,7 +199,7 @@ export function PaymentsScreen({ route }) {
                         </View>
                         <View style={{width: screenSize.width/ 2 - 20, flexGrow: 1, flexDirection: 'row'}}>
                             {/* <Text style={[masterStyles.headingsSmall, {flexShrink: 1, paddingTop: 15, color: fontColor, fontSize: 14}]} >{String(item).substring(0, 9)}</Text> */}
-                            <Text style={[masterStyles.headingsSmallNotBold, {flexShrink: 1, paddingLeft: 5, paddingTop: 15, color: fontColor, fontSize: 14}]} >{String(item).substring(9, String(item).length - 14)}</Text>
+                            <Text style={[masterStyles.headingsSmallNotBold, {flexShrink: 1, paddingLeft: 5, paddingTop: 15, color: fontColor, fontSize: 14, overflow: "hidden"}]} >{String(item).substring(9, String(item).length - 14)}</Text>
                         </View>
                     </View>
                 </View>
