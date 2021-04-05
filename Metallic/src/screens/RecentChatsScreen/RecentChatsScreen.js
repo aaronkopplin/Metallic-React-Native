@@ -47,7 +47,7 @@ export function RecentChatsScreen({ navigation }) {
                     const entity = doc.id;
                     const log = doc.data().chatLog;
                     newEntities.push(entity);
-                    newLogs.push(log);
+                    newLogs.push(log[0]);
                 });
                 setChats(newEntities);
                 setContentLogs(newLogs);
