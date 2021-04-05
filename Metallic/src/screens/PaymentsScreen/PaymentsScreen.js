@@ -152,7 +152,7 @@ export function PaymentsScreen({ route }) {
                 alert("wrote to my chatLog");
             }
         });
-        // otherCh
+
         otherChatRef.set(otherData, (error) => {
             if (error) {
                 alert("error writing to other chatLog");
