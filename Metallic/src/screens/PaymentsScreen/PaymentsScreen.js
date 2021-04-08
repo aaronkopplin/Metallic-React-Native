@@ -239,16 +239,17 @@ export function PaymentsScreen({ route }) {
                         });
                     }}
                 >
-                    <Image
-                        style={{
-                            borderRadius: 50,
-                            backgroundColor: "#000",
-                            height: userImageSize,
-                            width: userImageSize,
-                            resizeMode: "contain",
-                        }}
-                        source={require("../../../assets/Default_Img.png")}
-                    />
+                    <View style={{borderRadius: 50, backgroundColor: "#000", height: userImageSize, width: userImageSize,}}>
+                        <Image
+                            style={{
+                                borderRadius: 50,
+                                height: userImageSize,
+                                width: userImageSize,
+                                resizeMode: "contain",
+                            }}
+                            source={require("../../../assets/Default_Img.png")}
+                        />
+                    </View>
                 </TouchableOpacity>
 
                 <View

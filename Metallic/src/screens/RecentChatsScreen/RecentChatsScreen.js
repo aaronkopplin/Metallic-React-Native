@@ -44,18 +44,16 @@ export function RecentChatsScreen({ navigation }) {
                     const entity = doc.id;
                     const log = doc.data().chatLog;
                     newEntities.push(entity);
-                    if ( !(log[0] == undefined) && Platform.OS != "web" && (log[0].length > 35))
-                        {         
-                            newLogs.push(log[0].substring(0,35) + "...")
-                        }
-                    else if (!(log[0] == undefined) && Platform.OS == "web" && (log[0].length > 100))
-                        {
-                            newLogs.push(log[0].substring(0,100) + "...");
-                        }
-                    else
-                        {
-                            newLogs.push(log[0]);
-                        }
+                    // if ( !(log[0] == undefined) && Platform.OS != "web" && (log[0].length > 35)) {         
+                    //         newLogs.push(log[0].substring(0,35) + "...")
+                    // } 
+                    // else if (!(log[0] == undefined) && Platform.OS == "web" && (log[0].length > 100)) {
+                    //         newLogs.push(log[0].substring(0,100) + "...");
+                    // } 
+                    // else {
+                    newLogs.push(String(log[0]).substring(9, String(log[0]).length - 1));
+                            
+                    // }
                 });
                 setChats(newEntities);
                 setContentLogs(newLogs);
@@ -110,7 +108,7 @@ export function RecentChatsScreen({ navigation }) {
                     <Text style={[masterStyles.entityText]}>
                         {item}
                     </Text>
-                    <Text style={[masterStyles.recentChat, {maxWidth: screenSize.width * .75, }]}>
+                    <Text style={[masterStyles.recentChat, {maxWidth: Platform.OS == "web" ? screenSize.width * .85 : screenSize.width * .75, }]} numberOfLines={2}>
                         {(contentLogs[index])}
                     </Text>
                 </TouchableOpacity>
@@ -119,21 +117,22 @@ export function RecentChatsScreen({ navigation }) {
     };
 
     return (
-        <View style={masterStyles.mainBackground}>
-            <View style={(masterStyles.mainBackground, { flex: 0.1 })}></View>
+        <View style={[masterStyles.mainBackground]}>
             <Text style={[masterStyles.entityText, {alignSelf: "flex-start", paddingLeft: screenSize.width * .01}]}> Recent Chats </Text>
             <View
                 style={{
                     flex: 3,
                     backgroundColor: "#2e2b30",
-                    width: screenSize.width - 40,
-                    height:
-                        Platform.OS === "web"
-                            ? screenSize.height / 2.5
-                            : screenSize.width - 30,
-                    paddingTop: screenSize.height / 50,
+                    width: screenSize.width - 20,
+                    // height:
+                    //     Platform.OS === "web"
+                    //         ? screenSize.height / 2.5
+                    //         : screenSize.width - 30,
+                    // paddingTop: screenSize.height / 50,
                     paddingLeft: 20,
                     borderRadius: 4,
+                    marginBottom: 20,
+                    top: 5
                 }}
             >
                 <FlatList
@@ -143,7 +142,6 @@ export function RecentChatsScreen({ navigation }) {
                     removeClippedSubviews={true}
                 />
             </View>
-            <View style={(masterStyles.mainBackground, { flex: 0.1 })}></View>
         </View>
     );
 }

@@ -67,6 +67,7 @@ function Tabs() {
                     fontWeight: "bold",
                     position: "absolute",
                 },
+                keyboardHidesTabBar: true,
                 style: {
                     elevation: 0,
                     shadowOpacity: 0,
@@ -79,6 +80,7 @@ function Tabs() {
                 tabStyle: {
                     justifyContent: "center",
                 },
+                
             }}
         >
             <Tab.Screen
