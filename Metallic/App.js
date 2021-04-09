@@ -145,6 +145,29 @@ function Tabs() {
                     },
                 }}
             />
+            <Tab.Screen
+                name="Account"
+                options={{
+                    headerStyle: {
+                        backgroundColor:
+                            masterStyles.mainBackground
+                                .backgroundColor,
+                        borderColor:
+                            masterStyles.mainBackground
+                                .backgroundColor,
+                        elevation: 0,
+                        shadowOpacity: 0,
+                        borderBottomWidth: 0,
+                    },
+                    headerTintColor: masterStyles.headings.color,
+                    headerTitleStyle: {
+                        fontWeight: "normal",
+                        fontSize: 24,
+                    },
+                }}
+            >
+                {(props) => <AccountScreen {...props} />}
+            </Tab.Screen>
         </Tab.Navigator>
     ) : (
         <AccountRecoveryScreen />

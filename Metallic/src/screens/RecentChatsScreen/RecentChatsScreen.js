@@ -95,9 +95,9 @@ export function RecentChatsScreen({ navigation }) {
 
     const renderChat = ({ item, index }) => {
         return (
-            <View style={[masterStyles.entityContainer, {flexDirection: "row"}]}>
+            <View style={[masterStyles.entityContainer, {flexDirection: "row", alignItems: 'center'}]}>
                 <Image
-                    style={[masterStyles.recentChatsLogo, {borderRadius: 45, resizeMode: "contain"}]}
+                    style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "contain"}]}
                     source={require("../../../assets/Default_Img.png")}
                 />
                 <TouchableOpacity
@@ -118,7 +118,7 @@ export function RecentChatsScreen({ navigation }) {
 
     return (
         <View style={[masterStyles.mainBackground]}>
-            <Text style={[masterStyles.entityText, {alignSelf: "flex-start", paddingLeft: screenSize.width * .01}]}> Recent Chats </Text>
+            <Text style={[masterStyles.entityText, {alignSelf: "flex-start", paddingTop: 10, paddingLeft: screenSize.width * .01}]}> Recent Chats </Text>
             <View
                 style={{
                     flex: 3,
@@ -129,7 +129,7 @@ export function RecentChatsScreen({ navigation }) {
                     //         ? screenSize.height / 2.5
                     //         : screenSize.width - 30,
                     // paddingTop: screenSize.height / 50,
-                    paddingLeft: 20,
+                    paddingHorizontal: 10,
                     borderRadius: 4,
                     marginBottom: 20,
                     top: 5

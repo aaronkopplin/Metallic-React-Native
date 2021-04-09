@@ -81,9 +81,9 @@ export function UserSearchScreen(props) {
                         });
                     }
                 }}>
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Image 
-                            style={[masterStyles.searchLogo,{borderRadius: 45, resizeMode: "contain" }]}
+                            style={[masterStyles.recentChatsLogo,{borderRadius: 50, resizeMode: "contain" }]}
                             source={require("../../../assets/Default_Img.png")}></Image>
                         <View style={{paddingLeft: 10}}>
                             <Text style={[masterStyles.headingsSmall]} >{item.email}</Text>
@@ -98,7 +98,7 @@ export function UserSearchScreen(props) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center' }}>
-            <View coll style={{ backgroundColor: "#2e2b30", alignItems: 'center', paddingBottom: 40, borderRadius: 4, height: screenSize.height * 0.75, width: screenSize.width - 20 }}>
+            <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', paddingBottom: 40, borderRadius: 4, height: screenSize.height * 0.75, width: screenSize.width - 20 }}>
                 <View style={{ backgroundColor: '#2e2b30', alignItems: 'center', top: 20, height: screenSize.height * 0.01, paddingBottom: 20 }} />
                 <View style={{ width: screenSize.width - 40 }}>
                     <TextInput

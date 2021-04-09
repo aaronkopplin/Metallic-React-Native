@@ -166,21 +166,16 @@ export function AccountScreen(props) {
     };
 
     return (
-        <View style={masterStyles.mainBackground}>
-            <View style={(masterStyles.mainBackground, { flex: 0.5 })} />
+        <View style={[masterStyles.mainBackground, {justifyContent: "center", paddingVertical: 20}]}>
             <View
                 style={{
                     flex: 4,
                     backgroundColor: "#2e2b30",
-                    width: screenSize.width - 40,
-                    height:
-                        Platform.OS === "web"
-                            ? screenSize.height / 2.5
-                            : screenSize.width - 30,
-                    paddingTop: screenSize.height / 50,
-                    paddingBottom: screenSize.height / 50,
+                    width: screenSize.width - 20,
                     alignItems: "center",
                     borderRadius: 4,
+                    justifyContent: "center",
+                    paddingBottom: 5
                 }}
             >
                 <Text
@@ -256,7 +251,7 @@ export function AccountScreen(props) {
                 <View
                     style={{
                         zIndex: 1,
-                        paddingTop: Platform.OS == "web" ? screenSize.height / 20 : 0,
+                        paddingTop: Platform.OS == "web" ? screenSize.height / 20 : 10,
                         paddingBottom: screenSize.height * .01,
                     }}
                 >
@@ -298,16 +293,7 @@ export function AccountScreen(props) {
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}
                 />
-
-                <View style={{ zIndex: 2 }} />
             </View>
-            <View
-                style={{
-                    zIndex: 1,
-                    paddingTop: screenSize.height / 20,
-                    paddingBottom: screenSize.height *.01,
-                }}
-            />
         </View>
     );
 }
