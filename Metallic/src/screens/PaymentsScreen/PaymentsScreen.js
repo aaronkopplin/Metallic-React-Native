@@ -38,19 +38,18 @@ export function PaymentsScreen({ route }) {
 
     const navigation = useNavigation();
 
-    const [chatLog, updateChatLog] = useState([]);
-    const [otherChatLog, updateOtherChatLog] = useState([]);
-    const [chatExists, setChatExists] = useState(Boolean);
+    const [chatLog, updateChatLog] = useState([]);              // my chatLog
+    const [otherChatLog, updateOtherChatLog] = useState([]);    // chatLog of user I am sending a message to
+    const [chatExists, setChatExists] = useState(Boolean);      // used to confirm if a chat exists between me and the other user
 
     const user = firebase.auth().currentUser;
-    const [myUserName, setMyUserName] = useState("");
-    const [otherUserUID, setOtherUserUID] = useState("");
-    const [otherChatRef, setOtherChatRef] = useState();
+    const [myUserName, setMyUserName] = useState("");           // my username
+    const [otherUserUID, setOtherUserUID] = useState("");       // other user's userID
+    const [otherChatRef, setOtherChatRef] = useState();         // ref to other user's chats collection
     const db = firebase.firestore();
-    const chatRef = db.collection("users").doc(user.uid).collection("chats").doc(String(userName));
-    const otherRef = db.collection("users").where("userName", "==", userName).get();
-    var otherChat;
-    var exists = false;
+    const chatRef = db.collection("users").doc(user.uid).collection("chats").doc(String(userName)); // ref to my chat with other user
+    const otherRef = db.collection("users").where("userName", "==", userName).get();    // ref to other user's firebase
+
     useEffect(() => {
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
@@ -62,16 +61,17 @@ export function PaymentsScreen({ route }) {
 
         fetchBal();
 
+        // get my username
         db.collection("users").doc(user.uid).onSnapshot((snap) => {
             setMyUserName(snap.data().userName);
         })
 
         
-
+        // get other user's userID
         const otherID = async () => {
             (await otherRef).forEach((doc) => {
                 setOtherUserUID(doc.data().id);
-                // updateOtherChatLog(otherChat);
+                
                 return;
             })
             
@@ -79,62 +79,48 @@ export function PaymentsScreen({ route }) {
         }
         otherID();
 
-        // const otherUserChat = async () => {
-            
-        //     if (otherUserUID != "") {
-        //         const newOtherRef = db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName));
-        //         alert(newOtherRef);
-        //         newOtherRef.onSnapshot((snapshot) => {
-        //             alert("in it");
-        //             updateOtherChatLog(snapshot.data().chatLog);
-        //         })
-        //         // updateOtherChatLog(db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName)).get())
-        //     }
-        //     return;
-        // }
-        // otherUserChat();
     }, []);
 
     useEffect(() => {
-        // alert(otherUserUID);
-        // alert(myUserName);
         
         if (otherUserUID != "" && myUserName != "") {
-            otherChat = db.collection("users").doc(otherUserUID).collection("chats").doc(String(myUserName));
+            // only runs this code if we have the other user's userID and my username
+
             const oc = db.collection("users").doc(otherUserUID).collection("chats");
             oc.doc(myUserName).onSnapshot((snap) => {
 
-                if (snap.exists) {
+                if (snap.exists) {  // chat with other user exists
                     setOtherChatRef(snap.ref);
                     updateOtherChatLog(snap.data().chatLog);
                     setChatExists(true);
-                } else {
+                } else {    // no existing chat with other user
                     oc.doc(myUserName).set({chatLog: []});
                     setOtherChatRef(snap.ref);
                 }
 
             })
 
+            // get my chatLog with other user
             chatRef.onSnapshot((snapshot) => {
                 if (snapshot.exists) {
                     updateChatLog(snapshot.data().chatLog);
-                    exists = true;
                     setChatExists(true);
-                    return;
                 }
             })
         }
-    }, [otherUserUID, myUserName, chatExists])
+    }, [otherUserUID, myUserName, chatExists])  
+    // re-run this useEffect if any of the above three variables change value
 
+    // add chat to my and other user's chatLogs on firebase when sending a message/payment
     const addChat = async (message, amount) => {
 
+        // message that i sent and will go in my chatLog
         var rightSideMessage = "Message: " + message + " Sending: " + amount + "ETHr";
         chatLog.unshift(rightSideMessage);
-        // chatLog.push(rightSideMessage);
+
+        // message that i sent and will go in the other user's chatLog
         var leftSideMessage = "Message: " + message + " Sending: " + amount + "ETHl";
-        
         otherChatLog.unshift(leftSideMessage);
-        // otherChatLog.push(leftSideMessage);
         
         const myData = {
             chatLog: chatLog,
@@ -144,7 +130,7 @@ export function PaymentsScreen({ route }) {
             chatLog: otherChatLog,
         };
 
-        alert(otherData)
+        // push my message to my chatLog on firebase
         chatRef.set(myData, (error) => {
             if (error) {
                 alert("error writing to my chatLog");
@@ -153,6 +139,7 @@ export function PaymentsScreen({ route }) {
             }
         });
 
+        // push my message to the other user's chatLog on firebase
         otherChatRef.set(otherData, (error) => {
             if (error) {
                 alert("error writing to other chatLog");
@@ -160,6 +147,7 @@ export function PaymentsScreen({ route }) {
                 alert("wrote to other chatLog");
             }
         });
+
         return;
     };
 
@@ -171,6 +159,7 @@ export function PaymentsScreen({ route }) {
         var amountIndexStart = 5;
         var imageSize = Platform.OS === "web" ? 50 : 25;
         
+        // set variables accordingly to if the chat was sent by me or the other user
         if (String(item).charAt(String(item).length - 1) == "r") {
             justifySide = "flex-end";
             bgColor = "#5c555e";
@@ -188,18 +177,33 @@ export function PaymentsScreen({ route }) {
 
         return (
             <View style={[masterStyles.paymentFlatListContainer, { width: screenSize.width / 1.8, alignSelf: justifySide, backgroundColor: bgColor, flexDirection: "row", paddingLeft: 5}]}>
+                
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                    
                     <View style={{height: imageSize, width: imageSize, borderRadius: 50, backgroundColor: "#000"}}>
-                        <Image style={{flex: 1, width: undefined, height: undefined, borderRadius: 50}} resizeMode={'contain'} resizeMethod={'scale'} source={require("../../../assets/Default_Img.png")} />
+                        <Image 
+                            style={{flex: 1, width: undefined, height: undefined, borderRadius: 50}} 
+                            resizeMode={'contain'} 
+                            resizeMethod={'scale'} 
+                            source={require("../../../assets/Default_Img.png")} 
+                        />
                     </View>
+                    
                     <View style={{ justifyContent: "center", paddingLeft: 5}}>
+                        
                         <View style={{flexDirection: 'row'}}>
-                            <Text style={[masterStyles.headingsSmall, {color: fontColor, fontSize: 14}]} >{" "}{String(item).substring(String(item).length - sendingIndexStart, String(item).length - amountIndexStart)}</Text>
-                            <Text style={[masterStyles.headingsSmallNotBold, {paddingLeft: 5, color: fontColor, fontSize: 14}]} >{String(item).substring(String(item).length - amountIndexStart, String(item).length - 1)}</Text>
+                            <Text style={[masterStyles.headingsSmall, {color: fontColor, fontSize: 14}]} >
+                                {" "}{String(item).substring(String(item).length - sendingIndexStart, String(item).length - amountIndexStart)}
+                            </Text>
+                            <Text style={[masterStyles.headingsSmallNotBold, {paddingLeft: 5, color: fontColor, fontSize: 14}]} >
+                                {String(item).substring(String(item).length - amountIndexStart, String(item).length - 1)}
+                            </Text>
                         </View>
+                        
                         <View style={{width: screenSize.width/ 2 - 20, flexGrow: 1, flexDirection: 'row'}}>
-                            {/* <Text style={[masterStyles.headingsSmall, {flexShrink: 1, paddingTop: 15, color: fontColor, fontSize: 14}]} >{String(item).substring(0, 9)}</Text> */}
-                            <Text style={[masterStyles.headingsSmallNotBold, {flexShrink: 1, paddingLeft: 5, paddingTop: 15, color: fontColor, fontSize: 14, overflow: "hidden"}]} >{String(item).substring(9, String(item).length - 14)}</Text>
+                            <Text style={[masterStyles.headingsSmallNotBold, {flexShrink: 1, paddingLeft: 5, paddingTop: 15, color: fontColor, fontSize: 14, overflow: "hidden"}]} >
+                                {String(item).substring(9, String(item).length - 14)}
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -276,7 +280,6 @@ export function PaymentsScreen({ route }) {
                         key={(item, index) => item + index}
                         keyExtractor={(item, index) => item + index}
                         removeClippedSubviews={true}
-                        // key={(item) => item}
                         
                         contentContainerStyle={{flexDirection: 'column-reverse'}}
                         // inverted={true}
@@ -358,13 +361,7 @@ export function PaymentsScreen({ route }) {
                             ETH:{" "}
                         </Text>
                         <TextInput
-                            style={[
-                                masterStyles.input,
-                                {
-                                    width: screenSize.width - 80,
-                                    paddingRight: 5,
-                                },
-                            ]}
+                            style={[ masterStyles.input, {width: screenSize.width - 80, paddingRight: 5}]}
                             placeholder="Enter amount of ETH to send"
                             keyboardType="decimal-pad"
                             returnKeyType="done"
@@ -429,7 +426,7 @@ export function PaymentsScreen({ route }) {
                                                     sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
 
                                                     addChat(memo, amountInput);
-                                                    alert(chatLog)
+                                                    // alert(chatLog)
                                                 }
                                             } else {
                                                 setAmountTI("");
@@ -440,7 +437,7 @@ export function PaymentsScreen({ route }) {
                                                 sendingMessage = "Message: " + memo + " Sending: " + amountInput + "ETHr";
                                                 
                                                 addChat(memo, amountInput);
-                                                alert(chatLog)
+                                                // alert(chatLog)
                                             }
                                         }
                                     } else {
@@ -466,7 +463,7 @@ export function PaymentsScreen({ route }) {
                                                                     sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
 
                                                                     addChat(memo, amountInput);
-                                                                    alert(chatLog)
+                                                                    // alert(chatLog)
                                                                 },
                                                             },
                                                             {
@@ -478,7 +475,6 @@ export function PaymentsScreen({ route }) {
                                                             { cancelable: true, }
                                                         );
                                                     } else {
-                            // do all testing for sending messages here for mobile
                                                         setAmountTI("");
                                                         setMemoTI("");
 
@@ -487,7 +483,7 @@ export function PaymentsScreen({ route }) {
                                                         sendingMessage = "Message: " + memo + "\nSending: " + amountInput + "ETH";
 
                                                         addChat(memo, amountInput);
-                                                        alert(chatLog);
+                                                        // alert(chatLog);
                                                     }
                                                 },
                                             },
