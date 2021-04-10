@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { Text, useEffect, useState, } from "react";
+import React, { Text, useEffect, useState } from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -38,7 +38,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Tabs() {
-    const [account, setAccount] = useState(false);
+    const [account, setAccount] = useState(true);
 
     useEffect(() => {
         async function grabAccount() {
@@ -80,7 +80,6 @@ function Tabs() {
                 tabStyle: {
                     justifyContent: "center",
                 },
-                
             }}
         >
             <Tab.Screen
@@ -150,11 +149,9 @@ function Tabs() {
                 options={{
                     headerStyle: {
                         backgroundColor:
-                            masterStyles.mainBackground
-                                .backgroundColor,
+                            masterStyles.mainBackground.backgroundColor,
                         borderColor:
-                            masterStyles.mainBackground
-                                .backgroundColor,
+                            masterStyles.mainBackground.backgroundColor,
                         elevation: 0,
                         shadowOpacity: 0,
                         borderBottomWidth: 0,
