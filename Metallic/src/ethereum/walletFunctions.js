@@ -8,7 +8,8 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 
 // Import the ethers library
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
+import { TransactionDescription } from "ethers/lib/utils";
 
 export async function storeData(key, value) {
     try {
@@ -43,6 +44,7 @@ export async function loadWalletFromPrivate() {
     try {
         const storedPrivate = await getData("privateKey");
         const loadedWallet = new ethers.Wallet(storedPrivate);
+        console.log("address: " + loadedWallet.address);
         return loadedWallet;
     } catch (exception) {
         console.log("error loading wallet from private");
@@ -67,4 +69,37 @@ export async function getBalance(wallet) {
 
     const balance = await provider.getBalance(wallet.address);
     return balance;
+}
+
+export async function getBalanceFromAddress(address) {
+    // allow to get balance
+    const provider = new ethers.providers.InfuraProvider(
+        "ropsten",
+        "298080f1923540f19af74e5baa886001"
+    );
+
+    const balance = await provider.getBalance(address);
+    return balance;
+}
+
+export async function sendPayment(wallet, amount, recipientAddress) {
+    if (wallet == null || amount == null || recipientAddress == null) {
+        console.log("wallet, amount or recipient address was null");
+    }
+
+    const provider = new ethers.providers.InfuraProvider(
+        "ropsten",
+        "298080f1923540f19af74e5baa886001"
+    );
+
+    var transaction = {
+        to: recipientAddress,
+        value: "0x" + (amount * 1000000000000000000).toString(16),
+        chainId: provider.network.chainId,
+    };
+
+    wallet = wallet.connect(provider);
+    wallet.sendTransaction(transaction).then((response) => {
+        console.log(response);
+    });
 }

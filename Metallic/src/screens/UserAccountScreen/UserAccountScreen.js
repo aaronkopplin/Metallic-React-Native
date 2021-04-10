@@ -22,6 +22,7 @@ import CustomButton from "../../../button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
 import { useEffect } from "react/cjs/react.development";
+import * as WalletFunctions from "../../ethereum/walletFunctions";
 
 export function UserAccountScreen({ route }) {
     const screenSize =
@@ -31,22 +32,37 @@ export function UserAccountScreen({ route }) {
     const { email, fullName, userName, address } = route.params;
     const user = firebase.auth().currentUser;
     const [userImage, setImageUrl] = useState(undefined);
+    const [balance, setBalance] = useState("Loading");
+
+    useEffect(() => {
+        async function populateBalance() {
+            var bal = await WalletFunctions.getBalanceFromAddress(address);
+            bal = bal / 1000000000000000000;
+            console.log(
+                "you are viewing: " + address + " with balance: " + bal
+            );
+            setBalance(bal.toString());
+        }
+
+        populateBalance();
+    }, []);
 
     // Same code as Account Screen but doesn't stutter?
-    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    const ref = firebase.storage().ref("/" + userName + "ProfileImage");
     ref.getDownloadURL().then(onResolve, onReject);
-            
+
     // Found image for user
     function onResolve(foundUrl) {
         setImageUrl(foundUrl);
     }
-    
+
     // Failed to find Image for user
     function onReject(error) {
         //console.log(error.code)
-        var def = firebase.storage().ref('/DefaultImage.png');
+        var def = firebase.storage().ref("/DefaultImage.png");
         def.getDownloadURL().then((url) => {
-            setImageUrl(url)}); 
+            setImageUrl(url);
+        });
     }
 
     const navigation = useNavigation();
@@ -136,7 +152,7 @@ export function UserAccountScreen({ route }) {
 
                 <Image
                     style={[masterStyles.logo, { borderRadius: 50 }]}
-                    source={{ uri: userImage}}
+                    source={{ uri: userImage }}
                 />
                 <Text
                     style={[
@@ -223,6 +239,17 @@ export function UserAccountScreen({ route }) {
                     >
                         ###
                     </Text>
+                </Text>
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        {
+                            paddingBottom: screenSize.height * 0.005,
+                            textAlign: "center",
+                        },
+                    ]}
+                >
+                    Balance: {balance} Eth
                 </Text>
 
                 <View

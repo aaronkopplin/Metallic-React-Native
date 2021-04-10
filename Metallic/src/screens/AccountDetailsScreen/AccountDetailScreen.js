@@ -17,7 +17,6 @@ import { useEffect } from "react";
 import { Wallet } from "ethers";
 import QRCode from "react-native-qrcode-svg";
 import { useNavigation } from "@react-navigation/native";
-import Clipboard from "@react-native-community/clipboard";
 
 export function AccountDetailScreen(props) {
     const screenSize =
@@ -59,7 +58,7 @@ export function AccountDetailScreen(props) {
                 }}
             >
                 <Text
-                    onPress={() => Clipboard.setString(address)}
+                    onPress={() => {}}
                     style={[
                         masterStyles.headingsSmall,
                         {
