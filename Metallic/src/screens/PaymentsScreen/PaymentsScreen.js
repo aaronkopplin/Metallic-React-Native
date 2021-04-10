@@ -167,14 +167,14 @@ export function PaymentsScreen({ route }) {
 
         // send the transaction
         WalletFunctions.sendPayment(wallet, amount, recipientAddress);
+        alert(rightSideMessage)
     };
 
     const renderChats = ({ item }) => {
         var justifySide = "center";
         var bgColor = "#000fff";
         var fontColor = "#1e1c21";
-        var sendingIndexStart = 14;
-        var amountIndexStart = 5;
+        var sendingIndexStart = String(item).lastIndexOf('Sending: ');
         var imageSize = Platform.OS === "web" ? 50 : 25;
 
         // set variables accordingly to if the chat was sent by me or the other user
@@ -182,14 +182,10 @@ export function PaymentsScreen({ route }) {
             justifySide = "flex-end";
             bgColor = "#5c555e";
             fontColor = "#1e1c21";
-            sendingIndexStart = 14;
-            amountIndexStart = 5;
         } else {
             justifySide = "flex-start";
             bgColor = "#1e1c21";
             fontColor = "#79777d";
-            sendingIndexStart = 14;
-            amountIndexStart = 5;
         }
 
         return (
@@ -210,6 +206,7 @@ export function PaymentsScreen({ route }) {
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "center",
+                        
                     }}
                 >
                     <View
@@ -231,9 +228,10 @@ export function PaymentsScreen({ route }) {
                             resizeMethod={"scale"}
                             source={require("../../../assets/Default_Img.png")}
                         />
+                        
                     </View>
-
-                    <View style={{ justifyContent: "center", paddingLeft: 5 }}>
+                    
+                    <View style={{ justifyContent: "center", paddingLeft: 5}}>
                         <View style={{ flexDirection: "row" }}>
                             <Text
                                 style={[
@@ -241,24 +239,22 @@ export function PaymentsScreen({ route }) {
                                     { color: fontColor, fontSize: 14 },
                                 ]}
                             >
-                                {" "}
                                 {String(item).substring(
-                                    String(item).length - sendingIndexStart,
-                                    String(item).length - amountIndexStart
+                                    sendingIndexStart,
+                                    sendingIndexStart + String('Sending:').length
                                 )}
                             </Text>
                             <Text
                                 style={[
                                     masterStyles.headingsSmallNotBold,
                                     {
-                                        paddingLeft: 5,
                                         color: fontColor,
                                         fontSize: 14,
                                     },
                                 ]}
                             >
                                 {String(item).substring(
-                                    String(item).length - amountIndexStart,
+                                    sendingIndexStart + String('Sending:').length,
                                     String(item).length - 1
                                 )}
                             </Text>
@@ -276,7 +272,6 @@ export function PaymentsScreen({ route }) {
                                     masterStyles.headingsSmallNotBold,
                                     {
                                         flexShrink: 1,
-                                        paddingLeft: 5,
                                         paddingTop: 15,
                                         color: fontColor,
                                         fontSize: 14,
@@ -285,8 +280,8 @@ export function PaymentsScreen({ route }) {
                                 ]}
                             >
                                 {String(item).substring(
-                                    9,
-                                    String(item).length - 14
+                                    String('Message:').length + 1,
+                                    sendingIndexStart
                                 )}
                             </Text>
                         </View>
@@ -333,25 +328,29 @@ export function PaymentsScreen({ route }) {
                             address: address,
                         });
                     }}
+                    style={{alignItems: 'center', justifyContent: 'center'}}
                 >
-                    <View
+                    {/* <View
                         style={{
                             borderRadius: 50,
                             backgroundColor: "#000",
                             height: userImageSize,
                             width: userImageSize,
                         }}
-                    >
+                    > */}
                         <Image
                             style={{
                                 borderRadius: 50,
-                                height: userImageSize,
-                                width: userImageSize,
+                                height: userImageSize - 10,
+                                width: userImageSize - 10,
                                 resizeMode: "contain",
+                                backgroundColor: "#000",
                             }}
                             source={require("../../../assets/Default_Img.png")}
                         />
-                    </View>
+                        
+                    {/* </View> */}
+                    <Text style={{fontSize: 18, fontWeight: 'bold', color: '#fff', maxWidth: screenSize.width - 40, paddingTop: 5}}>{userName}</Text>
                 </TouchableOpacity>
 
                 <View
