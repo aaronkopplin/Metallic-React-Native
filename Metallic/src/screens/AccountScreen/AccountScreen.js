@@ -48,7 +48,7 @@ export function AccountScreen(props) {
             const balance = await (
                 await WalletFunctions.getBalance(wallet)
             ).toString();
-            setBalance(balance);
+            setBalance((balance / 1000000000000000000).toString() + " Eth");
         };
 
         // (async () => {
@@ -61,44 +61,43 @@ export function AccountScreen(props) {
         //   })();
 
         fetchBal();
-
-
     }, []);
 
     // if (perm && Platform.OS == "ios") {
-        
+
     // }
 
     // Stutters to load correct image probably from multiple function calls?
-    const ref = firebase.storage().ref('/' + userName + 'ProfileImage');
+    const ref = firebase.storage().ref("/" + userName + "ProfileImage");
     ref.getDownloadURL().then(onResolve, onReject);
-            
+
     // Found image for user
     function onResolve(foundUrl) {
         setImageUrl(foundUrl);
     }
-    
+
     // Failed to find Image for user
     function onReject(error) {
         //console.log(error.code)
-        var def = firebase.storage().ref('/DefaultImage.png');
+        var def = firebase.storage().ref("/DefaultImage.png");
         def.getDownloadURL().then((url) => {
-            setImageUrl(url)}); 
+            setImageUrl(url);
+        });
     }
 
     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
-    
-        if (!result.cancelled) {
-            let imageName = userName + 'ProfileImage';
 
-            const response = await fetch(result.uri)
+        if (!result.cancelled) {
+            let imageName = userName + "ProfileImage";
+
+            const response = await fetch(result.uri);
             const blob = await response.blob();
             var ref = firebase.storage().ref().child(imageName);
-            ref.put(blob)
+            ref.put(blob);
 
             setImageUrl(ref.getDownloadURL());
-        }; 
+        }
     };
 
     const onLogoutPress = () => {
@@ -163,10 +162,15 @@ export function AccountScreen(props) {
             });
         }
         getUser(db, uid);
-    };
+    }
 
     return (
-        <View style={[masterStyles.mainBackground, {justifyContent: "center", paddingVertical: 20}]}>
+        <View
+            style={[
+                masterStyles.mainBackground,
+                { justifyContent: "center", paddingVertical: 20 },
+            ]}
+        >
             <View
                 style={{
                     flex: 4,
@@ -175,7 +179,7 @@ export function AccountScreen(props) {
                     alignItems: "center",
                     borderRadius: 4,
                     justifyContent: "center",
-                    paddingBottom: 5
+                    paddingBottom: 5,
                 }}
             >
                 <Text
@@ -247,40 +251,39 @@ export function AccountScreen(props) {
                 >
                     Account Age:
                 </Text>
-                
+
                 <View
                     style={{
                         zIndex: 1,
-                        paddingTop: Platform.OS == "web" ? screenSize.height / 20 : 10,
-                        paddingBottom: screenSize.height * .01,
+                        paddingTop:
+                            Platform.OS == "web" ? screenSize.height / 20 : 10,
+                        paddingBottom: screenSize.height * 0.01,
                     }}
                 >
-                <CustomButton
-                    onPress={() => {
-                        navigation.navigate("AccountDetailScreen");
-                    }}
-                    text="View Account Details"
-                    color="#1e1c21"
-                    width={screenSize.width - 80}
-                    height={screenSize.height / 20}
-                />
+                    <CustomButton
+                        onPress={() => {
+                            navigation.navigate("AccountDetailScreen");
+                        }}
+                        text="View Account Details"
+                        color="#1e1c21"
+                        width={screenSize.width - 80}
+                        height={screenSize.height / 20}
+                    />
                 </View>
-                
+
                 <View
                     style={{
                         zIndex: 1,
-                        paddingBottom: screenSize.height * .01,
+                        paddingBottom: screenSize.height * 0.01,
                     }}
                 >
-                <CustomButton
-                    onPress={
-                        onChooseImagePress
-                    }
-                    text="Change Profile Picture"
-                    color="#1e1c21"
-                    width={screenSize.width - 80}
-                    height={screenSize.height / 20}
-                />
+                    <CustomButton
+                        onPress={onChooseImagePress}
+                        text="Change Profile Picture"
+                        color="#1e1c21"
+                        width={screenSize.width - 80}
+                        height={screenSize.height / 20}
+                    />
                 </View>
 
                 <View style={{ zIndex: 2 }} />
