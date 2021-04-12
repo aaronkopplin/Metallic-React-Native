@@ -7,6 +7,7 @@ import {
     Dimensions,
     Platform,
     KeyboardAvoidingView,
+    Alert,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
@@ -24,11 +25,99 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
+async function createAccount(
+    fullName,
+    user_email,
+    user_password,
+    confirmPassword,
+    userName
+) {
+    const db = firebase.firestore();
+
+    if (user_password !== confirmPassword) {
+        alert("Passwords don't match.");
+        return;
+    }
+
+    const snapshot = await db
+        .collection("users")
+        .where("userName", "==", userName)
+        .get();
+
+    if (!snapshot.empty) {
+        alert("Username Already Taken!");
+        return;
+    }
+
+    const snapshot2 = await db
+        .collection("users")
+        .where("email", "==", user_email)
+        .get();
+
+    if (!snapshot2.empty) {
+        alert("Email Already In Use!");
+        return;
+    }
+
+    // alert("Please wait while we create your account.");
+    const newWallet = ethers.Wallet.createRandom();
+
+    firebase
+        .auth()
+        .createUserWithEmailAndPassword(user_email, user_password)
+        .then((response) => {
+            const uid = response.user.uid;
+            const data = {
+                id: uid,
+                email: user_email,
+                fullName: fullName,
+                userName: userName,
+                address: newWallet.address,
+            };
+
+            const data2 = {
+                userName,
+                fullName,
+                email: user_email,
+                address: newWallet.address,
+            };
+
+            const usersRef = firebase.firestore().collection("users");
+            if (!snapshot.empty) {
+                alert("Username already taken.");
+            } else {
+                usersRef
+                    .doc(uid)
+                    .set(data)
+                    .then(() => {
+                        console.log("Attempting to navigate to home");
+                    })
+                    .catch((error) => {
+                        console.log("error caught in firebase.");
+                        alert(error);
+                    });
+
+                usersRef
+                    .doc(uid)
+                    .collection("Contacts")
+                    .doc(data.fullName)
+                    .set(data2);
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            alert(error);
+        })
+        .then(() => {
+            login(user_email, user_password, newWallet);
+        });
+}
+
 export default function RegistrationScreen({ navigation }) {
     // state
     const [fullName, setFullName] = useState("");
-    const [user_email, setEmail] = useState("");
-    const [user_password, setPassword] = useState("");
+    const [userEmail, setEmail] = useState("");
+    const [userPassword, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [userName, setUserName] = useState("");
 
@@ -56,85 +145,25 @@ export default function RegistrationScreen({ navigation }) {
     // };
 
     const onRegisterPress = async () => {
-        const db = firebase.firestore();
-
-        if (user_password !== confirmPassword) {
-            alert("Passwords don't match.");
-            return;
-        }
-
-        const snapshot = await db
-            .collection("users")
-            .where("userName", "==", userName)
-            .get();
-
-        if (!snapshot.empty) {
-            alert("Username Already Taken!");
-            return;
-        }
-
-        const snapshot2 = await db
-            .collection("users")
-            .where("email", "==", user_email)
-            .get();
-
-        if (!snapshot2.empty) {
-            alert("Email Already In Use!");
-            return;
-        }
-
-        alert("Please wait while we create your account.");
-        const newWallet = ethers.Wallet.createRandom();
-
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(user_email, user_password)
-            .then((response) => {
-                const uid = response.user.uid;
-                const data = {
-                    id: uid,
-                    email: user_email,
-                    fullName: fullName,
-                    userName: userName,
-                    address: newWallet.address,
-                };
-
-                const data2 = {
-                    userName,
-                    fullName,
-                    email: user_email,
-                    address: newWallet.address,
-                };
-
-                const usersRef = firebase.firestore().collection("users");
-                if (!snapshot.empty) {
-                    alert("Username already taken.");
-                } else {
-                    usersRef
-                        .doc(uid)
-                        .set(data)
-                        .then(() => {
-                            console.log("Attempting to navigate to home");
-                        })
-                        .catch((error) => {
-                            console.log("error caught in firebase.");
-                            alert(error);
-                        });
-
-                    usersRef
-                        .doc(uid)
-                        .collection("Contacts")
-                        .doc(data.fullName)
-                        .set(data2);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                alert(error);
-            })
-            .then(() => {
-                login(user_email, user_password, newWallet);
-            });
+        Alert.alert(
+            "Creating Account",
+            "Account creation will take a few seconds, sit tight.",
+            [
+                {
+                    text: "Got it",
+                    onPress: () => {
+                        createAccount(
+                            fullName,
+                            userEmail,
+                            userPassword,
+                            confirmPassword,
+                            userName
+                        );
+                    },
+                    style: "cancel",
+                },
+            ]
+        );
     };
 
     return (
@@ -205,7 +234,7 @@ export default function RegistrationScreen({ navigation }) {
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
-                    value={user_email}
+                    value={userEmail}
                     keyboardType="email-address"
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
@@ -261,7 +290,7 @@ export default function RegistrationScreen({ navigation }) {
                     secureTextEntry
                     placeholder="Password"
                     onChangeText={(text) => setPassword(text)}
-                    value={user_password}
+                    value={userPassword}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                     autoCompleteType="off"
