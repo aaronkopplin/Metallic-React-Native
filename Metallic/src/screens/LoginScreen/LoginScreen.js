@@ -6,6 +6,7 @@ import {
     View,
     Dimensions,
     Platform,
+    KeyboardAvoidingView,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
@@ -65,21 +66,23 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-        <View style={masterStyles.mainBackground}>
+        <View style={masterStyles.mainBackground} justifyContent="flex-start">
             <Image
-                style={[masterStyles.logo, { flex: 0.75 }]}
+                style={masterStyles.logo}
                 source={require("../../../assets/metalliclogo.png")}
             />
 
-            <View
+            <KeyboardAvoidingView
+                behavior="padding"
+                enabled
                 style={{
-                    flex: 3,
+                    // flex: 3,
                     backgroundColor: "#2e2b30",
                     width: screenSize.width - 20,
-                    height:
-                        Platform.OS === "web"
-                            ? screenSize.height / 2.5
-                            : screenSize.width - 30,
+                    // height:
+                    //     Platform.OS === "web"
+                    //         ? screenSize.height / 2.5
+                    //         : screenSize.width - 30,
                     paddingTop: screenSize.height / 50,
                     paddingLeft: 20,
                     borderRadius: 4,
@@ -140,35 +143,26 @@ export default function LoginScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
+                <Text></Text>
 
-                <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
-                >
-                    <CustomButton
-                        onPress={onLoginPress}
-                        text="Login"
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
-                </View>
+                <CustomButton
+                    onPress={onLoginPress}
+                    text="Login"
+                    color="#1e1c21"
+                    width={screenSize.width - 60}
+                    height={screenSize.height / 20}
+                />
+                <Text></Text>
 
-                <View style={{ zIndex: 2 }}>
-                    <CustomButton
-                        onPress={onFooterLinkPress}
-                        text={"Don't have an account?"}
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
-                </View>
-            </View>
-
-            <View style={(masterStyles.mainBackground, { flex: 2 })}></View>
+                <CustomButton
+                    onPress={onFooterLinkPress}
+                    text={"Don't have an account?"}
+                    color="#1e1c21"
+                    width={screenSize.width - 60}
+                    height={screenSize.height / 20}
+                />
+                <Text></Text>
+            </KeyboardAvoidingView>
         </View>
     );
 }
