@@ -29,16 +29,10 @@ async function createAccount(
     fullName,
     user_email,
     user_password,
-    confirmPassword,
-    userName
+    userName,
+    setLoadingMessge
 ) {
     const db = firebase.firestore();
-
-    if (user_password !== confirmPassword) {
-        alert("Passwords don't match.");
-        return;
-    }
-
     const snapshot = await db
         .collection("users")
         .where("userName", "==", userName)
@@ -62,7 +56,7 @@ async function createAccount(
     // alert("Please wait while we create your account.");
     const newWallet = ethers.Wallet.createRandom();
 
-    firebase
+    await firebase
         .auth()
         .createUserWithEmailAndPassword(user_email, user_password)
         .then((response) => {
@@ -94,7 +88,7 @@ async function createAccount(
                     })
                     .catch((error) => {
                         console.log("error caught in firebase.");
-                        alert(error);
+                        // alert(error);
                     });
 
                 usersRef
@@ -106,7 +100,8 @@ async function createAccount(
         })
         .catch((error) => {
             console.log(error);
-            alert(error);
+            // alert(error);
+            setLoadingMessge("Please go back and try again.");
         })
         .then(() => {
             login(user_email, user_password, newWallet);
@@ -120,6 +115,10 @@ export default function RegistrationScreen({ navigation }) {
     const [userPassword, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [userName, setUserName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState(
+        "Your account is being created..."
+    );
 
     const screenSize =
         Platform.OS === "web"
@@ -145,6 +144,36 @@ export default function RegistrationScreen({ navigation }) {
     // };
 
     const onRegisterPress = async () => {
+        if (fullName == "") {
+            alert("Please enter a name for the account.");
+            return;
+        }
+
+        if (userEmail == "") {
+            alert("Please enter an email for the account.");
+            return;
+        }
+
+        if (userPassword == "") {
+            alert("Please enter a password.");
+            return;
+        }
+
+        if (confirmPassword == "") {
+            alert("Please confirm password.");
+            return;
+        }
+
+        if (userName == "") {
+            alert("Please enter a username for the account.");
+            return;
+        }
+
+        if (userPassword !== confirmPassword) {
+            alert("Passwords don't match.");
+            return;
+        }
+
         Alert.alert(
             "Creating Account",
             "Account creation will take a few seconds, sit tight.",
@@ -152,12 +181,13 @@ export default function RegistrationScreen({ navigation }) {
                 {
                     text: "Got it",
                     onPress: () => {
+                        setLoading(true);
                         createAccount(
                             fullName,
                             userEmail,
                             userPassword,
-                            confirmPassword,
-                            userName
+                            userName,
+                            setLoadingMessage
                         );
                     },
                     style: "cancel",
@@ -166,7 +196,22 @@ export default function RegistrationScreen({ navigation }) {
         );
     };
 
-    return (
+    return loading ? (
+        <View style={masterStyles.mainBackground} justifyContent="flex-start">
+            <Image
+                style={[masterStyles.logo]}
+                source={require("../../../assets/metalliclogo.png")}
+            />
+            <Text
+                style={[
+                    masterStyles.headingsSmall,
+                    { paddingBottom: screenSize.height * 0.005 },
+                ]}
+            >
+                {loadingMessage}
+            </Text>
+        </View>
+    ) : (
         <View style={masterStyles.mainBackground} justifyContent="flex-start">
             <Image
                 style={[masterStyles.logo]}
