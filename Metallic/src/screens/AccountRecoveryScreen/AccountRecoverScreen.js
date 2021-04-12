@@ -14,6 +14,7 @@ import { masterStyles } from "../../../../Metallic/masterStyles";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firebase } from "../../firebase/config";
+import * as WalletFunctions from "../../ethereum/walletFunctions";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -24,6 +25,53 @@ import "@ethersproject/shims";
 // Import the ethers library
 import { ethers } from "ethers";
 
+async function verifyAccountMnemonic(mnemonic, navigation) {
+    Alert.alert("Warning", "This could take up to 10 seconds.", [
+        {
+            text: "Continue",
+            onPress: () => {
+                recoverAccount(mnemonic, navigation);
+            },
+            style: "Cancel",
+        },
+    ]);
+}
+
+async function recoverAccount(mnemonic, navigation) {
+    const newWallet = ethers.Wallet.fromMnemonic(mnemonic);
+    var user = firebase.auth().currentUser;
+    var doc = await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
+    var oldAddress = doc.data().address;
+    console.log(
+        "recovered address: " +
+            newWallet.address +
+            " old address: " +
+            oldAddress
+    );
+    if (newWallet.address == oldAddress) {
+        WalletFunctions.storeData("mnemonic", newWallet.mnemonic.phrase);
+        WalletFunctions.storeData("privateKey", newWallet.privateKey);
+        navigation.navigate("Account");
+    } else {
+        Alert.alert(
+            "Error",
+            "The ethereum wallet you are recovering does not match the wallet that is linked to this account." +
+                "\n\nPlease log into the account that this wallet is registered under.",
+            [
+                {
+                    text: "Ok",
+                    onPress: () => {},
+                    style: "Cancel",
+                },
+            ]
+        );
+    }
+}
+
 export function AccountRecoveryScreen() {
     const screenSize =
         Platform.OS === "web"
@@ -31,21 +79,6 @@ export function AccountRecoveryScreen() {
             : Dimensions.get("screen");
     const navigation = useNavigation();
     const [mnemonic, setMnemonic] = useState("");
-
-    const storeData = async (key, value) => {
-        try {
-            var user = firebase.auth().currentUser;
-            var doc = await firebase
-                .firestore()
-                .collection("users")
-                .doc(user.uid)
-                .get();
-            var userName = doc.data().userName;
-            await AsyncStorage.setItem(userName + key, value);
-        } catch (e) {
-            // saving error
-        }
-    };
 
     return (
         <View style={masterStyles.mainBackground}>
@@ -84,7 +117,6 @@ export function AccountRecoveryScreen() {
                     placeholder="Mnemonic"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setMnemonic(text)}
-                    // value={fullName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="words"
                     autoCompleteType="off"
@@ -93,60 +125,7 @@ export function AccountRecoveryScreen() {
                 <CustomButton
                     onPress={() => {
                         try {
-                            async function verifyAccountMnemonic() {
-                                Alert.alert(
-                                    "Loading",
-                                    "Please wait while we recover your account. This could take up to 10 seconds.",
-                                    [
-                                        {
-                                            text: "Ok",
-                                            onPress: () => {},
-                                            style: "Cancel",
-                                        },
-                                    ]
-                                );
-                                const newWallet = await ethers.Wallet.fromMnemonic(
-                                    mnemonic
-                                );
-                                var user = firebase.auth().currentUser;
-                                var doc = await firebase
-                                    .firestore()
-                                    .collection("users")
-                                    .doc(user.uid)
-                                    .get();
-                                var oldAddress = doc.data().address;
-                                console.log(
-                                    "recovered address: ",
-                                    newWallet.address,
-                                    "old address: ",
-                                    oldAddress
-                                );
-                                if (newWallet.address == oldAddress) {
-                                    storeData(
-                                        "mnemonic",
-                                        newWallet.mnemonic.phrase
-                                    );
-                                    storeData(
-                                        "privateKey",
-                                        newWallet.privateKey
-                                    );
-                                    navigation.navigate("Account");
-                                } else {
-                                    Alert.alert(
-                                        "Error",
-                                        "The ethereum wallet you are recovering does not match the wallet that is linked to this account." +
-                                            "\n\nPleaase log into the account that this wallet is registered under.",
-                                        [
-                                            {
-                                                text: "Ok",
-                                                onPress: () => {},
-                                                style: "Cancel",
-                                            },
-                                        ]
-                                    );
-                                }
-                            }
-                            verifyAccountMnemonic();
+                            verifyAccountMnemonic(mnemonic, navigation);
                         } catch (error) {
                             console.log("There was an error");
                         }
