@@ -23,36 +23,39 @@ import { useEffect } from "react";
 
 export function ContactsScreen({ navigation }) {
 
+    // Hooks
+    const [userImage, setImageUrl] = useState(undefined);
+    const [contactsList, setContactsList] = useState([]); 
+    const [you, setYou] = useState("");
+
+    // Const Variables
     const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
-
     const user = firebase.auth().currentUser
+    const RefUser = firebase.firestore().collection("users").doc(user.uid);
+    const ContactsRef = RefUser.collection("Contacts");
+    const titles = ["&","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
-    // Is there a user currently?
+    // Prevent App from Crashing When Logout?
     if (user == null){
         return;
     }
-    const RefUser = firebase.firestore().collection("users").doc(user.uid);
 
-    const ContactsRef = RefUser.collection("Contacts");
-
-    const [userImage, setImageUrl] = useState(undefined);
-    const [contactsList, setContactsList] = useState([]); 
-    const [you, setYou] = useState();
-    const titles = ["&","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-
-    // Get the list of contacts
     useEffect(() => {
-        ContactsRef.onSnapshot((querySnapshot) => {
-            // Variable for holding each contacts data
-            var list = [];
-            querySnapshot.forEach(doc => {
-                const entity = doc.data();
-                
-                list.push(entity);
+        // Get the list of contacts
+        const getList = async () =>{
+            ContactsRef.onSnapshot((querySnapshot) => {
+                // Variable for holding each contacts data
+                var list = [];
+                querySnapshot.forEach(doc => {
+                    const entity = doc.data();
+                    
+                    list.push(entity);
+                });
+                setContactsList(list);
+                //   console.log(contactsList);
             });
-            setContactsList(list);
-            //   console.log(contactsList);
-        });
+        }
+        getList();
 
         // Get the username for the current user
         async function getUser() {
@@ -64,14 +67,12 @@ export function ContactsScreen({ navigation }) {
             }
             else {snapshot.forEach((doc) => {
                 setYou(doc.data().userName);
-                });
-            }
+            });}
         }
         getUser();
 
     }, []);
 
-    // TODO: Once image storage is setup for users actually search for it.
     const getImage = (userName) => {
         var [iUrl, setIURL] = useState(undefined);
 
@@ -129,7 +130,7 @@ export function ContactsScreen({ navigation }) {
                 </TouchableOpacity>
             </View>
         </View>
-        );
+    );
 
     // Go through our list of contacts and add them to the map.
     const populateData = () => {
@@ -143,8 +144,7 @@ export function ContactsScreen({ navigation }) {
                 }
                 i++;
             })
-        });
-        
+        });    
     };
 
     // Map out letter to the title of our list.

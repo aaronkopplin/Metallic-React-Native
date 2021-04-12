@@ -21,6 +21,7 @@ import "@ethersproject/shims";
 
 // Import the ethers library
 import { ethers } from "ethers";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function RegistrationScreen({ navigation }) {
     // state
@@ -138,19 +139,18 @@ export default function RegistrationScreen({ navigation }) {
     return (
         <View style={masterStyles.mainBackground}>
             <Image
-                style={[masterStyles.logo, { flex: 0.75 }]}
+                style={[masterStyles.logo]}
                 source={require("../../../assets/metalliclogo.png")}
             />
 
-            <View
+            <KeyboardAwareScrollView
                 style={{
-                    flex: 5,
                     backgroundColor: "#2e2b30",
-                    width: screenSize.width - 20,
+                    width: screenSize.width * .99,
                     height:
                         Platform.OS === "web"
                             ? screenSize.height / 2.5
-                            : screenSize.height / 2.5,
+                            : screenSize.height * .75,
                     paddingTop: screenSize.height / 50,
                     paddingLeft: 20,
                     borderRadius: 4,
@@ -316,9 +316,9 @@ export default function RegistrationScreen({ navigation }) {
                         </Text>
                     </Text>
                 </View>
-            </View>
+            </KeyboardAwareScrollView>
 
-            <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
+            <View style={(masterStyles.mainBackground, { flex: 0.1 })}></View>
         </View>
     );
 }
