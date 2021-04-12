@@ -147,24 +147,15 @@ export function AccountScreen(props) {
             setImageUrl(ref.getDownloadURL());
         }
     };
-    
+
     useEffect(() => {
         // Failed to find Image for user        
         const getImage = async(userName) => {
-            if (userName != ""){
-                const ref = await firebase.storage().ref('/' + userName + 'ProfileImage');
-                await ref.getDownloadURL().then(onResolve, onReject);
-            
-                async function onReject(error) {
+            if (userName != "")
+            {            
                     //console.log(error.code)
-                    var def = await firebase.storage().ref('/DefaultImage.png');
-                    def.getDownloadURL().then((url) => {
-                        setImageUrl(url)}) 
-                }
+                    setImageUrl("https://storage.googleapis.com/metallic-975be.appspot.com/DefaultImage") 
                 
-                async function onResolve(foundUrl) {
-                    setImageUrl(foundUrl);
-                }
             }
         }
 
