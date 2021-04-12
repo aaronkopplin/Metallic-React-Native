@@ -37,6 +37,7 @@ export function login(email, password, wallet) {
                         return;
                     }
                     const user = firestoreDocument.data();
+                    WalletFunctions.clearKeysNotForThisUser();
                 })
                 .catch((error) => {
                     alert(error);

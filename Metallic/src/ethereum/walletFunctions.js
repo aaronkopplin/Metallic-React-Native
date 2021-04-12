@@ -8,8 +8,43 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 
 // Import the ethers library
-import { ethers, utils } from "ethers";
-import { TransactionDescription } from "ethers/lib/utils";
+import { ethers } from "ethers";
+
+export async function clearKeysNotForThisUser() {
+    var userName = await getUsername();
+    var allKeysPromise = AsyncStorage.getAllKeys();
+
+    allKeysPromise
+        .then((keys) => {
+            if (keys == null) {
+                console.log("COULD NOT LOCATE KEYS");
+            } else {
+                // located the keys
+
+                if (userName && userName.length > 0) {
+                    keys.forEach((key) => {
+                        if (key.substring(0, userName.length) != userName) {
+                            //this key is not associated with the logged in user
+                            console.log("removing data for key: " + key);
+                            AsyncStorage.removeItem(key);
+                        }
+                    });
+                }
+            }
+        })
+        .catch((error) => console.log("error getting all keys: " + error));
+}
+
+async function getUsername() {
+    var user = firebase.auth().currentUser;
+    var doc = await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .get();
+    var userName = doc.data().userName;
+    return userName;
+}
 
 export async function storeData(key, value) {
     try {
