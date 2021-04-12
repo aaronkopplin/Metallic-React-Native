@@ -7,11 +7,12 @@ import {
     Platform,
     Alert,
     Button,
+    Linking,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
@@ -25,72 +26,26 @@ import { ethers } from "ethers";
 import { useEffect } from "react";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 import * as ImagePicker from "expo-image-picker";
-import storage from "@react-native-firebase/storage";
+// import storage from "@react-native-firebase/storage";
 import "firebase/storage";
 import { formatBytes32String } from "@ethersproject/strings";
 
-// if (perm && Platform.OS == "ios") {
-    
-// }
-
-const onLogoutPress = () => {
-    console.log("logout?");
-    Alert.alert(
-        "Logout",
-        "Are you sure you want to logout?",
-        [
-            {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-            },
-            {
-                text: "OK",
-                onPress: () => {
-                    firebase
-                        .auth()
-                        .signOut()
-                        .then(() => {})
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                },
-            },
-        ],
-        { cancelable: false }
-    );
-};
-
-const onLogoutPressWeb = () => {
-    firebase
-        .auth()
-        .signOut()
-        .then(() => {
-            alert("Logout Successful");
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-};
+import * as Permissions from 'expo-permissions';
 
 export function AccountScreen(props) {
-
-    const [balance, setBalance] = useState("Loading");
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
     const [userCreateDate, setCreateDate] = useState("");
     const [userName, setUserName] = useState("");
-    const [imageUrl, setImageUrl] = useState(undefined);
-
-    const navigation = useNavigation();
     const screenSize =
-    Platform.OS === "web"
-        ? Dimensions.get("window")
-        : Dimensions.get("screen");
+        Platform.OS === "web"
+            ? Dimensions.get("window")
+            : Dimensions.get("screen");
+    const navigation = useNavigation();
+    const [balance, setBalance] = useState("Loading");
+    const [imageUrl, setImageUrl] = useState(undefined);
+    const [imagePermission, setImagePermission] = useState()
 
-    var user = firebase.auth().currentUser;
-    var db = firebase.firestore();
-    var uid = user.uid;
     useEffect(() => {
         const fetchBal = async () => {
             const wallet = await WalletFunctions.loadWalletFromPrivate();
@@ -99,26 +54,7 @@ export function AccountScreen(props) {
             ).toString();
             setBalance((balance / 1000000000000000000).toString() + " Eth");
         };
-    
 
-        if (user != null){
-            const getUser = async(datab, userID) => {
-                    const users = await datab.collection("users");
-                    const snapshot = await users.where("id", "==", userID).get();
-
-                    if (snapshot.empty) {
-                        alert("no matching");
-                        return;
-                    }
-                    await snapshot.forEach((doc) => {
-                        setFullName(doc.data().fullName);
-                        setEmail(doc.data().email);
-                        setCreateDate(user.metadata.creationTime);
-                        setUserName(doc.data().userName);
-                });
-            };
-            getUser(db, uid);
-        }
         // (async () => {
         //     if (Platform.OS !== 'web') {
         //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -127,50 +63,125 @@ export function AccountScreen(props) {
         //       }
         //     }
         //   })();
-    
+
         fetchBal();
-        
-    
     }, []);
-    
+
+    // if (perm && Platform.OS == "ios") {
+
+    // }
+
+    // Stutters to load correct image probably from multiple function calls?
+    const ref = firebase.storage().ref("/" + userName + "ProfileImage");
+    ref.getDownloadURL().then(onResolve, onReject);
+
+    // Found image for user
+    function onResolve(foundUrl) {
+        setImageUrl(foundUrl);
+    }
+
+    // Failed to find Image for user
+    function onReject(error) {
+        //console.log(error.code)
+        var def = firebase.storage().ref("/DefaultImage.png");
+        def.getDownloadURL().then((url) => {
+            setImageUrl(url);
+        });
+    }
+
     const onChooseImagePress = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync();
-
-        if (!result.cancelled) {
-            let imageName = userName + "ProfileImage";
-
-            const response = await fetch(result.uri);
-            const blob = await response.blob();
-            var ref = firebase.storage().ref().child(imageName);
-            ref.put(blob);
-
-            setImageUrl(ref.getDownloadURL());
-        }
-    };
-    
-    useEffect(() => {
-        // Failed to find Image for user        
-        const getImage = async(userName) => {
-            if (userName != ""){
-                const ref = await firebase.storage().ref('/' + userName + 'ProfileImage');
-                await ref.getDownloadURL().then(onResolve, onReject);
-            
-                async function onReject(error) {
-                    //console.log(error.code)
-                    var def = await firebase.storage().ref('/DefaultImage.png');
-                    def.getDownloadURL().then((url) => {
-                        setImageUrl(url)}) 
-                }
-                
-                async function onResolve(foundUrl) {
-                    setImageUrl(foundUrl);
-                }
+        alert(imagePermission)
+        // alert((await Permissions.getAsync(Permissions.MEDIA_LIBRARY)).status);
+        if (Platform.OS == 'ios' && imagePermission != 'granted') {
+            if (imagePermission == null) {
+                const x = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+                setImagePermission(x.status);
+            }
+             else if ((await Permissions.getAsync(Permissions.MEDIA_LIBRARY)).status != 'granted')  {
+                Linking.openURL('app-settings:');
+                return;
             }
         }
+        if (Platform.OS != 'ios' || imagePermission == 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync();
 
-        getImage(userName);
+            if (!result.cancelled) {
+                let imageName = userName + "ProfileImage";
     
-    }, [userName, imageUrl])
+                const response = await fetch(result.uri);
+                const blob = await response.blob();
+                var ref = firebase.storage().ref().child(imageName);
+                ref.put(blob);
+    
+                setImageUrl(ref.getDownloadURL());
+            }
+        }
+        
+    };
+
+    const onLogoutPress = () => {
+        console.log("logout?");
+        Alert.alert(
+            "Logout",
+            "Are you sure you want to logout?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                },
+                {
+                    text: "OK",
+                    onPress: () => {
+                        firebase
+                            .auth()
+                            .signOut()
+                            .then(() => {})
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    },
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
+    const onLogoutPressWeb = () => {
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                alert("Logout Successful");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    var user = firebase.auth().currentUser;
+    var db = firebase.firestore();
+    var uid;
+    if (user != null) {
+        uid = user.uid;
+        async function getUser(datab, userID) {
+            var users = datab.collection("users");
+            const snapshot = await users.where("id", "==", userID).get();
+
+            if (snapshot.empty) {
+                alert("no matching");
+                return;
+            }
+            snapshot.forEach((doc) => {
+                setFullName(doc.data().fullName);
+                setEmail(doc.data().email);
+                setCreateDate(user.metadata.creationTime);
+                setUserName(doc.data().userName);
+                return doc;
+            });
+        }
+        getUser(db, uid);
+    }
 
     return (
         <View
@@ -286,7 +297,7 @@ export function AccountScreen(props) {
                     }}
                 >
                     <CustomButton
-                        onPress={onChooseImagePress}
+                        onPress={() => {onChooseImagePress()}}
                         text="Change Profile Picture"
                         color="#1e1c21"
                         width={screenSize.width - 80}

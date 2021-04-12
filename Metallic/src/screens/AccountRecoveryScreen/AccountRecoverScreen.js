@@ -86,7 +86,7 @@ export function AccountRecoveryScreen() {
                     onChangeText={(text) => setMnemonic(text)}
                     // value={fullName}
                     underlineColorAndroid="transparent"
-                    autoCapitalize="words"
+                    // autoCapitalize="words"
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
