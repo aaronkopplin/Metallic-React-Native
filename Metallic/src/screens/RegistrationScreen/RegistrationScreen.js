@@ -6,6 +6,7 @@ import {
     View,
     Dimensions,
     Platform,
+    KeyboardAvoidingView,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
@@ -73,9 +74,9 @@ export default function RegistrationScreen({ navigation }) {
         }
 
         const snapshot2 = await db
-        .collection("users")
-        .where("email", "==", user_email)
-        .get();
+            .collection("users")
+            .where("email", "==", user_email)
+            .get();
 
         if (!snapshot2.empty) {
             alert("Email Already In Use!");
@@ -102,7 +103,7 @@ export default function RegistrationScreen({ navigation }) {
                     userName,
                     fullName,
                     email: user_email,
-                    address: newWallet.address
+                    address: newWallet.address,
                 };
 
                 const usersRef = firebase.firestore().collection("users");
@@ -137,7 +138,7 @@ export default function RegistrationScreen({ navigation }) {
     };
 
     return (
-        <View style={masterStyles.mainBackground}>
+        <View style={masterStyles.mainBackground} justifyContent="flex-start">
             <Image
                 style={[masterStyles.logo]}
                 source={require("../../../assets/metalliclogo.png")}
@@ -145,17 +146,21 @@ export default function RegistrationScreen({ navigation }) {
 
             <KeyboardAwareScrollView
                 style={{
+                    flex: 1,
                     backgroundColor: "#2e2b30",
-                    width: screenSize.width * .99,
-                    height:
-                        Platform.OS === "web"
-                            ? screenSize.height / 2.5
-                            : screenSize.height * .75,
-                    paddingTop: screenSize.height / 50,
+                    width: screenSize.width - 20,
+
+                    // height:
+                    //     Platform.OS === "web"
+                    //         ? screenSize.height / 2.5
+                    //         : screenSize.height * 0.75,
+                    // paddingTop: screenSize.height / 50,
                     paddingLeft: 20,
                     borderRadius: 4,
                 }}
+                justifyContent="flex-start"
             >
+                <Text></Text>
                 <Text
                     style={[
                         masterStyles.headingsSmall,
@@ -290,21 +295,16 @@ export default function RegistrationScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
-                <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
-                >
-                    <CustomButton
-                        onPress={onRegisterPress}
-                        text="Create Account"
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
-                </View>
+                <Text></Text>
+
+                <CustomButton
+                    onPress={onRegisterPress}
+                    text="Create Account"
+                    color="#1e1c21"
+                    width={screenSize.width - 60}
+                    height={screenSize.height / 20}
+                />
+
                 <View style={masterStyles.footerView}>
                     <Text style={masterStyles.footerText}>
                         Already got an account?{" "}
