@@ -202,27 +202,37 @@ export default function RegistrationScreen({ navigation }) {
             return;
         }
 
-        Alert.alert(
-            "Creating Account",
-            "Account creation will take a few seconds, sit tight.",
-            [
-                {
-                    text: "Got it",
-                    onPress: () => {
-                        setLoading(true);
-                        createAccount(
-                            fullName,
-                            userEmail,
-                            userPassword,
-                            userName,
-                            setLoading,
-                            setLoadingMessage
-                        );
-                    },
-                    style: "cancel",
-                },
-            ]
+        setLoading(true);
+        createAccount(
+            fullName,
+            userEmail,
+            userPassword,
+            userName,
+            setLoading,
+            setLoadingMessage
         );
+
+        // Alert.alert(
+        //     "Creating Account",
+        //     "Account creation will take a few seconds, sit tight.",
+        //     [
+        //         {
+        //             text: "Got it",
+        //             onPress: () => {
+        //                 setLoading(true);
+        //                 createAccount(
+        //                     fullName,
+        //                     userEmail,
+        //                     userPassword,
+        //                     userName,
+        //                     setLoading,
+        //                     setLoadingMessage
+        //                 );
+        //             },
+        //             style: "cancel",
+        //         },
+        //     ]
+        // );
     };
 
     return loading ? (
