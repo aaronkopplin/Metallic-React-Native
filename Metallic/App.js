@@ -26,6 +26,7 @@ import "@ethersproject/shims";
 
 // Import the ethers library
 import { ethers } from "ethers";
+import { Platform } from "react-native";
 
 if (!global.btoa) {
     global.btoa = encode;
@@ -67,7 +68,7 @@ function Tabs() {
                     fontWeight: "bold",
                     position: "absolute",
                 },
-                keyboardHidesTabBar: true,
+                keyboardHidesTabBar: Platform.OS == 'android' ? true : false,
                 style: {
                     elevation: 0,
                     shadowOpacity: 0,
