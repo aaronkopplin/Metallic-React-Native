@@ -440,16 +440,16 @@ export default function RegistrationScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
-                <Text></Text>
-
-                <CustomButton
-                    onPress={onRegisterPress}
-                    text="Create Account"
-                    color="#1e1c21"
-                    width={screenSize.width - 60}
-                    height={screenSize.height / 20}
-                />
-
+                
+                <View style={{marginTop: 30}}>
+                    <CustomButton
+                        onPress={onRegisterPress}
+                        text="Create Account"
+                        color="#1e1c21"
+                        width={screenSize.width - 60}
+                        height={screenSize.height / 20}
+                    />
+                </View>
                 <View style={masterStyles.footerView}>
                     <Text style={masterStyles.footerText}>
                         Already got an account?{" "}

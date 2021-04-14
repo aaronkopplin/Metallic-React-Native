@@ -110,15 +110,15 @@ export function RecentChatsScreen({ navigation }) {
                         defaultSource={require("../../../assets/Default_Img.png")}
                         source={{uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item + "ProfileImage")}}
                     />
-                </View>
 
-                <View>
-                    <Text style={[masterStyles.entityText]}>
-                        {item}
-                    </Text>
-                    <Text style={[masterStyles.recentChat, {maxWidth: Platform.OS == "web" ? screenSize.width * .85 : screenSize.width * .75, }]} numberOfLines={2}>
-                        {(contentLogs[index])}
-                    </Text>
+                    <View>
+                        <Text style={[masterStyles.entityText]}>
+                            {item}
+                        </Text>
+                        <Text style={[masterStyles.recentChat, {maxWidth: Platform.OS == "web" ? screenSize.width * .85 : screenSize.width * .75, }]} numberOfLines={2}>
+                            {(contentLogs[index])}
+                        </Text>
+                    </View>
                 </View>
             </TouchableOpacity>
         );

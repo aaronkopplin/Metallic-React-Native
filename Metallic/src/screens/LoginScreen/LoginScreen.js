@@ -143,34 +143,26 @@ export default function LoginScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
-                <Text></Text>
+                <View style={{marginTop: 30, marginBottom: 20}}>
 
-                <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
-                >
-                    <CustomButton
-                        onPress={onLoginPress}
-                        text="Login"
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
+                <CustomButton
+                    onPress={onLoginPress}
+                    text="Login"
+                    color="#1e1c21"
+                    width={screenSize.width - 60}
+                    height={screenSize.height / 20}
+                />
                 </View>
+                <View>
 
-                <View style={{ zIndex: 2 }}>
-                    <CustomButton
-                        onPress={onFooterLinkPress}
-                        text={"Don't have an account?"}
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
+                <CustomButton
+                    onPress={onFooterLinkPress}
+                    text={"Don't have an account?"}
+                    color="#1e1c21"
+                    width={screenSize.width - 60}
+                    height={screenSize.height / 20}
+                />
                 </View>
-                    
                 <Text></Text>
             </KeyboardAvoidingView>
         </View>
