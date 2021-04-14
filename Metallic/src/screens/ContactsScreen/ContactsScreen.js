@@ -11,7 +11,6 @@ import {
     Platform,
     StatusBar,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 // import styles from "./styles";
 import { firebase } from "../../firebase/config";
 import { useNavigation } from "@react-navigation/native";
@@ -19,12 +18,12 @@ import CustomButton from "../../../button";
 import { masterStyles } from '../../../../Metallic/masterStyles';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
+import { defaultImage } from "../../../assets/Default_Img.png"
 
 
 export function ContactsScreen({ navigation }) {
 
     // Hooks
-    const [userImage, setImageUrl] = useState(undefined);
     const [contactsList, setContactsList] = useState([]); 
     const [you, setYou] = useState("");
 
@@ -73,31 +72,6 @@ export function ContactsScreen({ navigation }) {
 
     }, []);
 
-    const getImage = (userName) => {
-        var [iUrl, setIURL] = useState(undefined);
-
-        var DefaultRef = firebase.storage().ref('/DefaultImage.png');
-        DefaultRef.getDownloadURL()
-        .then( (url) => {setImageUrl(url)});
-
-        var ref = undefined;
-        // check if image exists?
-        ref = firebase.storage().ref('/' + userName + "ProfileImage");
-        ref.getDownloadURL().then(onResolve,onReject);
-
-        function onResolve(foundURL){
-            setIURL(foundURL);
-        }
-        function onReject(error) {
-            //console.log(error.code);
-        }
-
-        if (iUrl != undefined){
-            return iUrl;
-        }
-        return userImage;
-    }
-
     // Set up navigation and touchable components for each contact.
     const Item = ({ title }) => (
         
@@ -107,8 +81,9 @@ export function ContactsScreen({ navigation }) {
             }}
             >
                 <Image
-                style={[masterStyles.contactsLogo, {borderRadius: 45, resizeMode: "cover"}]}
-                source={{ uri: getImage(title)}}
+                style={[masterStyles.contactsLogo, {borderRadius: 45, resizeMode: "contain"}]}
+                defaultSource={require("../../../assets/Default_Img.png")}
+                source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + title + "ProfileImage")}}
                 />
             
             <View style={masterStyles.contactBar}>
@@ -171,8 +146,9 @@ export function ContactsScreen({ navigation }) {
                 }}/>
             <View style={{flexDirection: "row"}}>
                 <Image
-                    style={[masterStyles.contactsUserLogo, {borderRadius: 45, resizeMode: "cover"}]}
-                    source={{ uri: getImage(you)}}
+                    style={[masterStyles.contactsUserLogo, {borderRadius: 45, resizeMode: "contain"}]}
+                    defaultSource={require("../../../assets/Default_Img.png")}
+                    source={{ uri: "https://storage.googleapis.com/metallic-975be.appspot.com/" + you + "ProfileImage"}}
                 />
                 <View style={{
                     backgroundColor: "#ffffff", 

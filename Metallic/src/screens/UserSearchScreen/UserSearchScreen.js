@@ -60,7 +60,7 @@ export function UserSearchScreen(props) {
                     console.log(error);
                 }
             );
-    });
+    }, [searchText]);
 
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {
@@ -84,7 +84,10 @@ export function UserSearchScreen(props) {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Image 
                             style={[masterStyles.recentChatsLogo,{borderRadius: 50, resizeMode: "contain" }]}
-                            source={require("../../../assets/Default_Img.png")}></Image>
+                            defaultSource={require("../../../assets/Default_Img.png")}
+                            source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item.userName + "ProfileImage")}}
+                                
+                        />                           
                         <View style={{paddingLeft: 10}}>
                             <Text style={[masterStyles.headingsSmall]} >{item.email}</Text>
                             <Text style={[masterStyles.headingsSmallNotBold]} >{item.userName}</Text>

@@ -13,6 +13,7 @@ import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { defaultImg } from "../../../assets/Default_Img.png"
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -135,7 +136,6 @@ export function AccountScreen(props) {
     
     const onChooseImagePress = async () => {
         let result = await ImagePicker.launchImageLibraryAsync();
-
         if (!result.cancelled) {
             let imageName = userName + "ProfileImage";
 
@@ -147,15 +147,19 @@ export function AccountScreen(props) {
             setImageUrl(ref.getDownloadURL());
         }
     };
-
+    
     useEffect(() => {
         // Failed to find Image for user        
         const getImage = async(userName) => {
-            if (userName != "")
-            {            
+            if (userName != ""){
+                const ref = await firebase.storage().ref('/' + userName + 'ProfileImage');
+                await ref.getDownloadURL().then(onResolve, onReject);
+                async function onReject(error) {
                     //console.log(error.code)
-                    setImageUrl("https://storage.googleapis.com/metallic-975be.appspot.com/DefaultImage") 
-                
+                }
+                async function onResolve(foundUrl) {
+                    setImageUrl(foundUrl);
+                }
             }
         }
 
@@ -192,7 +196,8 @@ export function AccountScreen(props) {
                     My Account
                 </Text>
                 <Image
-                    style={[masterStyles.logo, { borderRadius: 30 }]}
+                    style={[masterStyles.logo, { borderRadius: 30, resizeMode: "contain"}]}
+                    defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: imageUrl }}
                 />
                 <Text

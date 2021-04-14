@@ -127,6 +127,15 @@ export function PaymentsScreen({ route }) {
     }, [otherUserUID, myUserName, chatExists]);
     // re-run this useEffect if any of the above three variables change value
 
+    function getImage(item){
+        if (item.indexOf("ETHl") == -1){
+            return ("https://storage.googleapis.com/metallic-975be.appspot.com/" + myUserName + "ProfileImage");
+        }   
+        else{
+            return ("https://storage.googleapis.com/metallic-975be.appspot.com/" + userName + "ProfileImage");
+        }
+    }
+
     // add chat to my and other user's chatLogs on firebase when sending a message/payment
     const addChat = async (message, amount) => {
         // message that i sent and will go in my chatLog
@@ -176,7 +185,6 @@ export function PaymentsScreen({ route }) {
         var fontColor = "#1e1c21";
         var sendingIndexStart = String(item).lastIndexOf('Sending: ');
         var imageSize = Platform.OS === "web" ? 50 : 25;
-
         // set variables accordingly to if the chat was sent by me or the other user
         if (String(item).charAt(String(item).length - 1) == "r") {
             justifySide = "flex-end";
@@ -226,7 +234,9 @@ export function PaymentsScreen({ route }) {
                             }}
                             resizeMode={"contain"}
                             resizeMethod={"scale"}
-                            source={require("../../../assets/Default_Img.png")}
+                            
+                            defaultSource={require("../../../assets/Default_Img.png")}
+                            source={{ uri: getImage(item)}}
                         />
                         
                     </View>
@@ -330,27 +340,20 @@ export function PaymentsScreen({ route }) {
                     }}
                     style={{alignItems: 'center', justifyContent: 'center'}}
                 >
-                    {/* <View
+                    <Image
                         style={{
                             borderRadius: 50,
-                            backgroundColor: "#000",
-                            height: userImageSize,
-                            width: userImageSize,
+                            height: userImageSize - 10,
+                            width: userImageSize - 10,
+                            resizeMode: "contain",
+                            backgroundColor: "#000"
                         }}
-                    > */}
-                        <Image
-                            style={{
-                                borderRadius: 50,
-                                height: userImageSize - 10,
-                                width: userImageSize - 10,
-                                resizeMode: "contain",
-                                backgroundColor: "#000",
-                            }}
-                            source={require("../../../assets/Default_Img.png")}
-                        />
-                        
-                    {/* </View> */}
+                        defaultSource={require("../../../assets/Default_Img.png")}
+                        source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + userName + "ProfileImage")}}
+                    />
+                    
                     <Text style={{fontSize: 18, fontWeight: 'bold', color: '#fff', maxWidth: screenSize.width - 40, paddingTop: 5}}>{userName}</Text>
+
                 </TouchableOpacity>
 
                 <View

@@ -31,7 +31,7 @@ export function UserAccountScreen({ route }) {
             : Dimensions.get("screen");
     const { email, fullName, userName, address } = route.params;
     const user = firebase.auth().currentUser;
-    const [userImage, setImageUrl] = useState(undefined);
+    const [imageUrl, setImageUrl] = useState(undefined);
     const [balance, setBalance] = useState("Loading");
 
     useEffect(() => {
@@ -47,23 +47,26 @@ export function UserAccountScreen({ route }) {
         populateBalance();
     }, []);
 
-    // Same code as Account Screen but doesn't stutter?
-    const ref = firebase.storage().ref("/" + userName + "ProfileImage");
-    ref.getDownloadURL().then(onResolve, onReject);
+    useEffect(() => {
+        // Failed to find Image for user        
+        const getImage = async(userName) => {
+            if (userName != ""){
+                const ref = await firebase.storage().ref('/' + userName + 'ProfileImage');
+                await ref.getDownloadURL().then(onResolve, onReject);
+            
+                async function onReject(error) {
+                    //console.log(error.code)
+                }
+                
+                async function onResolve(foundUrl) {
+                    setImageUrl(foundUrl);
+                }
+            }
+        }
 
-    // Found image for user
-    function onResolve(foundUrl) {
-        setImageUrl(foundUrl);
-    }
-
-    // Failed to find Image for user
-    function onReject(error) {
-        //console.log(error.code)
-        var def = firebase.storage().ref("/DefaultImage.png");
-        def.getDownloadURL().then((url) => {
-            setImageUrl(url);
-        });
-    }
+        getImage(userName);
+    
+    }, [userName, imageUrl])
 
     const navigation = useNavigation();
 
@@ -151,8 +154,9 @@ export function UserAccountScreen({ route }) {
                 {/* <Text style={[masterStyles.title, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{} Account</Text> */}
 
                 <Image
-                    style={[masterStyles.logo, { borderRadius: 50 }]}
-                    source={{ uri: userImage }}
+                    style={[masterStyles.logo, { borderRadius: 50, resizeMode: "contain" }]}
+                    defaultSource={require("../../../assets/Default_Img.png")}
+                    source={{ uri: imageUrl }}
                 />
                 <Text
                     style={[

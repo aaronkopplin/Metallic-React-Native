@@ -11,7 +11,8 @@ import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
-import { useEffect } from "react";
+import "firebase/storage"
+import {defaultImage } from "../../../assets/Default_Img.png"
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
