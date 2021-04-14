@@ -100,20 +100,17 @@ export function UserSearchScreen(props) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center' }}>
-            <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginBottom: 10 }}>
-                <View style={{ backgroundColor: '#2e2b30', alignItems: 'center', height: screenSize.height * 0.01, paddingBottom: 20 }} />
-                <View style={{ width: screenSize.width - 40 }}>
-                    <TextInput
-                        style={[masterStyles.input]}
-                        placeholder="Enter name/username to search for a user"
-                        placeholderTextColor="#aaaaaa"
-                        onChangeText={(text) => setSearchText(text)}
-                        clearButtonMode="while-editing"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                    />
-                </View>
-                <View style={{ paddingVertical: 20, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}>
+            <TextInput
+                style={[masterStyles.input, {width: screenSize.width - 20, marginBottom: 20,}]}
+                placeholder="Enter name/username to search for a user"
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setSearchText(text)}
+                clearButtonMode="while-editing"
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
+            <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
+                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}>
                     <FlatList
                         data={users}
                         renderItem={renderUser}
