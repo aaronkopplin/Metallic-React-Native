@@ -29,7 +29,7 @@ export function UserAccountScreen({ route }) {
         Platform.OS === "web"
             ? Dimensions.get("window")
             : Dimensions.get("screen");
-    const { email, fullName, userName, address } = route.params;
+    const { email, fullName, userName, address, score } = route.params;
     const user = firebase.auth().currentUser;
     const [userImage, setImageUrl] = useState(undefined);
     const [balance, setBalance] = useState("Loading");
@@ -82,6 +82,7 @@ export function UserAccountScreen({ route }) {
                     fullName: fullName,
                     userName: userName,
                     address: address,
+                    score: score
                 };
 
                 ContactsRef.doc(userName).set(data);
@@ -226,7 +227,7 @@ export function UserAccountScreen({ route }) {
                             },
                         ]}
                     >
-                        Account Age:{" "}
+                        Score:{" "}
                     </Text>
                     <Text
                         style={[
@@ -237,7 +238,7 @@ export function UserAccountScreen({ route }) {
                             },
                         ]}
                     >
-                        ###
+                        {score}
                     </Text>
                 </Text>
                 <Text
@@ -281,6 +282,7 @@ export function UserAccountScreen({ route }) {
                                 fullName: fullName,
                                 userName: userName,
                                 address: address,
+                                score: score
                             });
                         }}
                         text="Send/Request Payment"

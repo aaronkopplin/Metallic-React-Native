@@ -45,6 +45,7 @@ export function AccountScreen(props) {
     const [balance, setBalance] = useState("Loading");
     const [imageUrl, setImageUrl] = useState(undefined);
     const [imagePermission, setImagePermission] = useState()
+    const [score, setScore] = useState()
 
     useEffect(() => {
         const fetchBal = async () => {
@@ -168,15 +169,28 @@ export function AccountScreen(props) {
             var users = datab.collection("users");
             const snapshot = await users.where("id", "==", userID).get();
 
+            var scoreRef = db.collection("users").doc(uid);
+            
+            scoreRef.onSnapshot((snap) => {
+                if (snap.data().score == undefined) {
+                    scoreRef.update({ score: 0})
+                    setScore(snap.data().score);
+                } else {
+                    setScore(snap.data().score);
+                }
+            })
+
             if (snapshot.empty) {
                 alert("no matching");
                 return;
             }
+            
             snapshot.forEach((doc) => {
                 setFullName(doc.data().fullName);
                 setEmail(doc.data().email);
                 setCreateDate(user.metadata.creationTime);
                 setUserName(doc.data().userName);
+                
                 return doc;
             });
         }
@@ -268,7 +282,7 @@ export function AccountScreen(props) {
                         },
                     ]}
                 >
-                    Account Age:
+                    Score: {score}
                 </Text>
 
                 <View

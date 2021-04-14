@@ -75,11 +75,13 @@ export function RecentChatsScreen({ navigation }) {
             var address;
             var email;
             var fullName;
+            var score;
 
             snapShot.forEach((doc) => {
                 address = doc.data().address;
                 email = doc.data().email;
                 fullName = doc.data().fullName;
+                score = doc.data().score
             });
 
             navigation.navigate("Payments", {
@@ -87,6 +89,7 @@ export function RecentChatsScreen({ navigation }) {
                 fullName: fullName,
                 userName: userName,
                 address: address,
+                score: score
             });
         }
 

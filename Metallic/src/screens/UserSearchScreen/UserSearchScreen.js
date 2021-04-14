@@ -80,6 +80,7 @@ export function UserSearchScreen(props) {
                             fullName: item.fullName,
                             userName: item.userName,
                             address: item.address,
+                            score: item.score
                         });
                     }
                 }}>
