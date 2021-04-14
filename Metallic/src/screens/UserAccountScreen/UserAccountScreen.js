@@ -33,7 +33,8 @@ export function UserAccountScreen({ route }) {
     const user = firebase.auth().currentUser;
     const [imageUrl, setImageUrl] = useState(undefined);
     const [balance, setBalance] = useState("Loading");
-
+    const [forf, setForF] = useState("Add Contact");
+    var found = false;
     useEffect(() => {
         async function populateBalance() {
             var bal = await WalletFunctions.getBalanceFromAddress(address);
@@ -46,6 +47,22 @@ export function UserAccountScreen({ route }) {
 
         populateBalance();
     }, []);
+
+    useEffect(() => {
+        const userRef = firebase.firestore().collection("users").doc(user.uid);
+        const ContactsRef = userRef.collection("Contacts"); 
+        ContactsRef.onSnapshot((person) =>
+            {
+                person.forEach((doc) => {
+                    if (doc.data().userName == userName){
+                        setForF("Remove Contact");
+                    }
+                }
+                )
+            }
+        )
+        
+    }, [forf])
 
     useEffect(() => {
         // Failed to find Image for user        
@@ -89,6 +106,7 @@ export function UserAccountScreen({ route }) {
                 };
 
                 ContactsRef.doc(userName).set(data);
+                setForF("Remove Contact");
                 console.log("Contact Added");
                 return;
             }
@@ -129,11 +147,13 @@ export function UserAccountScreen({ route }) {
                               ]
                           );
                 });
+                setForF("Add Contact");
             }
         }
 
         getUser(userRef, userName);
     };
+
 
     return (
         <View style={masterStyles.mainBackground}>
@@ -266,7 +286,7 @@ export function UserAccountScreen({ route }) {
                 >
                     <CustomButton
                         onPress={getContacts}
-                        text="Add/Remove Contact"
+                        text={forf}
                         color="#1e1c21"
                         width={screenSize.width - 80}
                         height={screenSize.height / 20}
