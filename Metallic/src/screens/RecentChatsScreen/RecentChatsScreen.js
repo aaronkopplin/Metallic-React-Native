@@ -44,15 +44,17 @@ export function RecentChatsScreen({ navigation }) {
                     const entity = doc.id;
                     const log = doc.data().chatLog;
                     newEntities.push(entity);
-                    // if ( !(log[0] == undefined) && Platform.OS != "web" && (log[0].length > 35)) {         
+                    // if ( !(log[0] == undefined) && Platform.OS != "web" && (log[0].length > 35)) {
                     //         newLogs.push(log[0].substring(0,35) + "...")
-                    // } 
+                    // }
                     // else if (!(log[0] == undefined) && Platform.OS == "web" && (log[0].length > 100)) {
                     //         newLogs.push(log[0].substring(0,100) + "...");
-                    // } 
+                    // }
                     // else {
-                    newLogs.push(String(log[0]).substring(9, String(log[0]).length - 1));
-                            
+                    newLogs.push(
+                        String(log[0]).substring(9, String(log[0]).length - 1)
+                    );
+
                     // }
                 });
                 setChats(newEntities);
@@ -81,7 +83,7 @@ export function RecentChatsScreen({ navigation }) {
                 address = doc.data().address;
                 email = doc.data().email;
                 fullName = doc.data().fullName;
-                score = doc.data().score
+                score = doc.data().score;
             });
 
             navigation.navigate("Payments", {
@@ -89,7 +91,7 @@ export function RecentChatsScreen({ navigation }) {
                 fullName: fullName,
                 userName: userName,
                 address: address,
-                score: score
+                score: score,
             });
         }
 
@@ -99,21 +101,38 @@ export function RecentChatsScreen({ navigation }) {
     const renderChat = ({ item, index }) => {
         return (
             <TouchableOpacity
-                    onPress={() => {
-                        goToPayments(item);
-                    }}
+                onPress={() => {
+                    goToPayments(item);
+                }}
+            >
+                <View
+                    style={[
+                        masterStyles.entityContainer,
+                        { flexDirection: "row", alignItems: "center" },
+                    ]}
                 >
-                <View style={[masterStyles.entityContainer, {flexDirection: "row", alignItems: 'center'}]}>
                     <Image
-                        style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "contain"}]}
+                        style={[
+                            masterStyles.recentChatsLogo,
+                            { borderRadius: 50, resizeMode: "contain" },
+                        ]}
                         source={require("../../../assets/Default_Img.png")}
                     />
                     <View>
-                        <Text style={[masterStyles.entityText]}>
-                            {item}
-                        </Text>
-                        <Text style={[masterStyles.recentChat, {maxWidth: Platform.OS == "web" ? screenSize.width * .85 : screenSize.width * .75, }]} numberOfLines={2}>
-                            {(contentLogs[index])}
+                        <Text style={[masterStyles.entityText]}>{item}</Text>
+                        <Text
+                            style={[
+                                masterStyles.recentChat,
+                                {
+                                    maxWidth:
+                                        Platform.OS == "web"
+                                            ? screenSize.width * 0.85
+                                            : screenSize.width * 0.75,
+                                },
+                            ]}
+                            numberOfLines={2}
+                        >
+                            {contentLogs[index]}
                         </Text>
                     </View>
                 </View>
@@ -123,7 +142,7 @@ export function RecentChatsScreen({ navigation }) {
 
     return (
         <View style={[masterStyles.mainBackground]}>
-            <Text style={[masterStyles.entityText, {alignSelf: "flex-start", paddingTop: 10, paddingLeft: screenSize.width * .01}]}> Recent Chats </Text>
+            {/* <Text style={[masterStyles.entityText, {alignSelf: "flex-start", paddingTop: 10, paddingLeft: screenSize.width * .01}]}> Recent Chats </Text> */}
             <View
                 style={{
                     flex: 3,
@@ -137,7 +156,7 @@ export function RecentChatsScreen({ navigation }) {
                     paddingHorizontal: 10,
                     borderRadius: 4,
                     marginBottom: 20,
-                    top: 5
+                    top: 5,
                 }}
             >
                 <FlatList

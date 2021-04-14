@@ -17,6 +17,7 @@ import { AccountDetailScreen } from "./src/screens/AccountDetailsScreen/AccountD
 import { masterStyles } from "./masterStyles";
 import { AccountRecoveryScreen } from "./src/screens/AccountRecoveryScreen/AccountRecoverScreen";
 import * as WalletFunctions from "./src/ethereum/walletFunctions";
+import Icon from "react-native-vector-icons/Ionicons";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -68,7 +69,7 @@ function Tabs() {
                     fontWeight: "bold",
                     position: "absolute",
                 },
-                keyboardHidesTabBar: Platform.OS == 'android' ? true : false,
+                keyboardHidesTabBar: Platform.OS == "android" ? true : false,
                 style: {
                     elevation: 0,
                     shadowOpacity: 0,
@@ -87,6 +88,9 @@ function Tabs() {
                 name="RecentChats"
                 component={RecentChatsScreen}
                 options={{
+                    tabBarIcon: () => (
+                        <Icon name="paper-plane" color="#2e2b30" size={30} />
+                    ),
                     headerStyle: {
                         backgroundColor:
                             masterStyles.mainBackground.backgroundColor,
@@ -96,7 +100,8 @@ function Tabs() {
                         shadowOpacity: 0,
                         borderBottomWidth: 0,
                     },
-                    title: "Recent Chats",
+                    title: "",
+
                     headerTintColor: masterStyles.headings.color,
                     headerTitleStyle: {
                         fontWeight: "normal",
@@ -108,6 +113,9 @@ function Tabs() {
                 name="UserSearch"
                 component={UserSearchScreen}
                 options={{
+                    tabBarIcon: () => (
+                        <Icon name="search" color="#2e2b30" size={30} />
+                    ),
                     headerStyle: {
                         backgroundColor:
                             masterStyles.mainBackground.backgroundColor,
@@ -117,7 +125,7 @@ function Tabs() {
                         shadowOpacity: 0,
                         borderBottomWidth: 0,
                     },
-                    title: "Search",
+                    title: "",
                     headerTintColor: masterStyles.headings.color,
                     headerTitleStyle: {
                         fontWeight: "normal",
@@ -129,6 +137,10 @@ function Tabs() {
                 name="Contacts"
                 component={ContactsScreen}
                 options={{
+                    tabBarIcon: () => (
+                        <Icon name="book" color="#2e2b30" size={30} />
+                    ),
+                    title: "",
                     headerStyle: {
                         backgroundColor:
                             masterStyles.mainBackground.backgroundColor,
@@ -148,6 +160,10 @@ function Tabs() {
             <Tab.Screen
                 name="Account"
                 options={{
+                    tabBarIcon: () => (
+                        <Icon name="person" color="#2e2b30" size={30} />
+                    ),
+                    title: "",
                     headerStyle: {
                         backgroundColor:
                             masterStyles.mainBackground.backgroundColor,
@@ -200,90 +216,11 @@ export default function App() {
             }
         });
     }, []);
-
-    // async function InitAccount() {
-    //     const st
-    //     const newWallet = ethers.Wallet.fromMnemonic(
-    //         "panther chimney define cigar author moment holiday heart measure sugar flag degree"
-    //     );
-    //     console.log(newWallet.mnemonic.phrase);
-    //     storeData(newWallet.privateKey);
-    //     console.log(newWallet.address);
-    //     setEthAccount(newWallet);
-    //     setAddress(newWallet.address);
-    //     setMnemonic(newWallet.mnemonic.phrase);
-
-    //     const provider = new ethers.providers.InfuraProvider(
-    //         "ropsten",
-    //         "298080f1923540f19af74e5baa886001"
-    //     );
-    //     const b = await provider.getBalance(newWallet.address);
-    //     var bal = b.toString();
-    //     console.log("balance: " + b.toString());
-    //     bal =
-    //         (bal.length >= 18 ? bal.substring(0, bal.length - 18) : "0") +
-    //         "." +
-    //         bal.slice(-18);
-    //     bal = parseFloat(bal);
-
-    //     setBalance(bal.toString() + " eth");
-    // }
-
-    // useEffect(() => {
-    //     InitAccount();
-    // }, []);
-
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Home">
                 {user ? (
                     <>
-                        <Stack.Screen
-                            name="RecentChats"
-                            component={RecentChatsScreen}
-                            options={{
-                                headerStyle: {
-                                    backgroundColor:
-                                        masterStyles.mainBackground
-                                            .backgroundColor,
-                                    borderColor:
-                                        masterStyles.mainBackground
-                                            .backgroundColor,
-                                    elevation: 0,
-                                    shadowOpacity: 0,
-                                    borderBottomWidth: 0,
-                                },
-                                headerTintColor: masterStyles.headings.color,
-                                headerTitleStyle: {
-                                    fontWeight: "normal",
-                                    fontSize: 24,
-                                    alignContent: "center",
-                                },
-                            }}
-                        />
-                        <Stack.Screen
-                            name="Contacts"
-                            component={ContactsScreen}
-                            options={{
-                                headerStyle: {
-                                    backgroundColor:
-                                        masterStyles.mainBackground
-                                            .backgroundColor,
-                                    borderColor:
-                                        masterStyles.mainBackground
-                                            .backgroundColor,
-                                    elevation: 0,
-                                    shadowOpacity: 0,
-                                    borderBottomWidth: 0,
-                                },
-                                headerTintColor: masterStyles.headings.color,
-                                headerTitleStyle: {
-                                    fontWeight: "normal",
-                                    fontSize: 24,
-                                    alignContent: "center",
-                                },
-                            }}
-                        />
                         <Stack.Screen
                             name="Payments"
                             options={{
@@ -307,29 +244,7 @@ export default function App() {
                         >
                             {(props) => <PaymentsScreen {...props} />}
                         </Stack.Screen>
-                        <Stack.Screen
-                            name="Account"
-                            options={{
-                                headerStyle: {
-                                    backgroundColor:
-                                        masterStyles.mainBackground
-                                            .backgroundColor,
-                                    borderColor:
-                                        masterStyles.mainBackground
-                                            .backgroundColor,
-                                    elevation: 0,
-                                    shadowOpacity: 0,
-                                    borderBottomWidth: 0,
-                                },
-                                headerTintColor: masterStyles.headings.color,
-                                headerTitleStyle: {
-                                    fontWeight: "normal",
-                                    fontSize: 24,
-                                },
-                            }}
-                        >
-                            {(props) => <AccountScreen {...props} />}
-                        </Stack.Screen>
+
                         <Stack.Screen
                             name="AccountDetailScreen"
                             options={{
@@ -398,53 +313,6 @@ export default function App() {
                                 },
                             }}
                         />
-                        <Stack.Screen
-                            name="UserSearchScreen"
-                            component={UserSearchScreen}
-                            options={{
-                                headerStyle: {
-                                    backgroundColor:
-                                        masterStyles.mainBackground
-                                            .backgroundColor,
-                                    borderColor:
-                                        masterStyles.mainBackground
-                                            .backgroundColor,
-                                    elevation: 0,
-                                    shadowOpacity: 0,
-                                    borderBottomWidth: 0,
-                                },
-                                headerTintColor: masterStyles.headings.color,
-                                headerTitleStyle: {
-                                    fontWeight: "normal",
-                                    fontSize: 24,
-                                },
-                            }}
-                        />
-                        {/* <Stack.Screen 
-                        name="Account"
-                        options={{ 
-                            headerStyle: { 
-                                backgroundColor: masterStyles.mainBackground.backgroundColor, 
-                                borderColor: masterStyles.mainBackground.backgroundColor,
-                                elevation: 0,
-                                shadowOpacity: 0,
-                                borderBottomWidth: 0
-                            },
-                            headerTintColor: masterStyles.headings.color,
-                            headerTitleStyle: {
-                                fontWeight: 'normal',
-                                fontSize: 24
-                            },
-                        }}
-                        >
-                            {(props) => (
-                                <AccountScreen
-                                    {...props}
-                                    ethAccount={ethAccount}
-                                    // ethAccount={wallet}
-                                />
-                            )}
-                        </Stack.Screen> */}
                         <Stack.Screen
                             name="Home"
                             options={{
