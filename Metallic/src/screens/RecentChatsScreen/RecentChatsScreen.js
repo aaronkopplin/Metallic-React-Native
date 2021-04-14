@@ -95,24 +95,26 @@ export function RecentChatsScreen({ navigation }) {
 
     const renderChat = ({ item, index }) => {
         return (
-            <View style={[masterStyles.entityContainer, {flexDirection: "row", alignItems: 'center'}]}>
-                <Image
-                    style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "contain"}]}
-                    source={require("../../../assets/Default_Img.png")}
-                />
-                <TouchableOpacity
+            <TouchableOpacity
                     onPress={() => {
                         goToPayments(item);
                     }}
                 >
-                    <Text style={[masterStyles.entityText]}>
-                        {item}
-                    </Text>
-                    <Text style={[masterStyles.recentChat, {maxWidth: Platform.OS == "web" ? screenSize.width * .85 : screenSize.width * .75, }]} numberOfLines={2}>
-                        {(contentLogs[index])}
-                    </Text>
-                </TouchableOpacity>
-            </View>
+                <View style={[masterStyles.entityContainer, {flexDirection: "row", alignItems: 'center'}]}>
+                    <Image
+                        style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "contain"}]}
+                        source={require("../../../assets/Default_Img.png")}
+                    />
+                    <View>
+                        <Text style={[masterStyles.entityText]}>
+                            {item}
+                        </Text>
+                        <Text style={[masterStyles.recentChat, {maxWidth: Platform.OS == "web" ? screenSize.width * .85 : screenSize.width * .75, }]} numberOfLines={2}>
+                            {(contentLogs[index])}
+                        </Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
         );
     };
 
