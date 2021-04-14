@@ -75,11 +75,13 @@ export function RecentChatsScreen({ navigation }) {
             var address;
             var email;
             var fullName;
+            var score;
 
             snapShot.forEach((doc) => {
                 address = doc.data().address;
                 email = doc.data().email;
                 fullName = doc.data().fullName;
+                score = doc.data().score
             });
 
             navigation.navigate("Payments", {
@@ -87,6 +89,7 @@ export function RecentChatsScreen({ navigation }) {
                 fullName: fullName,
                 userName: userName,
                 address: address,
+                score: score
             });
         }
 
@@ -95,25 +98,29 @@ export function RecentChatsScreen({ navigation }) {
 
     const renderChat = ({ item, index }) => {
         return (
-            <View style={[masterStyles.entityContainer, {flexDirection: "row", alignItems: 'center'}]}>
-                <Image
-                    style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "contain"}]}
-                    defaultSource={require("../../../assets/Default_Img.png")}
-                    source={{uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item + "ProfileImage")}}
-                />
-                <TouchableOpacity
-                    onPress={() => {
-                        goToPayments(item);
-                    }}
-                >
+
+            <TouchableOpacity
+                onPress={() => {
+                    goToPayments(item);
+                }}
+            >
+                <View style={[masterStyles.entityContainer, {flexDirection: "row", alignItems: 'center'}]}>
+                    <Image
+                        style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "contain"}]}
+                        defaultSource={require("../../../assets/Default_Img.png")}
+                        source={{uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item + "ProfileImage")}}
+                    />
+                </View>
+
+                <View>
                     <Text style={[masterStyles.entityText]}>
                         {item}
                     </Text>
                     <Text style={[masterStyles.recentChat, {maxWidth: Platform.OS == "web" ? screenSize.width * .85 : screenSize.width * .75, }]} numberOfLines={2}>
                         {(contentLogs[index])}
                     </Text>
-                </TouchableOpacity>
-            </View>
+                </View>
+            </TouchableOpacity>
         );
     };
 

@@ -99,6 +99,7 @@ export function ContactsScreen({ navigation }) {
                                 fullName: c.fullName,
                                 userName: c.userName,
                                 address: c.address,
+                                score: c.score
                             })
                         }})}}>
                     <Text style={masterStyles.contactNames}>{title}</Text>

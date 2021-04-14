@@ -29,7 +29,7 @@ export function PaymentsScreen({ route }) {
             : Dimensions.get("screen");
     const [amountInput, changeAmountInput] = useState(0.0);
     const [available, changeAvailable] = useState(0.0);
-    const { email, fullName, userName, address } = route.params;
+    const { email, fullName, userName, address, score } = route.params;
 
     const userImageSize = Platform.OS === "web" ? 75 : 50;
     var sendingMessage = "";
@@ -49,6 +49,10 @@ export function PaymentsScreen({ route }) {
     const [myUserName, setMyUserName] = useState(""); // my username
     const [otherUserUID, setOtherUserUID] = useState(""); // other user's userID
     const [otherChatRef, setOtherChatRef] = useState(); // ref to other user's chats collection
+    const [myScore, setMyScore] = useState();
+    const [otherScore, setOtherScore] = useState();
+
+
     const db = firebase.firestore();
     const chatRef = db
         .collection("users")
@@ -59,6 +63,8 @@ export function PaymentsScreen({ route }) {
         .collection("users")
         .where("userName", "==", userName)
         .get();
+
+    const scoreRef = db.collection("users").doc(user.uid);
 
     const [wallet, setWallet] = useState(null);
     const [recipientAddress, setRecipientAddress] = useState("");
@@ -80,6 +86,7 @@ export function PaymentsScreen({ route }) {
             .doc(user.uid)
             .onSnapshot((snap) => {
                 setMyUserName(snap.data().userName);
+                setMyScore(snap.data().score);
             });
 
         // get other user's userID
@@ -87,6 +94,7 @@ export function PaymentsScreen({ route }) {
             (await otherRef).forEach((doc) => {
                 setOtherUserUID(doc.data().id);
                 setRecipientAddress(doc.data().address);
+                setOtherScore(score);
                 return;
             });
 
@@ -172,6 +180,19 @@ export function PaymentsScreen({ route }) {
             } else {
                 alert("wrote to other chatLog");
             }
+        });
+
+        // update my and other user's score
+        var newScore = myScore + 1;
+        setMyScore(newScore);
+        scoreRef.update({ score: newScore }, (e) => {
+            alert(e);
+        });
+
+        var otherNewScore = score + 1;
+        setOtherScore(otherNewScore);
+        db.collection('users').doc(otherUserUID).update({ score: otherNewScore }, (e) => {
+            alert(e);
         });
 
         // send the transaction
@@ -336,6 +357,7 @@ export function PaymentsScreen({ route }) {
                             fullName: fullName,
                             userName: userName,
                             address: address,
+                            score: otherScore
                         });
                     }}
                     style={{alignItems: 'center', justifyContent: 'center'}}

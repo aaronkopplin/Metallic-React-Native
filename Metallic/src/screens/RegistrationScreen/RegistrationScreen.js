@@ -6,6 +6,8 @@ import {
     View,
     Dimensions,
     Platform,
+    KeyboardAvoidingView,
+    Alert,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import { login } from "../LoginScreen/LoginScreen";
@@ -24,13 +26,128 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
+function callLogin(setLoadingMessage, user_email, user_password, newWallet) {
+    console.log("Successfully created account");
+    setLoadingMessage("Account creation successful.");
+    // setLoading(false);
+    login(user_email, user_password, newWallet);
+}
+
+function displayErrorMessage(error, setLoadingMessage) {
+    console.log(error);
+    setLoadingMessage(error + "\n\nPlease go back and try again.");
+}
+
+async function createAccount(
+    fullName,
+    user_email,
+    user_password,
+    userName,
+    setLoading,
+    setLoadingMessage
+) {
+    setLoadingMessage("Your account is being created...");
+
+    const db = firebase.firestore();
+    const snapshot = await db
+        .collection("users")
+        .where("userName", "==", userName)
+        .get();
+
+    if (!snapshot.empty) {
+        setLoadingMessage(
+            "Username Already Taken.\n\nPlease go back and try again."
+        );
+        return;
+    }
+
+    const snapshot2 = await db
+        .collection("users")
+        .where("email", "==", user_email)
+        .get();
+
+    if (!snapshot2.empty) {
+        setLoadingMessage(
+            "Email Already In Use.\n\nPlease go back and try again."
+        );
+        return;
+    }
+
+    // alert("Please wait while we create your account.");
+    const newWallet = ethers.Wallet.createRandom();
+
+    await firebase
+        .auth()
+        .createUserWithEmailAndPassword(user_email, user_password)
+        .then(
+            (response) => {
+                const uid = response.user.uid;
+                const data = {
+                    id: uid,
+                    email: user_email,
+                    fullName: fullName,
+                    userName: userName,
+                    address: newWallet.address,
+                };
+
+                const data2 = {
+                    userName,
+                    fullName,
+                    email: user_email,
+                    address: newWallet.address,
+                };
+
+                const usersRef = firebase.firestore().collection("users");
+                usersRef
+                    .doc(uid)
+                    .set(data)
+                    .then(
+                        () => {
+                            usersRef
+                                .doc(uid)
+                                .collection("Contacts")
+                                .doc(data.fullName)
+                                .set(data2)
+                                .then(
+                                    () => {
+                                        callLogin(
+                                            setLoadingMessage,
+                                            user_email,
+                                            user_password,
+                                            newWallet
+                                        );
+                                    },
+                                    (error) => {
+                                        console.log(error);
+                                        setLoadingMessage(
+                                            error +
+                                                "\n\nPlease go back and try again."
+                                        );
+                                    }
+                                );
+                        },
+                        (error) => {
+                            displayErrorMessage(error, setLoadingMessage);
+                        }
+                    );
+            },
+            (error) => {
+                displayErrorMessage(error, setLoadingMessage);
+            }
+        );
+}
+
 export default function RegistrationScreen({ navigation }) {
     // state
     const [fullName, setFullName] = useState("");
-    const [user_email, setEmail] = useState("");
-    const [user_password, setPassword] = useState("");
+    const [userEmail, setEmail] = useState("");
+    const [userPassword, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [userName, setUserName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState(
+        "Your account is being created..."
+    );
 
     const screenSize =
         Platform.OS === "web"
@@ -56,88 +173,117 @@ export default function RegistrationScreen({ navigation }) {
     // };
 
     const onRegisterPress = async () => {
-        const db = firebase.firestore();
+        if (fullName == "") {
+            alert("Please enter a name for the account.");
+            return;
+        }
 
-        if (user_password !== confirmPassword) {
+        if (userEmail == "") {
+            alert("Please enter an email for the account.");
+            return;
+        }
+
+        if (userPassword == "") {
+            alert("Please enter a password.");
+            return;
+        }
+
+        if (confirmPassword == "") {
+            alert("Please confirm password.");
+            return;
+        }
+
+        if (userName == "") {
+            alert("Please enter a username for the account.");
+            return;
+        }
+
+        if (userPassword !== confirmPassword) {
             alert("Passwords don't match.");
             return;
         }
 
-        const snapshot = await db
-            .collection("users")
-            .where("userName", "==", userName)
-            .get();
+        setLoading(true);
+        createAccount(
+            fullName,
+            userEmail,
+            userPassword,
+            userName,
+            setLoading,
+            setLoadingMessage
+        );
 
-        if (!snapshot.empty) {
-            alert("Username Already Taken!");
-            return;
-        }
-
-        const snapshot2 = await db
-        .collection("users")
-        .where("email", "==", user_email)
-        .get();
-
-        if (!snapshot2.empty) {
-            alert("Email Already In Use!");
-            return;
-        }
-
-        alert("Please wait while we create your account.");
-        const newWallet = ethers.Wallet.createRandom();
-
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(user_email, user_password)
-            .then((response) => {
-                const uid = response.user.uid;
-                const data = {
-                    id: uid,
-                    email: user_email,
-                    fullName: fullName,
-                    userName: userName,
-                    address: newWallet.address,
-                };
-
-                const data2 = {
-                    userName,
-                    fullName,
-                    email: user_email
-                };
-
-                const usersRef = firebase.firestore().collection("users");
-                if (!snapshot.empty) {
-                    alert("Username already taken.");
-                } else {
-                    usersRef
-                        .doc(uid)
-                        .set(data)
-                        .then(() => {
-                            console.log("Attempting to navigate to home");
-                        })
-                        .catch((error) => {
-                            console.log("error caught in firebase.");
-                            alert(error);
-                        });
-
-                    usersRef
-                        .doc(uid)
-                        .collection("Contacts")
-                        .doc(data.fullName)
-                        .set(data2);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                alert(error);
-            })
-            .then(() => {
-                login(user_email, user_password, newWallet);
-            });
+        // Alert.alert(
+        //     "Creating Account",
+        //     "Account creation will take a few seconds, sit tight.",
+        //     [
+        //         {
+        //             text: "Got it",
+        //             onPress: () => {
+        //                 setLoading(true);
+        //                 createAccount(
+        //                     fullName,
+        //                     userEmail,
+        //                     userPassword,
+        //                     userName,
+        //                     setLoading,
+        //                     setLoadingMessage
+        //                 );
+        //             },
+        //             style: "cancel",
+        //         },
+        //     ]
+        // );
     };
 
-    return (
-        <View style={masterStyles.mainBackground}>
+    return loading ? (
+        <View style={masterStyles.mainBackground} justifyContent="flex-start">
+            <Image
+                style={[masterStyles.logo]}
+                source={require("../../../assets/metalliclogo.png")}
+            />
+            <View
+                style={{
+                    // flex: 0.5,
+                    // backgroundColor: "#2e2b30",
+                    width: screenSize.width - 20,
+
+                    // height:
+                    //     Platform.OS === "web"
+                    //         ? screenSize.height / 2.5
+                    //         : screenSize.height * 0.75,
+                    // paddingTop: screenSize.height / 50,
+                    // paddingLeft: 20,
+                    borderRadius: 4,
+                }}
+                justifyContent="center"
+            >
+                <Text
+                    style={[
+                        masterStyles.headingsSmall,
+                        { paddingBottom: screenSize.height * 0.005 },
+                        {
+                            textAlignVertical: "center",
+                            textAlign: "center",
+                        },
+                    ]}
+                >
+                    {loadingMessage}
+                </Text>
+                <Text></Text>
+                {/* <CustomButton
+                    onPress={() => {
+                        setLoading(false);
+                    }}
+                    text="Go back"
+                    color="#1e1c21"
+                    width={screenSize.width - 60}
+                    height={screenSize.height / 20}
+                ></CustomButton> */}
+            </View>
+        </View>
+    ) : (
+        <View style={masterStyles.mainBackground} justifyContent="flex-start">
             <Image
                 style={[masterStyles.logo]}
                 source={require("../../../assets/metalliclogo.png")}
@@ -145,17 +291,21 @@ export default function RegistrationScreen({ navigation }) {
 
             <KeyboardAwareScrollView
                 style={{
+                    flex: 1,
                     backgroundColor: "#2e2b30",
-                    width: screenSize.width * .99,
-                    height:
-                        Platform.OS === "web"
-                            ? screenSize.height / 2.5
-                            : screenSize.height * .75,
-                    paddingTop: screenSize.height / 50,
+                    width: screenSize.width - 20,
+
+                    // height:
+                    //     Platform.OS === "web"
+                    //         ? screenSize.height / 2.5
+                    //         : screenSize.height * 0.75,
+                    // paddingTop: screenSize.height / 50,
                     paddingLeft: 20,
                     borderRadius: 4,
                 }}
+                justifyContent="flex-start"
             >
+                <Text></Text>
                 <Text
                     style={[
                         masterStyles.headingsSmall,
@@ -200,7 +350,7 @@ export default function RegistrationScreen({ navigation }) {
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
-                    value={user_email}
+                    value={userEmail}
                     keyboardType="email-address"
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
@@ -256,7 +406,7 @@ export default function RegistrationScreen({ navigation }) {
                     secureTextEntry
                     placeholder="Password"
                     onChangeText={(text) => setPassword(text)}
-                    value={user_password}
+                    value={userPassword}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                     autoCompleteType="off"
@@ -290,21 +440,16 @@ export default function RegistrationScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
-                <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
-                >
-                    <CustomButton
-                        onPress={onRegisterPress}
-                        text="Create Account"
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
-                </View>
+                <Text></Text>
+
+                <CustomButton
+                    onPress={onRegisterPress}
+                    text="Create Account"
+                    color="#1e1c21"
+                    width={screenSize.width - 60}
+                    height={screenSize.height / 20}
+                />
+
                 <View style={masterStyles.footerView}>
                     <Text style={masterStyles.footerText}>
                         Already got an account?{" "}

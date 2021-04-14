@@ -6,6 +6,7 @@ import {
     View,
     Dimensions,
     Platform,
+    KeyboardAvoidingView,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
@@ -65,15 +66,17 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-        <View style={masterStyles.mainBackground}>
+        <View style={masterStyles.mainBackground} justifyContent="flex-start">
             <Image
-                style={[masterStyles.logo, { flex: 0.75 }]}
+                style={masterStyles.logo}
                 source={require("../../../assets/metalliclogo.png")}
             />
 
-            <View
+            <KeyboardAvoidingView
+                behavior="padding"
+                enabled
                 style={{
-                    flex: 3,
+                    // flex: 3,
                     backgroundColor: "#2e2b30",
                     width: screenSize.width - 20,
                     height:
@@ -140,6 +143,7 @@ export default function LoginScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
+                <Text></Text>
 
                 <View
                     style={{
@@ -166,9 +170,9 @@ export default function LoginScreen({ navigation }) {
                         height={screenSize.height / 20}
                     />
                 </View>
-            </View>
-
-            <View style={(masterStyles.mainBackground, { flex: 2 })}></View>
+                    
+                <Text></Text>
+            </KeyboardAvoidingView>
         </View>
     );
 }

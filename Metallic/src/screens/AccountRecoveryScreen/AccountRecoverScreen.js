@@ -118,7 +118,7 @@ export function AccountRecoveryScreen() {
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setMnemonic(text)}
                     underlineColorAndroid="transparent"
-                    autoCapitalize="words"
+                    // autoCapitalize="words"
                     autoCompleteType="off"
                     autoCorrect={false}
                 />

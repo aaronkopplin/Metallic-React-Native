@@ -8,11 +8,13 @@ import {
     Dimensions,
     Platform,
     FlatList,
+    KeyboardAvoidingView,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export function UserSearchScreen(props) {
 
@@ -78,6 +80,7 @@ export function UserSearchScreen(props) {
                             fullName: item.fullName,
                             userName: item.userName,
                             address: item.address,
+                            score: item.score
                         });
                     }
                 }}>
@@ -89,8 +92,8 @@ export function UserSearchScreen(props) {
                                 
                         />                           
                         <View style={{paddingLeft: 10}}>
-                            <Text style={[masterStyles.headingsSmall]} >{item.email}</Text>
-                            <Text style={[masterStyles.headingsSmallNotBold]} >{item.userName}</Text>
+                            <Text style={[masterStyles.headingsSmall, {color: '#fff', fontWeight: 'normal', fontSize: 25}]} >{item.userName}</Text>
+                            <Text style={[masterStyles.headingsSmallNotBold, {fontWeight: 'normal', paddingLeft: 15, fontSize: 15}]} >{item.email}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -101,20 +104,17 @@ export function UserSearchScreen(props) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center' }}>
-            <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', paddingBottom: 40, borderRadius: 4, height: screenSize.height * 0.75, width: screenSize.width - 20 }}>
-                <View style={{ backgroundColor: '#2e2b30', alignItems: 'center', top: 20, height: screenSize.height * 0.01, paddingBottom: 20 }} />
-                <View style={{ width: screenSize.width - 40 }}>
-                    <TextInput
-                        style={[masterStyles.input]}
-                        placeholder="Enter name/username to search for a user"
-                        placeholderTextColor="#aaaaaa"
-                        onChangeText={(text) => setSearchText(text)}
-                        clearButtonMode="while-editing"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                    />
-                </View>
-                <View style={{ paddingVertical: 20, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}>
+            <TextInput
+                style={[masterStyles.input, {width: screenSize.width - 20, marginBottom: 20,}]}
+                placeholder="Enter name/username to search for a user"
+                placeholderTextColor="#aaaaaa"
+                onChangeText={(text) => setSearchText(text)}
+                clearButtonMode="while-editing"
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+            />
+            <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
+                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}>
                     <FlatList
                         data={users}
                         renderItem={renderUser}

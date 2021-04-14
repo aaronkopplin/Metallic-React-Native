@@ -57,8 +57,8 @@ export async function storeData(key, value) {
         var userName = doc.data().userName;
         console.log("storing data for " + userName);
         await AsyncStorage.setItem(userName + key, value);
-    } catch (e) {
-        console.log("ERROR STORING DATA");
+    } catch (error) {
+        console.log("ERROR STORING DATA: " + error);
     }
 }
 
