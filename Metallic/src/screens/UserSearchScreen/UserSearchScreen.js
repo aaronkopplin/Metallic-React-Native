@@ -70,7 +70,8 @@ export function UserSearchScreen(props) {
         return (
             <View style={[masterStyles.entityContainer]}>
                 <TouchableOpacity onPress={() => {
-                    
+                    setSearchText("");
+
                     if (thisUser.uid == item.id) {
                         navigation.navigate('Account')
                     }
@@ -103,27 +104,39 @@ export function UserSearchScreen(props) {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center' }}>
-            <TextInput
-                style={[masterStyles.input, {width: screenSize.width - 20, marginBottom: 20,}]}
-                placeholder="Enter name/username to search for a user"
-                placeholderTextColor="#aaaaaa"
-                onChangeText={(text) => setSearchText(text)}
-                clearButtonMode="while-editing"
-                underlineColorAndroid="transparent"
-                autoCapitalize="none"
-            />
-            <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
-                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}>
+        <SafeAreaView style={{ backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center' }}>
+            <View style={{paddingBottom: 4, top: -20 }}>
+                <TextInput
+                    style={[masterStyles.input, {width: screenSize.width - 20, marginBottom: 10,}]}
+                    placeholder="Enter name/username to search for a user"
+                    placeholderTextColor="#aaaaaa"
+                    onChangeText={(text) => setSearchText(text)}
+                    clearButtonMode="while-editing"
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                    clearTextOnFocus={true}
+                    value={searchText}
+                />
+                <View style={{
+
+                    backgroundColor: "#2e2b30",
+                    borderRadius: 4,
+                    marginBottom: 10,
+                    paddingHorizontal: 10,
+                    paddingVertical: 10
+                }}>
+            {/* <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
+                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}> */}
                     <FlatList
                         data={users}
                         renderItem={renderUser}
                         keyExtractor={(item) => item.id}
                         removeClippedSubviews={true}
                     />
-
                 </View>
             </View>
+                {/* </View>
+            </View> */}
         </SafeAreaView>
     );
 }

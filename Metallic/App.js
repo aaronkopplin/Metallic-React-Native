@@ -245,6 +245,33 @@ export default function App() {
                             {(props) => <PaymentsScreen {...props} />}
                         </Stack.Screen>
 
+                        
+                        <Stack.Screen
+                        // account screen needs to be in stack and tab for when recovering from mnemonic
+                            name="Account"
+                            options={{
+                                tabBarIcon: () => (
+                                    <Icon name="person" color="#2e2b30" size={30} />
+                                ),
+                                title: "",
+                                headerStyle: {
+                                    backgroundColor:
+                                        masterStyles.mainBackground.backgroundColor,
+                                    borderColor:
+                                        masterStyles.mainBackground.backgroundColor,
+                                    elevation: 0,
+                                    shadowOpacity: 0,
+                                    borderBottomWidth: 0,
+                                },
+                                headerTintColor: masterStyles.headings.color,
+                                headerTitleStyle: {
+                                    fontWeight: "normal",
+                                    fontSize: 24,
+                                },
+                            }}
+                        >
+                            {(props) => <AccountScreen {...props} />}
+                        </Stack.Screen>
                         <Stack.Screen
                             name="AccountDetailScreen"
                             options={{
