@@ -14,7 +14,6 @@ import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import "firebase/storage"
-import {defaultImage } from "../../../assets/Default_Img.png"
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -26,14 +25,14 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-function callLogin(setLoadingMessage, user_email, user_password, newWallet) {
+function callLogin(setLoadingMessage) {
     console.log("Successfully created account");
     setLoadingMessage("Account creation successful.");
     // setLoading(false);
-    login(user_email, user_password, newWallet);
 }
 
 function displayErrorMessage(error, setLoadingMessage) {
+    console.log("Cunt")
     console.log(error);
     setLoadingMessage(error + "\n\nPlease go back and try again.");
 }
@@ -88,13 +87,13 @@ async function createAccount(
                     fullName: fullName,
                     userName: userName,
                     address: newWallet.address,
+                    
                 };
 
                 const data2 = {
-                    userName,
-                    fullName,
+                    userName: userName,
+                    fullName: fullName,
                     email: user_email,
-                    address: newWallet.address,
                 };
 
                 const usersRef = firebase.firestore().collection("users");
@@ -135,6 +134,7 @@ async function createAccount(
                 displayErrorMessage(error, setLoadingMessage);
             }
         );
+        return newWallet;
 }
 
 export default function RegistrationScreen({ navigation }) {
@@ -204,7 +204,7 @@ export default function RegistrationScreen({ navigation }) {
         }
 
         setLoading(true);
-        createAccount(
+        const newWallet = await createAccount(
             fullName,
             userEmail,
             userPassword,
@@ -213,6 +213,7 @@ export default function RegistrationScreen({ navigation }) {
             setLoadingMessage
         );
 
+        login(userEmail, userPassword, newWallet);
         // Alert.alert(
         //     "Creating Account",
         //     "Account creation will take a few seconds, sit tight.",

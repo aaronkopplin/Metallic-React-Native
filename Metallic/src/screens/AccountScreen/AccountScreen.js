@@ -70,7 +70,7 @@ export function AccountScreen(props) {
     }, []);
 
     const onChooseImagePress = async () => {
-        alert(imagePermission)
+        //alert(imagePermission)
         // alert((await Permissions.getAsync(Permissions.MEDIA_LIBRARY)).status);
         if (Platform.OS == 'ios' && imagePermission != 'granted') {
             if (imagePermission == null) {
@@ -222,7 +222,7 @@ export function AccountScreen(props) {
                     My Account
                 </Text>
                 <Image
-                    style={[masterStyles.logo, { borderRadius: 30, resizeMode: "contain"}]}
+                    style={[masterStyles.logo, { borderRadius: 30, resizeMode: "cover"}]}
                     defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: imageUrl }}
                 />

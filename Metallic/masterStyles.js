@@ -157,6 +157,11 @@ export const masterStyles = StyleSheet.create({
     right: screenSize.width * 0.01,
     top: Platform.OS == 'web' ? 0 : screenSize.height * -.01
   },
+  contactsTitle: {
+    color: '#79777d',
+    fontWeight: 'bold',
+    fontSize: 35,
+  },
   paymentFlatListContainer: {
     marginTop: 6,
     borderBottomWidth: 0,

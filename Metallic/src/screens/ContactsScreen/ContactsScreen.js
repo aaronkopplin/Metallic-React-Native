@@ -155,7 +155,7 @@ export function ContactsScreen({ navigation }) {
                     backgroundColor: "#ffffff", 
                     borderRadius: 5, 
                     maxWidth: screenSize.width * .75,
-                    maxHeight: screenSize.height * .08,
+                    maxHeight: screenSize.height * .07,
                     overflow: "hidden",
                     textAlign: "center",
                     bottom: 
@@ -168,9 +168,10 @@ export function ContactsScreen({ navigation }) {
                         }}>
                         <Text
                             style={[
-                                masterStyles.title,
+                                masterStyles.contactsTitle,
                                 {
                                     color: "#000000",
+                                    overflow: "hidden",
                                 },
                             ]}
                         > {you} </Text>

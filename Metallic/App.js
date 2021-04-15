@@ -41,14 +41,16 @@ const Tab = createBottomTabNavigator();
 
 function Tabs() {
     const [account, setAccount] = useState(true);
-
+    
     useEffect(() => {
         async function grabAccount() {
             console.log("tabs getting wallet");
             var existingAccount = await WalletFunctions.loadWalletFromPrivate();
             if (existingAccount != null) {
+                console.log("Success")
                 setAccount(true);
             } else {
+                console.log("bitch")
                 setAccount(false);
             }
         }
