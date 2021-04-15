@@ -253,7 +253,7 @@ export function PaymentsScreen({ route }) {
                                 height: undefined,
                                 borderRadius: 50,
                             }}
-                            resizeMode={"contain"}
+                            resizeMode={"cover"}
                             resizeMethod={"scale"}
                             
                             defaultSource={require("../../../assets/Default_Img.png")}
@@ -367,7 +367,7 @@ export function PaymentsScreen({ route }) {
                             borderRadius: 50,
                             height: userImageSize - 10,
                             width: userImageSize - 10,
-                            resizeMode: "contain",
+                            resizeMode: "cover",
                             backgroundColor: "#000"
                         }}
                         defaultSource={require("../../../assets/Default_Img.png")}

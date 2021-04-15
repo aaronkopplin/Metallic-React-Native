@@ -14,6 +14,7 @@ import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import "firebase/storage"
+import {defaultImage } from "../../../assets/Default_Img.png"
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -25,14 +26,14 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-function callLogin(setLoadingMessage) {
+function callLogin(setLoadingMessage, user_email, user_password, newWallet) {
     console.log("Successfully created account");
     setLoadingMessage("Account creation successful.");
-    // setLoading(false);
+    Platform.OS == "web" ? login(user_email, user_password, newWallet) : console.log("not web");
+    // setLoading(false);    
 }
 
 function displayErrorMessage(error, setLoadingMessage) {
-    console.log("Cunt")
     console.log(error);
     setLoadingMessage(error + "\n\nPlease go back and try again.");
 }
@@ -87,13 +88,13 @@ async function createAccount(
                     fullName: fullName,
                     userName: userName,
                     address: newWallet.address,
-                    
                 };
 
                 const data2 = {
-                    userName: userName,
-                    fullName: fullName,
+                    userName,
+                    fullName,
                     email: user_email,
+                    address: newWallet.address,
                 };
 
                 const usersRef = firebase.firestore().collection("users");
@@ -134,7 +135,6 @@ async function createAccount(
                 displayErrorMessage(error, setLoadingMessage);
             }
         );
-        return newWallet;
 }
 
 export default function RegistrationScreen({ navigation }) {
@@ -204,6 +204,7 @@ export default function RegistrationScreen({ navigation }) {
         }
 
         setLoading(true);
+        
         const newWallet = await createAccount(
             fullName,
             userEmail,
@@ -212,8 +213,8 @@ export default function RegistrationScreen({ navigation }) {
             setLoading,
             setLoadingMessage
         );
-
-        login(userEmail, userPassword, newWallet);
+        
+        Platform.OS != "web" ? login(userEmail, userPassword, newWallet) : console.log("Am Web");
         // Alert.alert(
         //     "Creating Account",
         //     "Account creation will take a few seconds, sit tight.",

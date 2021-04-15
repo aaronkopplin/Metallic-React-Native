@@ -175,7 +175,7 @@ export function UserAccountScreen({ route }) {
                 {/* <Text style={[masterStyles.title, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{} Account</Text> */}
 
                 <Image
-                    style={[masterStyles.logo, { borderRadius: 50, resizeMode: "contain" }]}
+                    style={[masterStyles.logo, { borderRadius: 50, resizeMode: "cover" }]}
                     defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: imageUrl }}
                 />

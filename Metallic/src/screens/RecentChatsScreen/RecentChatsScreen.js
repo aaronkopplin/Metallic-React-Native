@@ -108,7 +108,7 @@ export function RecentChatsScreen({ navigation }) {
             >
                 <View style={[masterStyles.entityContainer, {flexDirection: "row", alignItems: 'center'}]}>
                     <Image
-                        style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "contain"}]}
+                        style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "cover"}]}
                         defaultSource={require("../../../assets/Default_Img.png")}
                         source={{uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item + "ProfileImage")}}
                     />

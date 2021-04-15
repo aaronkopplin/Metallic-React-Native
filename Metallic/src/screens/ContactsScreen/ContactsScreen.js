@@ -81,7 +81,7 @@ export function ContactsScreen({ navigation }) {
             }}
             >
                 <Image
-                style={[masterStyles.contactsLogo, {borderRadius: 45, resizeMode: "contain"}]}
+                style={[masterStyles.contactsLogo, {borderRadius: 45, resizeMode: "cover"}]}
                 defaultSource={require("../../../assets/Default_Img.png")}
                 source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + title + "ProfileImage")}}
                 />
@@ -147,7 +147,7 @@ export function ContactsScreen({ navigation }) {
                 }}/>
             <View style={{flexDirection: "row"}}>
                 <Image
-                    style={[masterStyles.contactsUserLogo, {borderRadius: 45, resizeMode: "contain"}]}
+                    style={[masterStyles.contactsUserLogo, {borderRadius: 45, resizeMode: "cover"}]}
                     defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: "https://storage.googleapis.com/metallic-975be.appspot.com/" + you + "ProfileImage"}}
                 />
