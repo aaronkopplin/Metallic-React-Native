@@ -12,9 +12,8 @@ import { ethers } from "ethers";
 
 export async function clearKeysNotForThisUser() {
     var userName = await getUsername();
-    var allKeysPromise = AsyncStorage.getAllKeys();
 
-    allKeysPromise
+    AsyncStorage.getAllKeys()
         .then((keys) => {
             if (keys == null) {
                 console.log("COULD NOT LOCATE KEYS");

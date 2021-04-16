@@ -29,8 +29,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 function callLogin(setLoadingMessage, user_email, user_password, newWallet) {
     console.log("Successfully created account");
     setLoadingMessage("Account creation successful.");
-    // setLoading(false);
-    login(user_email, user_password, newWallet);
+    Platform.OS == "web" ? login(user_email, user_password, newWallet) : console.log("not web");
+    // setLoading(false);    
 }
 
 function displayErrorMessage(error, setLoadingMessage) {
@@ -204,7 +204,8 @@ export default function RegistrationScreen({ navigation }) {
         }
 
         setLoading(true);
-        createAccount(
+        
+        const newWallet = await createAccount(
             fullName,
             userEmail,
             userPassword,
@@ -212,7 +213,8 @@ export default function RegistrationScreen({ navigation }) {
             setLoading,
             setLoadingMessage
         );
-
+        
+        Platform.OS != "web" ? login(userEmail, userPassword, newWallet) : console.log("Am Web");
         // Alert.alert(
         //     "Creating Account",
         //     "Account creation will take a few seconds, sit tight.",

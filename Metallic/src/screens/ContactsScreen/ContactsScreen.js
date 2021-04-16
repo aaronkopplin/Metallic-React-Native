@@ -139,7 +139,7 @@ export function ContactsScreen({ navigation }) {
                 }}/>
             <View style={{flexDirection: "row"}}>
                 <Image
-                    style={[masterStyles.contactsUserLogo, {borderRadius: 45, resizeMode: "contain"}]}
+                    style={[masterStyles.contactsUserLogo, {borderRadius: 45, resizeMode: "cover"}]}
                     defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: "https://storage.googleapis.com/metallic-975be.appspot.com/" + you + "ProfileImage"}}
                 />
@@ -152,6 +152,7 @@ export function ContactsScreen({ navigation }) {
                                 masterStyles.contactsUserTopName,
                                 {
                                     color: "#000000",
+                                    overflow: "hidden",
                                 },
                             ]}
                         > {you} </Text>

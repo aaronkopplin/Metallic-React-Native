@@ -69,7 +69,8 @@ export function UserSearchScreen(props) {
         return (
             <View style={[masterStyles.entityContainer]}>
                 <TouchableOpacity onPress={() => {
-                    
+                    setSearchText("");
+
                     if (thisUser.uid == item.id) {
                         navigation.navigate('Account')
                     }
@@ -124,9 +125,10 @@ export function UserSearchScreen(props) {
                         keyExtractor={(item) => item.id}
                         removeClippedSubviews={true}
                     />
-
                 </View>
             </View>
+                {/* </View>
+            </View> */}
         </SafeAreaView>
     );
 }

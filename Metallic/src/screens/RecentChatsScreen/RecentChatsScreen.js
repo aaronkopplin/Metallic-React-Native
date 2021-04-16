@@ -74,7 +74,7 @@ export function RecentChatsScreen({ navigation }) {
                 address = doc.data().address;
                 email = doc.data().email;
                 fullName = doc.data().fullName;
-                score = doc.data().score
+                score = doc.data().score;
             });
 
             navigation.navigate("Payments", {
@@ -82,7 +82,7 @@ export function RecentChatsScreen({ navigation }) {
                 fullName: fullName,
                 userName: userName,
                 address: address,
-                score: score
+                score: score,
             });
         }
 

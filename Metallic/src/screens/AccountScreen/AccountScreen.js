@@ -71,7 +71,7 @@ export function AccountScreen(props) {
     }, []);
 
     const onChooseImagePress = async () => {
-        alert(imagePermission)
+        //alert(imagePermission)
         // alert((await Permissions.getAsync(Permissions.MEDIA_LIBRARY)).status);
         if (Platform.OS == 'ios' && imagePermission != 'granted') {
             if (imagePermission == null) {
