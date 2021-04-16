@@ -75,19 +75,13 @@ export function ContactsScreen({ navigation }) {
     // Set up navigation and touchable components for each contact.
     const Item = ({ title }) => (
         
-        <View
-            style={{
-                flexDirection: 'row'
-            }}
-            >
-                <Image
-                style={[masterStyles.contactsLogo, {borderRadius: 45, resizeMode: "contain"}]}
-                defaultSource={require("../../../assets/Default_Img.png")}
-                source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + title + "ProfileImage")}}
-                />
-            
-            <View style={masterStyles.contactBar}>
-
+        <View style={{ flexDirection: 'row'}}>
+            <Image
+            style={[masterStyles.contactsLogo, {borderRadius: 45, resizeMode: "cover"}]}
+            defaultSource={require("../../../assets/Default_Img.png")}
+            source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + title + "ProfileImage")}}
+            />
+            <View style={masterStyles.contactsNameContainer}>
                 <TouchableOpacity onPress={() => {
                     contactsList.forEach((c) => {
                         if (you == title){
@@ -101,8 +95,10 @@ export function ContactsScreen({ navigation }) {
                                 address: c.address,
                                 score: c.score
                             })
-                        }})}}>
-                    <Text style={masterStyles.contactNames}>{title}</Text>
+                        }
+                    })
+                }}>
+                    <Text style={masterStyles.contactsNamesText}>{title}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -135,11 +131,7 @@ export function ContactsScreen({ navigation }) {
     var contactData = firstLetterList.filter(eixisting => eixisting.data.length != 0);
 
     return (
-        <SafeAreaView style={{
-            flex: 1, backgroundColor: "#1e1c21", 
-            alignContent: 'center', 
-            alignItems: 'center',}}>
-
+        <SafeAreaView style={masterStyles.mainView}>
             <View style={{    
                 backgroundColor: "#1e1c21", 
                 height: Platform.OS == "web" ? screenSize.height * 0.01 : 0, 
@@ -151,24 +143,13 @@ export function ContactsScreen({ navigation }) {
                     defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: "https://storage.googleapis.com/metallic-975be.appspot.com/" + you + "ProfileImage"}}
                 />
-                <View style={{
-                    backgroundColor: "#ffffff", 
-                    borderRadius: 5, 
-                    maxWidth: screenSize.width * .75,
-                    maxHeight: screenSize.height * .08,
-                    overflow: "hidden",
-                    textAlign: "center",
-                    bottom: 
-                        Platform.OS == "web" 
-                        ? 0
-                        : screenSize.height * .01,
-                    }}>
+                <View style={masterStyles.constactsUserContainer}>
                     <TouchableOpacity onPress={() => {
                             navigation.navigate('Account')
                         }}>
                         <Text
                             style={[
-                                masterStyles.title,
+                                masterStyles.contactsUserTopName,
                                 {
                                     color: "#000000",
                                 },
@@ -184,24 +165,13 @@ export function ContactsScreen({ navigation }) {
                 width: screenSize.width
                 }}/>
 
-            <View style={{
-                backgroundColor: "#2e2b30", 
-                paddingBottom: 10, 
-                borderRadius: 4, 
-                height: Platform.OS == "web" 
-                ? (screenSize.height * 0.75)
-                : screenSize.height
-                ,
-                maxHeight: Platform.OS == "web" 
-                ? screenSize.height
-                : (screenSize.height * 0.65), 
-                width: screenSize.width - 20}}>
+            <View style={masterStyles.contactsContainer}>
                 <SectionList
                     sections={contactData}
                     keyExtractor={(item, index) => item + index}
                     renderItem={({ item }) => <Item title={item} />}
                     renderSectionHeader={({ section: { title } }) => (
-                    <Text style={masterStyles.contactTitle}>{title}</Text>
+                    <Text style={masterStyles.contactsTitleText}>{title}</Text>
                 )}
                 />
             </View>

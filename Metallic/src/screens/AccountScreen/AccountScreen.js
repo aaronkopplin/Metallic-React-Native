@@ -8,6 +8,7 @@ import {
     Alert,
     Button,
     Linking,
+    MaskedViewBase,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
@@ -194,136 +195,62 @@ export function AccountScreen(props) {
     }
 
     return (
-        <View
-            style={[
-                masterStyles.mainBackground,
-                { justifyContent: "center", paddingVertical: 20 },
-            ]}
-        >
-            <View
-                style={{
-                    flex: 4,
-                    backgroundColor: "#2e2b30",
-                    width: screenSize.width - 20,
-                    alignItems: "center",
-                    borderRadius: 4,
-                    justifyContent: "center",
-                    paddingBottom: 5,
-                }}
-            >
-                <Text
-                    style={[
-                        masterStyles.title,
-                        {
-                            textAlign: "center",
-                        },
-                    ]}
-                >
+        <View style={masterStyles.mainView}>
+            <View style={masterStyles.accountContainer}>
+                <Text style={masterStyles.accountMyAccount}>
                     My Account
                 </Text>
                 <Image
-                    style={[masterStyles.logo, { borderRadius: 30, resizeMode: "contain"}]}
+                    style={masterStyles.logo}
                     defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: imageUrl }}
                 />
-                <Text
-                    style={[
-                        masterStyles.headings,
-                        {
-                            bottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.accountUserName}>
                     {userName}
                 </Text>
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            bottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.accountDetails}>
                     Name: {userFullName}
                 </Text>
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            bottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.accountDetails}>
                     Email: {userEmail}
                 </Text>
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            bottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.accountDetails}>
                     Balance: {balance}
                 </Text>
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            bottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.accountDetails}>
                     Score: {score}
                 </Text>
 
-                <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop:
-                            Platform.OS == "web" ? screenSize.height / 20 : 10,
-                        paddingBottom: screenSize.height * 0.01,
-                    }}
-                >
-                    <CustomButton
-                        onPress={() => {
-                            navigation.navigate("AccountDetailScreen");
-                        }}
-                        text="View Account Details"
-                        color="#1e1c21"
-                        width={screenSize.width - 80}
-                        height={screenSize.height / 20}
-                    />
-                </View>
+                <View style={{height: screenSize.height *.07}} />
 
-                <View
-                    style={{
-                        zIndex: 1,
-                        paddingBottom: screenSize.height * 0.01,
+                <CustomButton
+                    onPress={() => {
+                        navigation.navigate("AccountDetailScreen");
                     }}
-                >
-                    <CustomButton
-                        onPress={() => {onChooseImagePress()}}
-                        text="Change Profile Picture"
-                        color="#1e1c21"
-                        width={screenSize.width - 80}
-                        height={screenSize.height / 20}
-                    />
-                </View>
+                    text="View Account Details"
+                    color="#6111d1"
+                    width={Platform.OS == "web" ? screenSize.width *.55 : screenSize.width * .8}
+                    height={screenSize.height / 20}
+                />
 
-                <View style={{ zIndex: 2 }} />
+                <View style={{height: screenSize.height * .02}} /> 
+
+                <CustomButton
+                    onPress={() => {onChooseImagePress()}}
+                    text="Change Profile Picture"
+                    color="#117ed1"
+                    width={Platform.OS == "web" ? screenSize.width *.55 : screenSize.width * .8}
+                    height={screenSize.height / 20}
+                />
+
+                <View style={{height: screenSize.height * .02 }} />
                 <CustomButton
                     onPress={
                         Platform.OS === "web" ? onLogoutPressWeb : onLogoutPress
                     }
                     text="Logout"
-                    color="#1e1c21"
-                    width={screenSize.width - 80}
+                    color="#000000"
+                    width={Platform.OS == "web" ? screenSize.width *.55 : screenSize.width * .8}
                     height={screenSize.height / 20}
                 />
             </View>

@@ -66,7 +66,6 @@ export function UserSearchScreen(props) {
 
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {
-        var imageSize = Platform.OS === "web" ? 50 : 35;
         return (
             <View style={[masterStyles.entityContainer]}>
                 <TouchableOpacity onPress={() => {
@@ -86,7 +85,7 @@ export function UserSearchScreen(props) {
                 }}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Image 
-                            style={[masterStyles.recentChatsLogo,{borderRadius: 50, resizeMode: "contain" }]}
+                            style={masterStyles.userSearchLogo}
                             defaultSource={require("../../../assets/Default_Img.png")}
                             source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item.userName + "ProfileImage")}}
                                 
@@ -103,18 +102,22 @@ export function UserSearchScreen(props) {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center' }}>
-            <TextInput
-                style={[masterStyles.input, {width: screenSize.width - 20, marginBottom: 20,}]}
-                placeholder="Enter name/username to search for a user"
-                placeholderTextColor="#aaaaaa"
-                onChangeText={(text) => setSearchText(text)}
-                clearButtonMode="while-editing"
-                underlineColorAndroid="transparent"
-                autoCapitalize="none"
-            />
-            <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
-                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}>
+        <SafeAreaView style={masterStyles.mainView}>
+            <View style={masterStyles.userSearchPrompt}>
+                <TextInput
+                    style={[masterStyles.input, {width: Platform.OS == "web" ? screenSize.width *.6 : screenSize.width * .99 , marginBottom: 10}]}
+                    placeholder="Enter name/username to search for a user"
+                    placeholderTextColor="#aaaaaa"
+                    onChangeText={(text) => setSearchText(text)}
+                    clearButtonMode="while-editing"
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                    clearTextOnFocus={true}
+                    value={searchText}
+                />
+            <View style={masterStyles.userSearchListContainer}>
+            {/* <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
+                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}> */}
                     <FlatList
                         data={users}
                         renderItem={renderUser}
