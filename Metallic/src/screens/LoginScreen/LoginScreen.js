@@ -8,46 +8,9 @@ import {
     Platform,
     KeyboardAvoidingView,
 } from "react-native";
-import { firebase } from "../../firebase/config";
+import * as FirebaseFunctions from "../../firebase/firebaseFunctions";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
-import * as WalletFunctions from "../../ethereum/walletFunctions";
-
-export function login(email, password, wallet) {
-    async function storeDataAsync(key, value) {
-        await WalletFunctions.storeData(key, value);
-    }
-
-    if (wallet) {
-        storeDataAsync("mnemonic", wallet.mnemonic.phrase);
-        storeDataAsync("privateKey", wallet.privateKey);
-    }
-
-    firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then((response) => {
-            const uid = response.user.uid;
-            const usersRef = firebase.firestore().collection("users");
-            usersRef
-                .doc(uid)
-                .get()
-                .then((firestoreDocument) => {
-                    if (!firestoreDocument.exists) {
-                        alert("User does not exist anymore.");
-                        return;
-                    }
-                    const user = firestoreDocument.data();
-                    WalletFunctions.clearKeysNotForThisUser();
-                })
-                .catch((error) => {
-                    alert(error);
-                });
-        })
-        .catch((error) => {
-            alert(error);
-        });
-}
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
@@ -56,13 +19,9 @@ export default function LoginScreen({ navigation }) {
         Platform.OS === "web"
             ? Dimensions.get("window")
             : Dimensions.get("screen");
+
     const onFooterLinkPress = () => {
         navigation.navigate("Registration");
-    };
-
-    const onLoginPress = () => {
-        console.log("Login Button Pressed.");
-        login(email, password, null);
     };
 
     return (
@@ -143,25 +102,25 @@ export default function LoginScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
-                <View style={{marginTop: 30, marginBottom: 20}}>
-
-                <CustomButton
-                    onPress={onLoginPress}
-                    text="Login"
-                    color="#1e1c21"
-                    width={screenSize.width - 60}
-                    height={screenSize.height / 20}
-                />
+                <View style={{ marginTop: 30, marginBottom: 20 }}>
+                    <CustomButton
+                        onPress={() => {
+                            FirebaseFunctions.firebaseLogin(email, password);
+                        }}
+                        text="Login"
+                        color="#1e1c21"
+                        width={screenSize.width - 60}
+                        height={screenSize.height / 20}
+                    />
                 </View>
                 <View>
-
-                <CustomButton
-                    onPress={onFooterLinkPress}
-                    text={"Don't have an account?"}
-                    color="#1e1c21"
-                    width={screenSize.width - 60}
-                    height={screenSize.height / 20}
-                />
+                    <CustomButton
+                        onPress={onFooterLinkPress}
+                        text={"Don't have an account?"}
+                        color="#1e1c21"
+                        width={screenSize.width - 60}
+                        height={screenSize.height / 20}
+                    />
                 </View>
                 <Text></Text>
             </KeyboardAvoidingView>

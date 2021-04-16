@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import {
-    Image,
     Text,
     View,
     Dimensions,
     Platform,
     Alert,
-    Button,
     TextInput,
 } from "react-native";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firebase } from "../../firebase/config";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 
@@ -131,6 +128,22 @@ export function AccountRecoveryScreen() {
                         }
                     }}
                     text="Recover Account"
+                    color="#1e1c21"
+                    width={screenSize.width - 80}
+                    height={screenSize.height / 20}
+                ></CustomButton>
+                <Text></Text>
+                <CustomButton
+                    onPress={() => {
+                        firebase
+                            .auth()
+                            .signOut()
+                            .then(() => {})
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    }}
+                    text="Log Out"
                     color="#1e1c21"
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}

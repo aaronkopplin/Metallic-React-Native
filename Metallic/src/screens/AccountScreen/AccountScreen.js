@@ -6,32 +6,19 @@ import {
     Dimensions,
     Platform,
     Alert,
-    Button,
     Linking,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
-// import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import { defaultImg } from "../../../assets/Default_Img.png"
-
-// Import the crypto getRandomValues shim (**BEFORE** the shims)
-import "react-native-get-random-values";
-
-// Import the the ethers shims (**BEFORE** ethers)
-import "@ethersproject/shims";
-
-// Import the ethers library
-import { ethers } from "ethers";
+import { defaultImg } from "../../../assets/Default_Img.png";
 import { useEffect } from "react";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 import * as ImagePicker from "expo-image-picker";
-// import storage from "@react-native-firebase/storage";
 import "firebase/storage";
 import { formatBytes32String } from "@ethersproject/strings";
-
-import * as Permissions from 'expo-permissions';
+import * as Permissions from "expo-permissions";
 
 export function AccountScreen(props) {
     const [userFullName, setFullName] = useState("");
@@ -45,8 +32,8 @@ export function AccountScreen(props) {
     const navigation = useNavigation();
     const [balance, setBalance] = useState("Loading");
     const [imageUrl, setImageUrl] = useState(undefined);
-    const [imagePermission, setImagePermission] = useState()
-    const [score, setScore] = useState()
+    const [imagePermission, setImagePermission] = useState();
+    const [score, setScore] = useState();
 
     useEffect(() => {
         const fetchBal = async () => {
@@ -57,53 +44,45 @@ export function AccountScreen(props) {
             setBalance((balance / 1000000000000000000).toString() + " Eth");
         };
 
-        // (async () => {
-        //     if (Platform.OS !== 'web') {
-        //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        //       if (status !== 'granted') {
-        //         alert('Sorry, we need camera roll permissions to make this work!');
-        //       }
-        //     }
-        //   })();
-
         fetchBal();
     }, []);
 
     const onChooseImagePress = async () => {
-        //alert(imagePermission)
-        // alert((await Permissions.getAsync(Permissions.MEDIA_LIBRARY)).status);
-        if (Platform.OS == 'ios' && imagePermission != 'granted') {
+        if (Platform.OS == "ios" && imagePermission != "granted") {
             if (imagePermission == null) {
                 const x = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
                 setImagePermission(x.status);
-            }
-             else if ((await Permissions.getAsync(Permissions.MEDIA_LIBRARY)).status != 'granted')  {
-                Linking.openURL('app-settings:');
+            } else if (
+                (await Permissions.getAsync(Permissions.MEDIA_LIBRARY))
+                    .status != "granted"
+            ) {
+                Linking.openURL("app-settings:");
                 return;
             }
         }
-        if (Platform.OS != 'ios' || imagePermission == 'granted') {
+        if (Platform.OS != "ios" || imagePermission == "granted") {
             let result = await ImagePicker.launchImageLibraryAsync();
 
             if (!result.cancelled) {
                 let imageName = userName + "ProfileImage";
-    
+
                 const response = await fetch(result.uri);
                 const blob = await response.blob();
                 var ref = firebase.storage().ref().child(imageName);
                 ref.put(blob);
-    
+
                 setImageUrl(ref.getDownloadURL());
             }
         }
-        
     };
 
     useEffect(() => {
-        // Failed to find Image for user        
-        const getImage = async(userName) => {
-            if (userName != ""){
-                const ref = await firebase.storage().ref('/' + userName + 'ProfileImage');
+        // Failed to find Image for user
+        const getImage = async (userName) => {
+            if (userName != "") {
+                const ref = await firebase
+                    .storage()
+                    .ref("/" + userName + "ProfileImage");
                 await ref.getDownloadURL().then(onResolve, onReject);
                 async function onReject(error) {
                     //console.log(error.code)
@@ -112,10 +91,10 @@ export function AccountScreen(props) {
                     setImageUrl(foundUrl);
                 }
             }
-        }
+        };
         getImage(userName);
     }, [userName, imageUrl]);
-    
+
     const onLogoutPress = () => {
         console.log("logout?");
         Alert.alert(
@@ -166,27 +145,27 @@ export function AccountScreen(props) {
             const snapshot = await users.where("id", "==", userID).get();
 
             var scoreRef = db.collection("users").doc(uid);
-            
+
             scoreRef.onSnapshot((snap) => {
                 if (snap.data().score == undefined) {
-                    scoreRef.update({ score: 0})
+                    scoreRef.update({ score: 0 });
                     setScore(snap.data().score);
                 } else {
                     setScore(snap.data().score);
                 }
-            })
+            });
 
             if (snapshot.empty) {
                 alert("no matching");
                 return;
             }
-            
+
             snapshot.forEach((doc) => {
                 setFullName(doc.data().fullName);
                 setEmail(doc.data().email);
                 setCreateDate(user.metadata.creationTime);
                 setUserName(doc.data().userName);
-                
+
                 return doc;
             });
         }
@@ -222,7 +201,10 @@ export function AccountScreen(props) {
                     My Account
                 </Text>
                 <Image
-                    style={[masterStyles.logo, { borderRadius: 30, resizeMode: "cover"}]}
+                    style={[
+                        masterStyles.logo,
+                        { borderRadius: 30, resizeMode: "cover" },
+                    ]}
                     defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: imageUrl }}
                 />
@@ -235,7 +217,7 @@ export function AccountScreen(props) {
                         },
                     ]}
                 >
-                    {userName}
+                    @{userName}
                 </Text>
                 <Text
                     style={[
@@ -308,7 +290,9 @@ export function AccountScreen(props) {
                     }}
                 >
                     <CustomButton
-                        onPress={() => {onChooseImagePress()}}
+                        onPress={() => {
+                            onChooseImagePress();
+                        }}
                         text="Change Profile Picture"
                         color="#1e1c21"
                         width={screenSize.width - 80}
