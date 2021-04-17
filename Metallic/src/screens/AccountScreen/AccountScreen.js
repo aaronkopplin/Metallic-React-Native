@@ -266,6 +266,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "baseline",
         width: 200,
+        paddingTop: 10,
         // backgroundColor: "red",
     },
     cameraButton: {
@@ -278,6 +279,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: "100%",
         padding: 10,
+        borderBottomColor: Colors.lightForeground,
+        borderBottomWidth: 1,
     },
     iconButton: {
         padding: 5,
