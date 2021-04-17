@@ -134,7 +134,12 @@ export async function sendPayment(wallet, amount, recipientAddress) {
     };
 
     wallet = wallet.connect(provider);
-    wallet.sendTransaction(transaction).then((response) => {
+    try {
+        var response = await wallet.sendTransaction(transaction);
         console.log(response);
-    });
+        return "";
+    } catch (error) {
+        console.log(error);
+        return "";
+    }
 }

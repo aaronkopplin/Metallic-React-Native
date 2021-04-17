@@ -8,21 +8,19 @@ import {
     Dimensions,
     Platform,
     FlatList,
-    KeyboardAvoidingView,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export function UserSearchScreen(props) {
-
-
-    const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
+    const screenSize =
+        Platform.OS === "web"
+            ? Dimensions.get("window")
+            : Dimensions.get("screen");
 
     const [searchText, setSearchText] = useState("");
-
 
     var [users, setUsers] = useState([]);
     const thisUser = firebase.auth().currentUser;
@@ -30,38 +28,47 @@ export function UserSearchScreen(props) {
 
     useEffect(() => {
         // retrieve users from firebase without returning my own account
-        userRef.where("email", "!=", thisUser.email)
-            .onSnapshot(
-                (querySnapshot) => {
-                    var newEntities = [];
-                    if (searchText.trim != "") {    // search text entered
-                        querySnapshot.forEach(doc => {
-                            const entity = doc.data();
+        userRef.where("email", "!=", thisUser.email).onSnapshot(
+            (querySnapshot) => {
+                var newEntities = [];
+                if (searchText.trim != "") {
+                    // search text entered
+                    querySnapshot.forEach((doc) => {
+                        const entity = doc.data();
 
-                            // get text prior to @ of email
-                            var emailToSearch = String(entity.email).substring(0, (String(entity.email).lastIndexOf('@'))).toLowerCase();
-                            const search = searchText.toLowerCase();
+                        // get text prior to @ of email
+                        var emailToSearch = String(entity.email)
+                            .substring(0, String(entity.email).lastIndexOf("@"))
+                            .toLowerCase();
+                        const search = searchText.toLowerCase();
 
-                            // return only accounts that contain search text in the email, fullName, or userName
-                            if (emailToSearch.includes(search) || String(entity.fullName).toLowerCase().includes(search) || String(entity.userName).toLowerCase().includes(search)) {
-                                newEntities.push(entity);
-                            }
-
-                        });
-                    } else {    // no search text entered
-                        querySnapshot.forEach(doc => {
-                            const entity = doc.data();
-
+                        // return only accounts that contain search text in the email, fullName, or userName
+                        if (
+                            emailToSearch.includes(search) ||
+                            String(entity.fullName)
+                                .toLowerCase()
+                                .includes(search) ||
+                            String(entity.userName)
+                                .toLowerCase()
+                                .includes(search)
+                        ) {
                             newEntities.push(entity);
-                        });
-                    }
-                    setUsers(newEntities);
+                        }
+                    });
+                } else {
+                    // no search text entered
+                    querySnapshot.forEach((doc) => {
+                        const entity = doc.data();
 
-                },
-                (error) => {
-                    console.log(error);
+                        newEntities.push(entity);
+                    });
                 }
-            );
+                setUsers(newEntities);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }, [searchText]);
 
     const navigation = useNavigation();
@@ -69,45 +76,86 @@ export function UserSearchScreen(props) {
         var imageSize = Platform.OS === "web" ? 50 : 35;
         return (
             <View style={[masterStyles.entityContainer]}>
-                <TouchableOpacity onPress={() => {
-                    setSearchText("");
+                <TouchableOpacity
+                    onPress={() => {
+                        setSearchText("");
 
-                    if (thisUser.uid == item.id) {
-                        navigation.navigate('Account')
-                    }
-                    else {
-                        navigation.navigate('UserAccountScreen', {
-                            email: item.email,
-                            fullName: item.fullName,
-                            userName: item.userName,
-                            address: item.address,
-                            score: item.score
-                        });
-                    }
-                }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Image 
-                            style={[masterStyles.recentChatsLogo,{borderRadius: 50, resizeMode: "cover" }]}
+                        if (thisUser.uid == item.id) {
+                            navigation.navigate("Account");
+                        } else {
+                            navigation.navigate("UserAccountScreen", {
+                                email: item.email,
+                                fullName: item.fullName,
+                                userName: item.userName,
+                                address: item.address,
+                                score: item.score,
+                            });
+                        }
+                    }}
+                >
+                    <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                        <Image
+                            style={[
+                                masterStyles.recentChatsLogo,
+                                { borderRadius: 50, resizeMode: "cover" },
+                            ]}
                             defaultSource={require("../../../assets/Default_Img.png")}
-                            source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item.userName + "ProfileImage")}}
-                                
-                        />                           
-                        <View style={{paddingLeft: 10}}>
-                            <Text style={[masterStyles.headingsSmall, {color: '#fff', fontWeight: 'normal', fontSize: 25}]} >{item.userName}</Text>
-                            <Text style={[masterStyles.headingsSmallNotBold, {fontWeight: 'normal', paddingLeft: 15, fontSize: 15}]} >{item.email}</Text>
+                            source={{
+                                uri:
+                                    "https://storage.googleapis.com/metallic-975be.appspot.com/" +
+                                    item.userName +
+                                    "ProfileImage",
+                            }}
+                        />
+                        <View style={{ paddingLeft: 10 }}>
+                            <Text
+                                style={[
+                                    masterStyles.headingsSmall,
+                                    {
+                                        color: "#fff",
+                                        fontWeight: "normal",
+                                        fontSize: 25,
+                                    },
+                                ]}
+                            >
+                                {item.userName}
+                            </Text>
+                            <Text
+                                style={[
+                                    masterStyles.headingsSmallNotBold,
+                                    {
+                                        fontWeight: "normal",
+                                        paddingLeft: 15,
+                                        fontSize: 15,
+                                    },
+                                ]}
+                            >
+                                {item.email}
+                            </Text>
                         </View>
                     </View>
                 </TouchableOpacity>
-
             </View>
         );
     };
 
     return (
-        <SafeAreaView style={{ backgroundColor: "#1e1c21", alignContent: 'center', justifyContent: 'space-evenly', alignItems: 'center' }}>
-            <View style={{paddingBottom: 4, top: -20 }}>
+        <SafeAreaView
+            style={{
+                backgroundColor: "#1e1c21",
+                alignContent: "center",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+            }}
+        >
+            <View>
                 <TextInput
-                    style={[masterStyles.input, {width: screenSize.width - 20, marginBottom: 10,}]}
+                    style={[
+                        masterStyles.input,
+                        { width: screenSize.width - 20, marginBottom: 10 },
+                    ]}
                     placeholder="Enter name/username to search for a user"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setSearchText(text)}
@@ -117,16 +165,15 @@ export function UserSearchScreen(props) {
                     clearTextOnFocus={true}
                     value={searchText}
                 />
-                <View style={{
-
-                    backgroundColor: "#2e2b30",
-                    borderRadius: 4,
-                    marginBottom: 10,
-                    paddingHorizontal: 10,
-                    paddingVertical: 10
-                }}>
-            {/* <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
-                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}> */}
+                <View
+                    style={{
+                        backgroundColor: "#2e2b30",
+                        borderRadius: 4,
+                        marginBottom: 10,
+                        paddingHorizontal: 10,
+                        paddingVertical: 10,
+                    }}
+                >
                     <FlatList
                         data={users}
                         renderItem={renderUser}
@@ -135,8 +182,6 @@ export function UserSearchScreen(props) {
                     />
                 </View>
             </View>
-                {/* </View>
-            </View> */}
         </SafeAreaView>
     );
 }

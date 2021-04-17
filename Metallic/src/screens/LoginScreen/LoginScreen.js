@@ -24,6 +24,13 @@ export default function LoginScreen({ navigation }) {
         navigation.navigate("Registration");
     };
 
+    async function login() {
+        var errors = await FirebaseFunctions.firebaseLogin(email, password);
+        if (errors != "") {
+            alert(errors);
+        }
+    }
+
     return (
         <View style={masterStyles.mainBackground} justifyContent="flex-start">
             <Image
@@ -105,7 +112,7 @@ export default function LoginScreen({ navigation }) {
                 <View style={{ marginTop: 30, marginBottom: 20 }}>
                     <CustomButton
                         onPress={() => {
-                            FirebaseFunctions.firebaseLogin(email, password);
+                            login();
                         }}
                         text="Login"
                         color="#1e1c21"

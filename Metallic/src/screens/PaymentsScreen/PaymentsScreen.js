@@ -30,28 +30,23 @@ export function PaymentsScreen({ route }) {
     const [amountInput, changeAmountInput] = useState(0.0);
     const [available, changeAvailable] = useState(0.0);
     const { email, fullName, userName, address, score } = route.params;
-
     const userImageSize = Platform.OS === "web" ? 75 : 50;
     var sendingMessage = "";
     const [memo, setMemo] = useState("");
-
     // memoTI and amountTI used to clear TextInput on pushing send/request button
     const [memoTI, setMemoTI] = useState("");
     const [amountTI, setAmountTI] = useState("");
-
     const navigation = useNavigation();
-
     const [chatLog, updateChatLog] = useState([]); // my chatLog
     const [otherChatLog, updateOtherChatLog] = useState([]); // chatLog of user I am sending a message to
     const [chatExists, setChatExists] = useState(Boolean); // used to confirm if a chat exists between me and the other user
-
     const user = firebase.auth().currentUser;
     const [myUserName, setMyUserName] = useState(""); // my username
     const [otherUserUID, setOtherUserUID] = useState(""); // other user's userID
     const [otherChatRef, setOtherChatRef] = useState(); // ref to other user's chats collection
     const [myScore, setMyScore] = useState();
     const [otherScore, setOtherScore] = useState();
-
+    const [balance, setBalance] = useState(0); // will be big number
 
     const db = firebase.firestore();
     const chatRef = db
@@ -73,10 +68,11 @@ export function PaymentsScreen({ route }) {
         const fetchBal = async () => {
             const loadedWallet = await WalletFunctions.loadWalletFromPrivate();
             setWallet(loadedWallet);
-            const balance = await (
-                await WalletFunctions.getBalance(loadedWallet)
-            ).toString();
-            changeAvailable(parseFloat(balance));
+            const retrievedBalance = await await WalletFunctions.getBalance(
+                loadedWallet
+            );
+            changeAvailable(parseFloat(retrievedBalance.toString()));
+            setBalance(retrievedBalance);
         };
 
         fetchBal();
@@ -135,12 +131,19 @@ export function PaymentsScreen({ route }) {
     }, [otherUserUID, myUserName, chatExists]);
     // re-run this useEffect if any of the above three variables change value
 
-    function getImage(item){
-        if (item.indexOf("ETHl") == -1){
-            return ("https://storage.googleapis.com/metallic-975be.appspot.com/" + myUserName + "ProfileImage");
-        }   
-        else{
-            return ("https://storage.googleapis.com/metallic-975be.appspot.com/" + userName + "ProfileImage");
+    function getImage(item) {
+        if (item.indexOf("ETHl") == -1) {
+            return (
+                "https://storage.googleapis.com/metallic-975be.appspot.com/" +
+                myUserName +
+                "ProfileImage"
+            );
+        } else {
+            return (
+                "https://storage.googleapis.com/metallic-975be.appspot.com/" +
+                userName +
+                "ProfileImage"
+            );
         }
     }
 
@@ -191,20 +194,39 @@ export function PaymentsScreen({ route }) {
 
         var otherNewScore = score + 1;
         setOtherScore(otherNewScore);
-        db.collection('users').doc(otherUserUID).update({ score: otherNewScore }, (e) => {
-            alert(e);
-        });
+        db.collection("users")
+            .doc(otherUserUID)
+            .update({ score: otherNewScore }, (e) => {
+                alert(e);
+            });
 
         // send the transaction
-        WalletFunctions.sendPayment(wallet, amount, recipientAddress);
-        alert(rightSideMessage)
+        if (amount > balance) {
+            async function callSendPayment() {
+                var response = await WalletFunctions.sendPayment(
+                    wallet,
+                    amount,
+                    recipientAddress
+                );
+                if (response != "") {
+                    alert(
+                        "There was an error sending the payment. Please check that you have sufficient funds to make this payment and try again in a few minutes. "
+                    );
+                }
+            }
+
+            callSendPayment();
+        } else if (amount != 0) {
+            alert("insufficient funds");
+        }
+        // alert(rightSideMessage);
     };
 
     const renderChats = ({ item }) => {
         var justifySide = "center";
         var bgColor = "#000fff";
         var fontColor = "#1e1c21";
-        var sendingIndexStart = String(item).lastIndexOf('Sending: ');
+        var sendingIndexStart = String(item).lastIndexOf("Sending: ");
         var imageSize = Platform.OS === "web" ? 50 : 25;
         // set variables accordingly to if the chat was sent by me or the other user
         if (String(item).charAt(String(item).length - 1) == "r") {
@@ -235,7 +257,6 @@ export function PaymentsScreen({ route }) {
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "center",
-                        
                     }}
                 >
                     <View
@@ -255,14 +276,12 @@ export function PaymentsScreen({ route }) {
                             }}
                             resizeMode={"cover"}
                             resizeMethod={"scale"}
-                            
                             defaultSource={require("../../../assets/Default_Img.png")}
-                            source={{ uri: getImage(item)}}
+                            source={{ uri: getImage(item) }}
                         />
-                        
                     </View>
-                    
-                    <View style={{ justifyContent: "center", paddingLeft: 5}}>
+
+                    <View style={{ justifyContent: "center", paddingLeft: 5 }}>
                         <View style={{ flexDirection: "row" }}>
                             <Text
                                 style={[
@@ -272,7 +291,8 @@ export function PaymentsScreen({ route }) {
                             >
                                 {String(item).substring(
                                     sendingIndexStart,
-                                    sendingIndexStart + String('Sending:').length
+                                    sendingIndexStart +
+                                        String("Sending:").length
                                 )}
                             </Text>
                             <Text
@@ -285,7 +305,8 @@ export function PaymentsScreen({ route }) {
                                 ]}
                             >
                                 {String(item).substring(
-                                    sendingIndexStart + String('Sending:').length,
+                                    sendingIndexStart +
+                                        String("Sending:").length,
                                     String(item).length - 1
                                 )}
                             </Text>
@@ -311,7 +332,7 @@ export function PaymentsScreen({ route }) {
                                 ]}
                             >
                                 {String(item).substring(
-                                    String('Message:').length + 1,
+                                    String("Message:").length + 1,
                                     sendingIndexStart
                                 )}
                             </Text>
@@ -357,10 +378,10 @@ export function PaymentsScreen({ route }) {
                             fullName: fullName,
                             userName: userName,
                             address: address,
-                            score: otherScore
+                            score: otherScore,
                         });
                     }}
-                    style={{alignItems: 'center', justifyContent: 'center'}}
+                    style={{ alignItems: "center", justifyContent: "center" }}
                 >
                     <Image
                         style={{
@@ -368,14 +389,28 @@ export function PaymentsScreen({ route }) {
                             height: userImageSize - 10,
                             width: userImageSize - 10,
                             resizeMode: "cover",
-                            backgroundColor: "#000"
+                            backgroundColor: "#000",
                         }}
                         defaultSource={require("../../../assets/Default_Img.png")}
-                        source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + userName + "ProfileImage")}}
+                        source={{
+                            uri:
+                                "https://storage.googleapis.com/metallic-975be.appspot.com/" +
+                                userName +
+                                "ProfileImage",
+                        }}
                     />
-                    
-                    <Text style={{fontSize: 18, fontWeight: 'bold', color: '#fff', maxWidth: screenSize.width - 40, paddingTop: 5}}>{userName}</Text>
 
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            fontWeight: "bold",
+                            color: "#fff",
+                            maxWidth: screenSize.width - 40,
+                            paddingTop: 5,
+                        }}
+                    >
+                        {userName}
+                    </Text>
                 </TouchableOpacity>
 
                 <View
