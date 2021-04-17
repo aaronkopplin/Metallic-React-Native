@@ -274,6 +274,7 @@ export default function App() {
                         <Stack.Screen
                             name="AccountDetailScreen"
                             options={{
+                                title: "Account Details",
                                 headerStyle: {
                                     backgroundColor:
                                         masterStyles.mainBackground

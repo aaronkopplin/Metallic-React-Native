@@ -14,6 +14,69 @@ export async function firebaseLogin(email, password) {
     return errorMesasage;
 }
 
+export async function firebaseGetUserAccount() {
+    var score = 0;
+    var name = "";
+    var email = "";
+    var createdDate = "";
+    var userName = "";
+    var privateKey = "";
+    var mnemonic = "";
+    var address = "";
+
+    var user = firebase.auth().currentUser;
+    var database = firebase.firestore();
+    var userId;
+    if (user != null) {
+        userId = user.uid;
+
+        var usersCollection = database.collection("users");
+        const snapshot = await usersCollection.where("id", "==", userId).get();
+
+        var scoreRef = database.collection("users").doc(userId);
+
+        scoreRef.onSnapshot(async function (snap) {
+            if (snap.data().score == undefined) {
+                await scoreRef.update({ score: score });
+            }
+        });
+
+        if (!snapshot.empty) {
+            snapshot.forEach((doc) => {
+                name = doc.data().fullName;
+                email = doc.data().email;
+                createdDate = user.metadata.creationTime;
+                userName = doc.data().userName;
+                score = doc.data().score;
+            });
+        }
+
+        var wallet = await WalletFunctions.loadWalletFromPrivate();
+        privateKey = wallet.privateKey;
+        address = wallet.address;
+        mnemonic = await WalletFunctions.loadMnemonic();
+
+        return {
+            name: name,
+            userName: userName,
+            score: score,
+            email: email,
+            createdDate: createdDate,
+            privateKey: privateKey,
+            mnemonic: mnemonic,
+            address: address,
+        };
+    }
+}
+
+export async function firebaseLogout() {
+    try {
+        firebase.auth().signOut();
+    } catch (error) {
+        console.log("logout error: " + error);
+    }
+}
+
 export async function firebaseCreateAccountAndLogIn(
     email,
     password,
