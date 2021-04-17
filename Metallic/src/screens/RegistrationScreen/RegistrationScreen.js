@@ -23,19 +23,14 @@ import "@ethersproject/shims";
 // Import the ethers library
 import { ethers } from "ethers";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useEffect } from "react/cjs/react.development";
 
 export default function RegistrationScreen({ navigation }) {
-    // state
-    // const [name, setFullName] = useState("");
-    var name = "";
-    // const [email, setEmail] = useState("");
-    var email = "";
-    // const [password, setPassword] = useState("");
-    var password = "";
-    // const [confirmPassword, setConfirmPassword] = useState("");
-    var confirmPassword = "";
-    // const [userName, setUserName] = useState("");
-    var userName = "";
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [userName, setUserName] = useState("");
     const [loading, setLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState(
         "Your account is being created..."
@@ -49,7 +44,7 @@ export default function RegistrationScreen({ navigation }) {
         navigation.navigate("Login");
     };
 
-    function onRegisterPress() {
+    async function onRegisterPress() {
         if (name == "") {
             setLoadingMessage("Please enter a name for the account.");
             return;
@@ -80,26 +75,29 @@ export default function RegistrationScreen({ navigation }) {
             return;
         }
 
-        createAccountAndLogin();
+        var wallet = await WalletFunctions.createRandomWalletAndWriteToStorage(
+            userName
+        );
 
-        async function createAccountAndLogin() {
-            var wallet = await WalletFunctions.createRandomWalletAndWriteToStorage(
-                userName
-            );
+        var errorMessage = await FirebaseFunctions.firebaseCreateAccountAndLogIn(
+            email,
+            password,
+            name,
+            userName,
+            wallet.address
+        );
 
-            var errorMessage = await FirebaseFunctions.firebaseCreateAccountAndLogIn(
-                email,
-                password,
-                name,
-                userName,
-                wallet.address
-            );
-
-            if (errorMessage != "") {
-                setLoadingMessage(errorMessage);
-            }
+        if (errorMessage != "") {
+            setLoadingMessage(errorMessage);
         }
     }
+
+    useEffect(() => {
+        if (loading) {
+            console.log("loading: " + loading);
+            onRegisterPress();
+        }
+    }, [loading]);
 
     return loading ? (
         <View style={masterStyles.mainBackground} justifyContent="flex-start">
@@ -175,8 +173,9 @@ export default function RegistrationScreen({ navigation }) {
                     ]}
                     placeholder="Full Name"
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => (name = text)}
+                    onChangeText={(text) => setName(text)}
                     underlineColorAndroid="transparent"
+                    value={name}
                     autoCapitalize="words"
                     autoCompleteType="off"
                     autoCorrect={false}
@@ -201,7 +200,8 @@ export default function RegistrationScreen({ navigation }) {
                     ]}
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => (email = text)}
+                    onChangeText={(text) => setEmail(text)}
+                    value={email}
                     keyboardType="email-address"
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
@@ -228,7 +228,8 @@ export default function RegistrationScreen({ navigation }) {
                     ]}
                     placeholderTextColor="#aaaaaa"
                     placeholder="Username"
-                    onChangeText={(text) => (userName = text)}
+                    onChangeText={(text) => setUserName(text)}
+                    value={userName}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                     autoCompleteType="off"
@@ -255,7 +256,8 @@ export default function RegistrationScreen({ navigation }) {
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder="Password"
-                    onChangeText={(text) => (password = text)}
+                    onChangeText={(text) => setPassword(text)}
+                    value={password}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                     autoCompleteType="off"
@@ -282,7 +284,8 @@ export default function RegistrationScreen({ navigation }) {
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder="Confirm Password"
-                    onChangeText={(text) => (confirmPassword = text)}
+                    onChangeText={(text) => setConfirmPassword(text)}
+                    value={confirmPassword}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                     autoCompleteType="off"
@@ -296,7 +299,6 @@ export default function RegistrationScreen({ navigation }) {
                                 "Your account is being created..."
                             );
                             setLoading(true);
-                            onRegisterPress();
                         }}
                         text="Create Account"
                         color="#1e1c21"
@@ -306,7 +308,7 @@ export default function RegistrationScreen({ navigation }) {
                 </View>
                 <View style={masterStyles.footerView}>
                     <Text style={masterStyles.footerText}>
-                        Already got an account?{" "}
+                        Already have an account?{" "}
                         <Text
                             onPress={onFooterLinkPress}
                             style={masterStyles.footerLink}

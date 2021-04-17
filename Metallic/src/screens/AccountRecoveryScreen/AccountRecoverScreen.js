@@ -77,6 +77,10 @@ export function AccountRecoveryScreen() {
     const navigation = useNavigation();
     const [mnemonic, setMnemonic] = useState("");
 
+    alert(
+        "The wallet for the account you are accessing was not found on this device. Plase recover your account with the mnemonic phrase from this account."
+    );
+
     return (
         <View style={masterStyles.mainBackground}>
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
@@ -106,10 +110,11 @@ export function AccountRecoveryScreen() {
                     Enter the mnemonic phrase for the account that you wish to
                     recover below.
                 </Text>
+                <Text></Text>
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        { width: screenSize.width - 80 },
                     ]}
                     placeholder="Mnemonic"
                     placeholderTextColor="#aaaaaa"
@@ -119,6 +124,7 @@ export function AccountRecoveryScreen() {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
+                <Text></Text>
                 <CustomButton
                     onPress={() => {
                         try {
