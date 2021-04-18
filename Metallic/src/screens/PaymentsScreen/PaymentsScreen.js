@@ -373,7 +373,7 @@ export function PaymentsScreen({ route }) {
             >
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("UserAccountScreen", {
+                        navigation.navigate("ViewOtherAccount", {
                             email: email,
                             fullName: fullName,
                             userName: userName,
