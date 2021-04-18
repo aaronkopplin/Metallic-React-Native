@@ -35,6 +35,7 @@ export function AccountScreen({ navigation, route }) {
     const [userAddress, setUserAddress] = useState("");
     const [addContactButtonText, setAddContactButtonText] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
+    const [qrModalLabelText, setQrModalLabelText] = useState("");
 
     useEffect(() => {
         if (route.params == null) {
@@ -53,6 +54,7 @@ export function AccountScreen({ navigation, route }) {
                 setBalance((balance / 1000000000000000000).toString());
             }
 
+            setQrModalLabelText("Your Ethereum Address");
             loadProfileData();
         } else {
             //viewing other persons profile
@@ -81,6 +83,7 @@ export function AccountScreen({ navigation, route }) {
             setScore(route.params.score);
             setEmail(route.params.email);
             setUserAddress(route.params.address);
+            setQrModalLabelText("@" + userName + "'s\nEthereum address");
         }
     });
 
@@ -193,7 +196,7 @@ export function AccountScreen({ navigation, route }) {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.label}>Your Ethereum Address</Text>
+                        <Text style={styles.label}>{qrModalLabelText}</Text>
                         <QRCode
                             value={userAddress}
                             style={styles.qrCode}
@@ -303,7 +306,7 @@ export function AccountScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     qrCode: {},
     modalView: {
-        margin: 5,
+        // margin: 5,
         backgroundColor: Colors.lightBackground,
         borderRadius: 5,
         padding: 15,
@@ -311,6 +314,8 @@ const styles = StyleSheet.create({
         width: 300,
         height: 350,
         justifyContent: "center",
+        flexDirection: "column",
+        justifyContent: "space-between",
     },
     centeredView: {
         backgroundColor: "rgba(0,0,0,0.7)",
