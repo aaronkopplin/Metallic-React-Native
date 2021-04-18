@@ -22,16 +22,6 @@ export function AccountDetailScreen(props) {
     const navigation = useNavigation();
 
     useEffect(() => {
-        // const fetchBal = async () => {
-        //     const wallet = await WalletFunctions.loadWalletFromPrivate();
-        //     const storedMnemonic = await WalletFunctions.loadMnemonic();
-        //     setAddress(wallet.address);
-        //     setPrivateKey(wallet.privateKey);
-        //     setMnemonic(storedMnemonic);
-        // };
-
-        // fetchBal();
-
         async function grabData() {
             var data = await FirebaseFunctions.firebaseGetUserAccount();
             setAddress(data.address);
@@ -63,16 +53,6 @@ export function AccountDetailScreen(props) {
             <View style={styles.horizontalContainer}>
                 <Text style={styles.boldLabel}>Address:</Text>
                 <Text style={styles.label}>{address}</Text>
-            </View>
-            <View style={styles.horizontalContainer}>
-                <Text style={styles.boldLabel}>Qr Code:</Text>
-                <View style={{ width: "65%" }}>
-                    <QRCode
-                        style={styles.label}
-                        value={address}
-                        size={screenSize.width / 2}
-                    />
-                </View>
             </View>
             <View style={styles.horizontalContainer}>
                 <Text style={styles.boldLabel}>Private Key:</Text>

@@ -1,6 +1,44 @@
 import { firebase } from "./config";
 import * as WalletFunctions from "../ethereum/walletFunctions";
 
+export async function firebaseGetContacts() {
+    var user = firebase.auth().currentUser;
+    const userRef = firebase.firestore().collection("users").doc(user.uid);
+    const ContactsRef = userRef.collection("Contacts");
+    const contacts = await ContactsRef.get();
+    return contacts;
+}
+
+export async function firebaseIsContact(userName) {
+    var contacts = await firebaseGetContacts();
+    var contactsSnapshot = await contacts.query
+        .where("userName", "==", userName)
+        .get();
+    return !contactsSnapshot.empty;
+}
+
+export async function firebaseRemoveContact(userName) {
+    console.log("removing " + userName);
+    var user = firebase.auth().currentUser;
+    await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("Contacts")
+        .doc(userName)
+        .delete();
+}
+
+export async function firebaseAddContact(data) {
+    const userRef = await firebase
+        .firestore()
+        .collection("users")
+        .doc(firebase.auth().currentUser.uid);
+    // const userName = await (await userRef.get()).data().userName;
+
+    userRef.collection("Contacts").doc(data.userName).set(data);
+}
+
 export async function firebaseLogin(email, password) {
     var errorMesasage = "";
 

@@ -4,6 +4,7 @@ import {
     Text,
     View,
     Dimensions,
+    Modal,
     Platform,
     Alert,
     Linking,
@@ -11,46 +12,96 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { firebase } from "../../firebase/config";
-import CustomButton from "../../../button";
-import { masterStyles } from "../../../../Metallic/masterStyles";
-import { useNavigation } from "@react-navigation/native";
-import { defaultImg } from "../../../assets/Default_Img.png";
 import { useEffect } from "react";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 import * as ImagePicker from "expo-image-picker";
 import "firebase/storage";
-import { formatBytes32String } from "@ethersproject/strings";
 import * as Permissions from "expo-permissions";
 import Icon from "react-native-vector-icons/Ionicons";
 import * as FirebaseFunctions from "../../firebase/firebaseFunctions";
 import { Colors } from "../../styling/colors";
+import QRCode from "react-native-qrcode-svg";
 
-export function AccountScreen(props) {
+export function AccountScreen({ navigation, route }) {
     const [userFullName, setFullName] = useState("");
     const [userEmail, setEmail] = useState("");
     const [userCreateDate, setCreateDate] = useState("");
     const [userName, setUserName] = useState("");
-    // const screenSize =
-    //     Platform.OS === "web"
-    //         ? Dimensions.get("window")
-    //         : Dimensions.get("screen");
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
     const [balance, setBalance] = useState("Loading");
     const [imageUrl, setImageUrl] = useState(undefined);
     const [imagePermission, setImagePermission] = useState();
     const [score, setScore] = useState();
+    const [userAddress, setUserAddress] = useState("");
+    const [addContactButtonText, setAddContactButtonText] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
-        const fetchBal = async () => {
-            const wallet = await WalletFunctions.loadWalletFromPrivate();
-            const balance = await (
-                await WalletFunctions.getBalance(wallet)
-            ).toString();
-            setBalance((balance / 1000000000000000000).toString());
-        };
+        if (route.params == null) {
+            //view my own profile
+            async function loadProfileData() {
+                var data = await FirebaseFunctions.firebaseGetUserAccount();
+                setFullName(data.name);
+                setUserName(data.userName);
+                setScore(data.score);
+                setUserAddress(data.address);
 
-        fetchBal();
-    }, []);
+                const wallet = await WalletFunctions.loadWalletFromPrivate();
+                const balance = await (
+                    await WalletFunctions.getBalance(wallet)
+                ).toString();
+                setBalance((balance / 1000000000000000000).toString());
+            }
+
+            loadProfileData();
+        } else {
+            //viewing other persons profile
+            async function getBalance() {
+                var bal = await WalletFunctions.getBalanceFromAddress(
+                    route.params.address
+                );
+                setBalance((bal / 1000000000000000000).toString());
+            }
+
+            async function checkContact() {
+                var isContact = await FirebaseFunctions.firebaseIsContact(
+                    userName
+                );
+                if (isContact) {
+                    setAddContactButtonText("Remove Contact");
+                } else {
+                    setAddContactButtonText("Add Contact");
+                }
+            }
+
+            checkContact();
+            getBalance();
+            setFullName(route.params.fullName);
+            setUserName(route.params.userName);
+            setScore(route.params.score);
+            setEmail(route.params.email);
+            setUserAddress(route.params.address);
+        }
+    });
+
+    useEffect(() => {
+        // Failed to find Image for user
+        const getImage = async (userName) => {
+            if (userName != "") {
+                const ref = await firebase
+                    .storage()
+                    .ref("/" + userName + "ProfileImage");
+                await ref.getDownloadURL().then(onResolve, onReject);
+                async function onReject(error) {
+                    //console.log(error.code)
+                }
+                async function onResolve(foundUrl) {
+                    setImageUrl(foundUrl);
+                }
+            }
+        };
+        getImage(userName);
+    }, [userName, imageUrl]);
 
     const onChooseImagePress = async () => {
         if (Platform.OS == "ios" && imagePermission != "granted") {
@@ -81,100 +132,46 @@ export function AccountScreen(props) {
         }
     };
 
-    useEffect(() => {
-        // Failed to find Image for user
-        const getImage = async (userName) => {
-            if (userName != "") {
-                const ref = await firebase
-                    .storage()
-                    .ref("/" + userName + "ProfileImage");
-                await ref.getDownloadURL().then(onResolve, onReject);
-                async function onReject(error) {
-                    //console.log(error.code)
-                }
-                async function onResolve(foundUrl) {
-                    setImageUrl(foundUrl);
-                }
+    async function addOrRemoveContact() {
+        var isContact = await FirebaseFunctions.firebaseIsContact(userName);
+
+        if (!isContact) {
+            // add contact
+            const newContactData = {
+                email: userEmail,
+                fullName: userFullName,
+                userName: userName,
+                address: userAddress,
+                score: score,
+            };
+
+            try {
+                await FirebaseFunctions.firebaseAddContact(newContactData);
+                setAddContactButtonText("Remove Contact");
+            } catch (error) {
+                alert("Couldn't add contact.");
+                console.log(error);
             }
-        };
-        getImage(userName);
-    }, [userName, imageUrl]);
-
-    // const onLogoutPress = () => {
-    //     console.log("logout?");
-    //     Alert.alert(
-    //         "Logout",
-    //         "Are you sure you want to logout?",
-    //         [
-    //             {
-    //                 text: "Cancel",
-    //                 onPress: () => console.log("Cancel Pressed"),
-    //                 style: "cancel",
-    //             },
-    //             {
-    //                 text: "OK",
-    //                 onPress: () => {
-    //                     firebase
-    //                         .auth()
-    //                         .signOut()
-    //                         .then(() => {})
-    //                         .catch((error) => {
-    //                             console.log(error);
-    //                         });
-    //                 },
-    //             },
-    //         ],
-    //         { cancelable: false }
-    //     );
-    // };
-
-    // const onLogoutPressWeb = () => {
-    //     firebase
-    //         .auth()
-    //         .signOut()
-    //         .then(() => {
-    //             alert("Logout Successful");
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
-
-    var user = firebase.auth().currentUser;
-    var db = firebase.firestore();
-    var uid;
-    if (user != null) {
-        uid = user.uid;
-        async function getUser(db, userID) {
-            var users = db.collection("users");
-            const snapshot = await users.where("id", "==", userID).get();
-
-            var scoreRef = db.collection("users").doc(uid);
-
-            scoreRef.onSnapshot((snap) => {
-                if (snap.data().score == undefined) {
-                    scoreRef.update({ score: 0 });
-                    setScore(snap.data().score);
-                } else {
-                    setScore(snap.data().score);
-                }
-            });
-
-            if (snapshot.empty) {
-                alert("no matching");
-                return;
+        } else {
+            try {
+                await FirebaseFunctions.firebaseRemoveContact(userName);
+                setAddContactButtonText("Add Contact");
+                console.log("Contact removed");
+            } catch (error) {
+                console.log(error);
+                alert("Couldn't remove contact.");
             }
-
-            snapshot.forEach((doc) => {
-                setFullName(doc.data().fullName);
-                setEmail(doc.data().email);
-                setCreateDate(user.metadata.creationTime);
-                setUserName(doc.data().userName);
-
-                return doc;
-            });
         }
-        getUser(db, uid);
+    }
+
+    function sendPayment() {
+        navigation.navigate("Payments", {
+            email: userEmail,
+            fullName: userFullName,
+            userName: userName,
+            address: userAddress,
+            score: score,
+        });
     }
 
     return (
@@ -185,28 +182,60 @@ export function AccountScreen(props) {
                 alignItems: "center",
             }}
         >
-            <View style={styles.horizontalContainer}>
-                <TouchableOpacity onPress={FirebaseFunctions.firebaseLogout}>
-                    <Icon
-                        name="log-out-outline"
-                        color="#79777d"
-                        size={30}
-                        style={styles.iconButton}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => {
-                        navigation.navigate("AccountDetailScreen");
-                    }}
-                >
-                    <Icon
-                        name="settings"
-                        color="#79777d"
-                        size={30}
-                        style={styles.iconButton}
-                    />
-                </TouchableOpacity>
-            </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.label}>Your Ethereum Address</Text>
+                        <QRCode
+                            value={userAddress}
+                            style={styles.qrCode}
+                            size={200}
+                        />
+                        <TouchableOpacity
+                            style={styles.modalButton}
+                            onPress={() => {
+                                setModalVisible(false);
+                            }}
+                        >
+                            <Text style={styles.label}>Dismiss</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+            {route.params == null ? (
+                <View style={styles.horizontalContainer}>
+                    <TouchableOpacity
+                        onPress={FirebaseFunctions.firebaseLogout}
+                    >
+                        <Icon
+                            name="log-out-outline"
+                            color="#79777d"
+                            size={30}
+                            style={styles.iconButton}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate("AccountDetailScreen");
+                        }}
+                    >
+                        <Icon
+                            name="settings"
+                            color="#79777d"
+                            size={30}
+                            style={styles.iconButton}
+                        />
+                    </TouchableOpacity>
+                </View>
+            ) : null}
             <View style={styles.avitar}>
                 <Image
                     style={{
@@ -220,13 +249,25 @@ export function AccountScreen(props) {
                         console.log("press");
                     }}
                 />
+                {route.params == null ? (
+                    <Icon
+                        name="camera"
+                        color="#79777d"
+                        size={25}
+                        style={styles.cameraButton}
+                        onPress={() => {
+                            onChooseImagePress();
+                        }}
+                    />
+                ) : null}
                 <Icon
-                    name="camera"
+                    name="qr-code"
                     color="#79777d"
                     size={25}
-                    style={styles.cameraButton}
+                    style={styles.qrCodeButton}
                     onPress={() => {
-                        onChooseImagePress();
+                        console.log(userAddress);
+                        setModalVisible(true);
                     }}
                 />
             </View>
@@ -236,42 +277,66 @@ export function AccountScreen(props) {
                 <Text style={styles.label}>{balance} Eth</Text>
                 <Text style={styles.label}>{score} points</Text>
             </View>
-
-            {/* <Text style={styles.label}>{userEmail}</Text> */}
-
-            {/* <View
-                style={{
-                    zIndex: 1,
-                    paddingBottom: screenSize.height * 0.01,
-                }}
-            >
-                <CustomButton
-                    onPress={() => {
-                        onChooseImagePress();
-                    }}
-                    text="Change Profile Picture"
-                    color="#1e1c21"
-                    width={screenSize.width - 80}
-                    height={screenSize.height / 20}
-                />
-            </View> */}
-
+            {route.params == null ? (
+                <Text></Text>
+            ) : (
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={addOrRemoveContact}
+                    >
+                        <Text style={styles.label}>{addContactButtonText}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={sendPayment}
+                    >
+                        <Text style={styles.label}>Send Payment</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
             <View style={{ zIndex: 2 }} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    qrCode: {},
+    modalView: {
+        margin: 5,
+        backgroundColor: Colors.lightBackground,
+        borderRadius: 5,
+        padding: 15,
+        alignItems: "center",
+        width: 300,
+        height: 350,
+        justifyContent: "center",
+    },
+    centeredView: {
+        backgroundColor: "rgba(0,0,0,0.7)",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+    },
+    actionButton: {
+        width: "50%",
+        color: "white",
+    },
     avitar: {
         flexDirection: "row",
         alignItems: "baseline",
         width: 200,
         paddingTop: 10,
-        // backgroundColor: "red",
     },
     cameraButton: {
         position: "absolute",
         right: 0,
+        bottom: 0,
+    },
+    qrCodeButton: {
+        position: "absolute",
+        left: 0,
         bottom: 0,
     },
     horizontalContainer: {
@@ -282,10 +347,26 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.lightForeground,
         borderBottomWidth: 1,
     },
+    modalButton: {
+        marginTop: 10,
+        backgroundColor: Colors.darkBackground,
+        borderRadius: 5,
+        width: "60%",
+    },
+    button: {
+        backgroundColor: Colors.darkBackground,
+        borderRadius: 5,
+        width: "45%",
+    },
+    buttonContainer: {
+        justifyContent: "space-evenly",
+        flexDirection: "row",
+        width: "100%",
+        padding: 10,
+    },
     iconButton: {
         padding: 5,
     },
-
     name: {
         paddingTop: 5,
         fontSize: 30,
@@ -296,5 +377,6 @@ const styles = StyleSheet.create({
         padding: 5,
         fontSize: 20,
         color: Colors.lightForeground,
+        textAlign: "center",
     },
 });

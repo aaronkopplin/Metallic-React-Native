@@ -241,15 +241,15 @@ export default function App() {
 
                         <Stack.Screen
                             // account screen needs to be in stack and tab for when recovering from mnemonic
-                            name="Account"
+                            name="ViewOtherAccount"
                             options={{
-                                tabBarIcon: () => (
-                                    <Icon
-                                        name="person"
-                                        color="#2e2b30"
-                                        size={30}
-                                    />
-                                ),
+                                // tabBarIcon: () => (
+                                //     <Icon
+                                //         name="person"
+                                //         color="#2e2b30"
+                                //         size={30}
+                                //     />
+                                // ),
                                 title: "",
                                 headerStyle: {
                                     backgroundColor:

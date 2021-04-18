@@ -74,6 +74,7 @@ export function UserSearchScreen(props) {
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {
         var imageSize = Platform.OS === "web" ? 50 : 35;
+        console.log("search screen username: " + item.userName);
         return (
             <View style={[masterStyles.entityContainer]}>
                 <TouchableOpacity
@@ -83,13 +84,15 @@ export function UserSearchScreen(props) {
                         if (thisUser.uid == item.id) {
                             navigation.navigate("Account");
                         } else {
-                            navigation.navigate("UserAccountScreen", {
+                            navigation.navigate("ViewOtherAccount", {
                                 email: item.email,
                                 fullName: item.fullName,
                                 userName: item.userName,
                                 address: item.address,
                                 score: item.score,
                             });
+
+                            console.log("sending username: " + item.userName);
                         }
                     }}
                 >
