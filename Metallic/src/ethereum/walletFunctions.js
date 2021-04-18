@@ -70,7 +70,6 @@ export async function getData(key) {
         .doc(user.uid)
         .get();
     var userName = doc.data().userName;
-    console.log("getting data for " + userName);
     const storedPrivate = await AsyncStorage.getItem(userName + key);
     return storedPrivate;
 }
@@ -79,7 +78,6 @@ export async function loadWalletFromPrivate() {
     try {
         const storedPrivate = await getData("privateKey");
         const loadedWallet = new ethers.Wallet(storedPrivate);
-        console.log("address: " + loadedWallet.address);
         return loadedWallet;
     } catch (exception) {
         console.log("error loading wallet from private: " + exception);

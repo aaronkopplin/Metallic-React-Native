@@ -36,7 +36,7 @@ export async function firebaseAddContact(data) {
         .doc(firebase.auth().currentUser.uid);
     // const userName = await (await userRef.get()).data().userName;
 
-    userRef.collection("Contacts").doc(data.userName).set(data);
+    await userRef.collection("Contacts").doc(data.userName).set(data);
 }
 
 export async function firebaseLogin(email, password) {
@@ -157,9 +157,11 @@ export async function firebaseCreateAccountAndLogIn(
                     fullName: name,
                     userName: userName,
                     address: address,
+                    score: 0,
                 });
 
                 await usersRef.doc(uid).collection("Contacts").doc(name).set({
+                    address: address,
                     userName: userName,
                     fullName: name,
                     email: email,

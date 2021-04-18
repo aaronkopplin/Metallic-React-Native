@@ -21,6 +21,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import * as FirebaseFunctions from "../../firebase/firebaseFunctions";
 import { Colors } from "../../styling/colors";
 import QRCode from "react-native-qrcode-svg";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function AccountScreen({ navigation, route }) {
     const [userFullName, setFullName] = useState("");
@@ -36,6 +37,14 @@ export function AccountScreen({ navigation, route }) {
     const [addContactButtonText, setAddContactButtonText] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [qrModalLabelText, setQrModalLabelText] = useState("");
+    const [refresh, setRefresh] = useState("");
+    const [imageLoading, setImageLoading] = useState(false);
+    const [localImageUri, setLocalImageUri] = useState("");
+
+    useFocusEffect(() => {
+        console.log("refreshing account screen");
+        setRefresh("");
+    });
 
     useEffect(() => {
         if (route.params == null) {
@@ -96,7 +105,7 @@ export function AccountScreen({ navigation, route }) {
                     .ref("/" + userName + "ProfileImage");
                 await ref.getDownloadURL().then(onResolve, onReject);
                 async function onReject(error) {
-                    //console.log(error.code)
+                    console.log(error);
                 }
                 async function onResolve(foundUrl) {
                     setImageUrl(foundUrl);
@@ -121,16 +130,24 @@ export function AccountScreen({ navigation, route }) {
         }
         if (Platform.OS != "ios" || imagePermission == "granted") {
             let result = await ImagePicker.launchImageLibraryAsync();
-
+            setLocalImageUri(result.uri);
+            setImageLoading(true);
             if (!result.cancelled) {
                 let imageName = userName + "ProfileImage";
 
                 const response = await fetch(result.uri);
                 const blob = await response.blob();
                 var ref = firebase.storage().ref().child(imageName);
-                ref.put(blob);
-
-                setImageUrl(ref.getDownloadURL());
+                ref.put(blob).then((snapshot) => {
+                    console.log("added profile image");
+                    async function downloadAndSetUrl() {
+                        var url = await ref.getDownloadURL();
+                        setImageUrl(url);
+                        setImageLoading(false);
+                        console.log("setting profile image");
+                    }
+                    downloadAndSetUrl();
+                });
             }
         }
     };
@@ -247,7 +264,7 @@ export function AccountScreen({ navigation, route }) {
                         borderRadius: 1000,
                     }}
                     defaultSource={require("../../../assets/Default_Img.png")}
-                    source={{ uri: imageUrl }}
+                    source={{ uri: imageLoading ? localImageUri : imageUrl }}
                     onPress={() => {
                         console.log("press");
                     }}
