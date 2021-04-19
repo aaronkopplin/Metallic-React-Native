@@ -73,37 +73,27 @@ export function UserSearchScreen(props) {
 
     const navigation = useNavigation();
     const renderUser = ({ item, index }) => {
-        var imageSize = Platform.OS === "web" ? 50 : 35;
-        console.log("search screen username: " + item.userName);
         return (
             <View style={[masterStyles.entityContainer]}>
-                <TouchableOpacity
-                    onPress={() => {
-                        setSearchText("");
+                <TouchableOpacity onPress={() => {
+                    setSearchText("");
 
-                        if (thisUser.uid == item.id) {
-                            navigation.navigate("Account");
-                        } else {
-                            navigation.navigate("ViewOtherAccount", {
-                                email: item.email,
-                                fullName: item.fullName,
-                                userName: item.userName,
-                                address: item.address,
-                                score: item.score,
-                            });
-
-                            console.log("sending username: " + item.userName);
-                        }
-                    }}
-                >
-                    <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                        <Image
-                            style={[
-                                masterStyles.recentChatsLogo,
-                                { borderRadius: 50, resizeMode: "cover" },
-                            ]}
+                    if (thisUser.uid == item.id) {
+                        navigation.navigate('Account')
+                    }
+                    else {
+                        navigation.navigate('ViewOtherAccount', {
+                            email: item.email,
+                            fullName: item.fullName,
+                            userName: item.userName,
+                            address: item.address,
+                            score: item.score
+                        });
+                    }
+                }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Image 
+                            style={masterStyles.userSearchLogo}
                             defaultSource={require("../../../assets/Default_Img.png")}
                             source={{
                                 uri:
@@ -145,20 +135,10 @@ export function UserSearchScreen(props) {
     };
 
     return (
-        <SafeAreaView
-            style={{
-                backgroundColor: "#1e1c21",
-                alignContent: "center",
-                justifyContent: "space-evenly",
-                alignItems: "center",
-            }}
-        >
-            <View>
+        <SafeAreaView style={masterStyles.mainView}>
+            <View style={masterStyles.userSearchPrompt}>
                 <TextInput
-                    style={[
-                        masterStyles.input,
-                        { width: screenSize.width - 20, marginBottom: 10 },
-                    ]}
+                    style={[masterStyles.input, {width: Platform.OS == "web" ? screenSize.width *.6 : screenSize.width * .99 , marginBottom: 10}]}
                     placeholder="Enter name/username to search for a user"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setSearchText(text)}
@@ -168,15 +148,9 @@ export function UserSearchScreen(props) {
                     clearTextOnFocus={true}
                     value={searchText}
                 />
-                <View
-                    style={{
-                        backgroundColor: "#2e2b30",
-                        borderRadius: 4,
-                        marginBottom: 10,
-                        paddingHorizontal: 10,
-                        paddingVertical: 10,
-                    }}
-                >
+            <View style={masterStyles.userSearchListContainer}>
+            {/* <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
+                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}> */}
                     <FlatList
                         data={users}
                         renderItem={renderUser}

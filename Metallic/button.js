@@ -15,16 +15,15 @@ const CustomButton = props => {
 
 const styles = StyleSheet.create({
     button: {
-        borderRadius: 3,
+        borderRadius: 10,
         alignItems: 'center',
         alignContent: 'center',
         justifyContent: 'center'
         
     },
     buttonText: {
-        color: '#79777d',
+        color: '#ffffff',
         fontSize: 20,
-        
     }
 });
 

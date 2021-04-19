@@ -22,6 +22,7 @@ import * as FirebaseFunctions from "../../firebase/firebaseFunctions";
 import { Colors } from "../../styling/colors";
 import QRCode from "react-native-qrcode-svg";
 import { useFocusEffect } from "@react-navigation/native";
+import { masterStyles } from "../../../../Metallic/masterStyles";
 
 export function AccountScreen({ navigation, route }) {
     const [userFullName, setFullName] = useState("");
@@ -183,7 +184,6 @@ export function AccountScreen({ navigation, route }) {
             }
         }
     }
-
     function sendPayment() {
         navigation.navigate("Payments", {
             email: userEmail,
@@ -193,25 +193,21 @@ export function AccountScreen({ navigation, route }) {
             score: score,
         });
     }
-
     return (
         <View
-            style={{
-                flex: 4,
-                backgroundColor: "#2e2b30",
-                alignItems: "center",
-            }}
+            style={masterStyles.mainView}
         >
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={styles.centeredView}>
+            <View style={[masterStyles.accountContainer]}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                <View style={[styles.centeredView]}>
                     <View style={styles.modalView}>
                         <Text style={styles.label}>{qrModalLabelText}</Text>
                         <QRCode
@@ -315,7 +311,7 @@ export function AccountScreen({ navigation, route }) {
                     </TouchableOpacity>
                 </View>
             )}
-            <View style={{ zIndex: 2 }} />
+            </View>
         </View>
     );
 }
