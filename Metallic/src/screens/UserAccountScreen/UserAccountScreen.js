@@ -131,6 +131,7 @@ export function UserAccountScreen({ route }) {
                                   {
                                       text: "Confirm",
                                       onPress: () => {
+                                        setForF("Add Contact");
                                           console.log("OK preseed");
                                           firebase
                                               .firestore()
@@ -152,171 +153,78 @@ export function UserAccountScreen({ route }) {
     };
 
     return (
-        <View style={masterStyles.mainBackground}>
-            <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
-            <View
-                style={{
-                    flex: 4,
-                    backgroundColor: "#2e2b30",
-                    width: screenSize.width - 40,
-                    height:
-                        Platform.OS === "web"
-                            ? screenSize.height / 2.5
-                            : screenSize.width - 30,
-                    paddingTop: screenSize.height / 50,
-                    alignItems: "center",
-                    borderRadius: 4,
-                }}
-            >
-                {/* <Text style={[masterStyles.title, {paddingBottom: screenSize.height * .005, textAlign: 'center'}]}>{} Account</Text> */}
-
+        <View style={masterStyles.mainView}>
+            <View style={masterStyles.accountContainer}>
                 <Image
-                    style={[
-                        masterStyles.logo,
-                        { borderRadius: 50, resizeMode: "cover" },
-                    ]}
+                    style={masterStyles.logo}
                     defaultSource={require("../../../assets/Default_Img.png")}
                     source={{ uri: imageUrl }}
                 />
                 <Text
-                    style={[
-                        masterStyles.headings,
-                        {
-                            paddingBottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
+                    style={masterStyles.accountUserName}
                 >
                     {userName}
                 </Text>
-
-                <Text>
-                    <Text
-                        style={[
-                            masterStyles.headingsSmall,
-                            {
-                                paddingBottom: screenSize.height * 0.005,
-                                textAlign: "center",
-                            },
-                        ]}
-                    >
+                
+                <Text> 
+                    <Text style={masterStyles.accountHeadings}>
                         Name:{" "}
                     </Text>
-                    <Text
-                        style={[
-                            masterStyles.headingsSmallNotBold,
-                            {
-                                paddingBottom: screenSize.height * 0.005,
-                                textAlign: "center",
-                            },
-                        ]}
-                    >
+                    <Text style={masterStyles.accountDetails}>
                         {fullName}
                     </Text>
                 </Text>
 
                 <Text>
-                    <Text
-                        style={[
-                            masterStyles.headingsSmall,
-                            {
-                                paddingBottom: screenSize.height * 0.005,
-                                textAlign: "center",
-                            },
-                        ]}
-                    >
+                    <Text style={masterStyles.accountHeadings}>
                         Email:{" "}
                     </Text>
-                    <Text
-                        style={[
-                            masterStyles.headingsSmallNotBold,
-                            {
-                                paddingBottom: screenSize.height * 0.005,
-                                textAlign: "center",
-                            },
-                        ]}
-                    >
+                    <Text style={masterStyles.accountDetails}>
                         {email}
                     </Text>
                 </Text>
 
                 <Text>
-                    <Text
-                        style={[
-                            masterStyles.headingsSmall,
-                            {
-                                paddingBottom: screenSize.height * 0.005,
-                                textAlign: "center",
-                            },
-                        ]}
-                    >
+                    <Text style={masterStyles.accountHeadings}>
                         Score:{" "}
                     </Text>
-                    <Text
-                        style={[
-                            masterStyles.headingsSmallNotBold,
-                            {
-                                paddingBottom: screenSize.height * 0.005,
-                                textAlign: "center",
-                            },
-                        ]}
-                    >
+                    <Text style={masterStyles.accountDetails}>
                         {score}
                     </Text>
                 </Text>
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingBottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
+
+                <Text style={masterStyles.accountHeadings}>
                     Balance: {balance} Eth
                 </Text>
 
-                <View
-                    style={{
-                        zIndex: 1,
-                        paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
-                >
-                    <CustomButton
-                        onPress={getContacts}
-                        text={forf}
-                        color="#1e1c21"
-                        width={screenSize.width - 80}
-                        height={screenSize.height / 20}
-                    />
-                </View>
-                <View
-                    style={{
-                        zIndex: 1,
-                        // paddingTop: screenSize.height / 20,
-                        paddingBottom: screenSize.height / 70,
-                    }}
-                >
-                    <CustomButton
-                        onPress={() => {
-                            navigation.navigate("Payments", {
-                                email: email,
-                                fullName: fullName,
-                                userName: userName,
-                                address: address,
-                                score: score,
-                            });
-                        }}
-                        text="Send/Request Payment"
-                        color="#1e1c21"
-                        width={screenSize.width - 80}
-                        height={screenSize.height / 20}
-                    />
-                </View>
-            </View>
+                <View style={{height: screenSize.height / 20}}/>
 
-            <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
+                <CustomButton
+                    onPress={getContacts}
+                    text={forf}
+                    color="#117ed1"
+                    width={Platform.OS == "web" ? screenSize.width *.55 : screenSize.width * .95}
+                    height={screenSize.height / 20}
+                />
+
+                <View style={{height: screenSize.height / 20}}/>
+
+                <CustomButton
+                    onPress={() => {
+                        navigation.navigate("Payments", {
+                            email: email,
+                            fullName: fullName,
+                            userName: userName,
+                            address: address,
+                            score: score
+                        });
+                    }}
+                    text="Send/Request Payment"
+                    color="#6111d1"
+                    width={Platform.OS == "web" ? screenSize.width *.55 : screenSize.width * .95}
+                    height={screenSize.height / 20}
+                />
+            </View>
         </View>
     );
 }

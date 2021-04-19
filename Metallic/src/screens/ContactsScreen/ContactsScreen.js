@@ -103,44 +103,31 @@ export function ContactsScreen({ navigation }) {
 
     // Set up navigation and touchable components for each contact.
     const Item = ({ title }) => (
-        <View
-            style={{
-                flexDirection: "row",
-            }}
-        >
+        
+        <View style={{ flexDirection: 'row'}}>
             <Image
-                style={[
-                    masterStyles.contactsLogo,
-                    { borderRadius: 45, resizeMode: "cover" },
-                ]}
-                defaultSource={require("../../../assets/Default_Img.png")}
-                source={{
-                    uri:
-                        "https://storage.googleapis.com/metallic-975be.appspot.com/" +
-                        title +
-                        "ProfileImage",
-                }}
+            style={[masterStyles.contactsLogo, {borderRadius: 45, resizeMode: "cover"}]}
+            defaultSource={require("../../../assets/Default_Img.png")}
+            source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + title + "ProfileImage")}}
             />
-
-            <View style={masterStyles.contactBar}>
-                <TouchableOpacity
-                    onPress={() => {
-                        contactsList.forEach((c) => {
-                            if (you == title) {
-                                navigation.navigate("Account");
-                            } else if (c.userName == title) {
-                                navigation.navigate("ViewOtherAccount", {
-                                    email: c.email,
-                                    fullName: c.fullName,
-                                    userName: c.userName,
-                                    address: c.address,
-                                    score: c.score,
-                                });
-                            }
-                        });
-                    }}
-                >
-                    <Text style={masterStyles.contactNames}>{title}</Text>
+            <View style={masterStyles.contactsNameContainer}>
+                <TouchableOpacity onPress={() => {
+                    contactsList.forEach((c) => {
+                        if (you == title){
+                            navigation.navigate('Account')
+                        }
+                        else if (c.userName == title){
+                            navigation.navigate('ViewOtherAccount',{
+                                email: c.email,
+                                fullName: c.fullName,
+                                userName: c.userName,
+                                address: c.address,
+                                score: c.score
+                            })
+                        }
+                    })
+                }}>
+                    <Text style={masterStyles.contactsNamesText}>{title}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -175,22 +162,13 @@ export function ContactsScreen({ navigation }) {
     );
 
     return (
-        <SafeAreaView
-            style={{
-                flex: 1,
-                backgroundColor: "#1e1c21",
-                alignContent: "center",
-                alignItems: "center",
-            }}
-        >
-            <View
-                style={{
-                    backgroundColor: "#1e1c21",
-                    height: Platform.OS == "web" ? screenSize.height * 0.01 : 0,
-                    width: screenSize.width,
-                }}
-            />
-            <View style={{ flexDirection: "row" }}>
+        <SafeAreaView style={masterStyles.mainView}>
+            <View style={{    
+                backgroundColor: "#1e1c21", 
+                height: Platform.OS == "web" ? screenSize.height * 0.01 : 0, 
+                width: screenSize.width
+                }}/>
+            <View style={{flexDirection: "row"}}>
                 <Image
                     style={[
                         masterStyles.contactsUserLogo,
@@ -204,34 +182,20 @@ export function ContactsScreen({ navigation }) {
                             "ProfileImage",
                     }}
                 />
-                <View
-                    style={{
-                        backgroundColor: "#ffffff",
-                        borderRadius: 5,
-                        maxWidth: screenSize.width * 0.75,
-                        maxHeight: screenSize.height * 0.07,
-                        overflow: "hidden",
-                        textAlign: "center",
-                        bottom:
-                            Platform.OS == "web" ? 0 : screenSize.height * 0.01,
-                    }}
-                >
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate("Account");
-                        }}
-                    >
+                <View style={masterStyles.constactsUserContainer}>
+                    <TouchableOpacity onPress={() => {
+                            navigation.navigate('Account')
+                        }}>
                         <Text
                             style={[
-                                masterStyles.contactsTitle,
+                                masterStyles.contactsUserTopName,
                                 {
                                     color: "#000000",
                                     overflow: "hidden",
                                 },
                             ]}
                         >
-                            {" "}
-                            {you}{" "}
+                            {" " + you + " "}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -244,29 +208,14 @@ export function ContactsScreen({ navigation }) {
                 }}
             />
 
-            <View
-                style={{
-                    backgroundColor: "#2e2b30",
-                    paddingBottom: 10,
-                    borderRadius: 4,
-                    height:
-                        Platform.OS == "web"
-                            ? screenSize.height * 0.75
-                            : screenSize.height,
-                    maxHeight:
-                        Platform.OS == "web"
-                            ? screenSize.height
-                            : screenSize.height * 0.65,
-                    width: screenSize.width - 20,
-                }}
-            >
+            <View style={masterStyles.contactsContainer}>
                 <SectionList
                     sections={contactData}
                     keyExtractor={(item, index) => item + index}
                     renderItem={({ item }) => <Item title={item} />}
                     renderSectionHeader={({ section: { title } }) => (
-                        <Text style={masterStyles.contactTitle}>{title}</Text>
-                    )}
+                    <Text style={masterStyles.contactsTitleText}>{title}</Text>
+                )}
                 />
             </View>
         </SafeAreaView>

@@ -32,7 +32,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     return (
-        <View style={masterStyles.mainBackground} justifyContent="flex-start">
+        <View style={masterStyles.mainView}>
             <Image
                 style={masterStyles.logo}
                 source={require("../../../assets/metalliclogo.png")}
@@ -40,36 +40,16 @@ export default function LoginScreen({ navigation }) {
 
             <KeyboardAvoidingView
                 behavior="padding"
-                enabled
-                style={{
-                    // flex: 3,
-                    backgroundColor: "#2e2b30",
-                    width: screenSize.width - 20,
-                    height:
-                        Platform.OS === "web"
-                            ? screenSize.height / 2.5
-                            : screenSize.width - 30,
-                    paddingTop: screenSize.height / 50,
-                    paddingLeft: 20,
-                    borderRadius: 4,
-                }}
+                style={masterStyles.loginKeyboardAvoidView}
             >
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingTop: screenSize.height * 0.01,
-                            paddingBottom: screenSize.height * 0.005,
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.mainHeadings}>
                     E-Mail
                 </Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
                     ]}
                     placeholder="Enter your e-mail"
                     placeholderTextColor="#aaaaaa"
@@ -82,22 +62,14 @@ export default function LoginScreen({ navigation }) {
                     keyboardType={"email-address"}
                 />
 
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingTop: screenSize.height * 0.01,
-                            paddingBottom: screenSize.height * 0.005,
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.mainHeadings}>
                     Password
                 </Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        { width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
                     ]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
@@ -109,27 +81,24 @@ export default function LoginScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
-                <View style={{ marginTop: 30, marginBottom: 20 }}>
-                    <CustomButton
-                        onPress={() => {
-                            login();
-                        }}
-                        text="Login"
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
-                </View>
-                <View>
-                    <CustomButton
-                        onPress={onFooterLinkPress}
-                        text={"Don't have an account?"}
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
-                </View>
-                <Text></Text>
+                <View style={{height: screenSize.height * .05}}/>
+
+                <CustomButton
+                    onPress={login}
+                    text="Login"
+                    color="#117ed1"
+                    width={Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85}
+                    height={screenSize.height / 20}
+                />
+                <View style={{height: screenSize.height * .02}}/>
+
+                <CustomButton
+                    onPress={onFooterLinkPress}
+                    text={"Don't have an account?"}
+                    color="#6111d1"
+                    width={Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85}
+                    height={screenSize.height / 20}
+                />
             </KeyboardAvoidingView>
         </View>
     );

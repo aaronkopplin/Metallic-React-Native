@@ -100,11 +100,12 @@ export default function RegistrationScreen({ navigation }) {
     }, [loading]);
 
     return loading ? (
-        <View style={masterStyles.mainBackground} justifyContent="flex-start">
+        <View style={masterStyles.mainView}>
             <Image
                 style={[masterStyles.logo]}
                 source={require("../../../assets/metalliclogo.png")}
             />
+
             <View
                 style={{
                     flex: 0.5,
@@ -140,36 +141,22 @@ export default function RegistrationScreen({ navigation }) {
             </View>
         </View>
     ) : (
-        <View style={masterStyles.mainBackground} justifyContent="flex-start">
+        <View style={masterStyles.mainView}>
             <Image
                 style={[masterStyles.logo]}
                 source={require("../../../assets/metalliclogo.png")}
             />
 
-            <KeyboardAwareScrollView
-                style={{
-                    flex: 1,
-                    backgroundColor: "#2e2b30",
-                    width: screenSize.width - 20,
-                    paddingLeft: 20,
-                    borderRadius: 4,
-                }}
-                justifyContent="flex-start"
-            >
+            <KeyboardAwareScrollView style={masterStyles.registrationKeyboardAwareView}>
                 <Text></Text>
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        { paddingBottom: screenSize.height * 0.005 },
-                    ]}
-                >
+                <Text style={masterStyles.mainHeadings}>
                     Name
                 </Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
                     ]}
                     placeholder="Full Name"
                     placeholderTextColor="#aaaaaa"
@@ -181,22 +168,14 @@ export default function RegistrationScreen({ navigation }) {
                     autoCorrect={false}
                 />
 
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingTop: screenSize.height * 0.01,
-                            paddingBottom: screenSize.height * 0.005,
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.mainHeadings}>
                     E-Mail
                 </Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
                     ]}
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
@@ -209,22 +188,14 @@ export default function RegistrationScreen({ navigation }) {
                     autoCorrect={false}
                 />
 
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingTop: screenSize.height * 0.01,
-                            paddingBottom: screenSize.height * 0.005,
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.mainHeadings} >
                     Username
                 </Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
                     ]}
                     placeholderTextColor="#aaaaaa"
                     placeholder="Username"
@@ -236,22 +207,14 @@ export default function RegistrationScreen({ navigation }) {
                     autoCorrect={false}
                 />
 
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingTop: screenSize.height * 0.01,
-                            paddingBottom: screenSize.height * 0.005,
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.mainHeadings}>
                     Password
                 </Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
                     ]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
@@ -264,22 +227,14 @@ export default function RegistrationScreen({ navigation }) {
                     autoCorrect={false}
                 />
 
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingTop: screenSize.height * 0.01,
-                            paddingBottom: screenSize.height * 0.005,
-                        },
-                    ]}
-                >
+                <Text style={masterStyles.mainHeadings}>
                     Confirm Password
                 </Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
                     ]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
@@ -291,21 +246,17 @@ export default function RegistrationScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
+                
+                <View style={{height: screenSize.height * .05}}/>
 
-                <View style={{ marginTop: 30 }}>
-                    <CustomButton
-                        onPress={() => {
-                            setLoadingMessage(
-                                "Your account is being created..."
-                            );
-                            setLoading(true);
-                        }}
-                        text="Create Account"
-                        color="#1e1c21"
-                        width={screenSize.width - 60}
-                        height={screenSize.height / 20}
-                    />
-                </View>
+                <CustomButton
+                    onPress={onRegisterPress}
+                    text="Create Account"
+                    color="#117ed1"
+                    width={Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85}
+                    height={screenSize.height / 20}
+                />
+
                 <View style={masterStyles.footerView}>
                     <Text style={masterStyles.footerText}>
                         Already have an account?{" "}

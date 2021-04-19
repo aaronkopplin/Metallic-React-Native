@@ -44,18 +44,9 @@ export function RecentChatsScreen({ navigation }) {
                     const entity = doc.id;
                     const log = doc.data().chatLog;
                     newEntities.push(entity);
-                    // if ( !(log[0] == undefined) && Platform.OS != "web" && (log[0].length > 35)) {
-                    //         newLogs.push(log[0].substring(0,35) + "...")
-                    // }
-                    // else if (!(log[0] == undefined) && Platform.OS == "web" && (log[0].length > 100)) {
-                    //         newLogs.push(log[0].substring(0,100) + "...");
-                    // }
-                    // else {
                     newLogs.push(
                         String(log[0]).substring(9, String(log[0]).length - 1)
                     );
-
-                    // }
                 });
                 setChats(newEntities);
                 setContentLogs(newLogs);
@@ -108,13 +99,13 @@ export function RecentChatsScreen({ navigation }) {
             >
                 <View style={[masterStyles.entityContainer, {flexDirection: "row", alignItems: 'center'}]}>
                     <Image
-                        style={[masterStyles.recentChatsLogo, {borderRadius: 50, resizeMode: "cover"}]}
+                        style={masterStyles.recentChatsLogo}
                         defaultSource={require("../../../assets/Default_Img.png")}
                         source={{uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item + "ProfileImage")}}
                     />
 
                     <View>
-                        <Text style={[masterStyles.entityText]}>{item}</Text>
+                        <Text style={[masterStyles.recentChatsUserNames]}>{item}</Text>
                         <Text
                             style={[
                                 masterStyles.recentChat,
@@ -136,24 +127,8 @@ export function RecentChatsScreen({ navigation }) {
     };
 
     return (
-        <View style={[masterStyles.mainBackground]}>
-            {/* <Text style={[masterStyles.entityText, {alignSelf: "flex-start", paddingTop: 10, paddingLeft: screenSize.width * .01}]}> Recent Chats </Text> */}
-            <View
-                style={{
-                    flex: 3,
-                    backgroundColor: "#2e2b30",
-                    width: screenSize.width - 20,
-                    // height:
-                    //     Platform.OS === "web"
-                    //         ? screenSize.height / 2.5
-                    //         : screenSize.width - 30,
-                    // paddingTop: screenSize.height / 50,
-                    paddingHorizontal: 10,
-                    borderRadius: 4,
-                    marginBottom: 20,
-                    top: 5,
-                }}
-            >
+        <View style={masterStyles.mainView}>
+            <View style={masterStyles.recentChatsContainer} >
                 <FlatList
                     data={chats}
                     renderItem={renderChat}
