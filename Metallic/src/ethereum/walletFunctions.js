@@ -10,6 +10,14 @@ import "@ethersproject/shims";
 // Import the ethers library
 import { ethers } from "ethers";
 
+export async function createRandomWalletAndWriteToStorage(userName) {
+    var wallet = ethers.Wallet.createRandom();
+    await storeData(userName, "mnemonic", wallet.mnemonic.phrase);
+    await storeData(userName, "privateKey", wallet.privateKey);
+
+    return wallet;
+}
+
 export async function clearKeysNotForThisUser() {
     var userName = await getUsername();
 
@@ -45,15 +53,8 @@ async function getUsername() {
     return userName;
 }
 
-export async function storeData(key, value) {
+export async function storeData(userName, key, value) {
     try {
-        var user = firebase.auth().currentUser;
-        var doc = await firebase
-            .firestore()
-            .collection("users")
-            .doc(user.uid)
-            .get();
-        var userName = doc.data().userName;
         console.log("storing data for " + userName);
         await AsyncStorage.setItem(userName + key, value);
     } catch (error) {
@@ -69,7 +70,6 @@ export async function getData(key) {
         .doc(user.uid)
         .get();
     var userName = doc.data().userName;
-    console.log("getting data for " + userName);
     const storedPrivate = await AsyncStorage.getItem(userName + key);
     return storedPrivate;
 }
@@ -78,10 +78,9 @@ export async function loadWalletFromPrivate() {
     try {
         const storedPrivate = await getData("privateKey");
         const loadedWallet = new ethers.Wallet(storedPrivate);
-        console.log("address: " + loadedWallet.address);
         return loadedWallet;
     } catch (exception) {
-        console.log("error loading wallet from private");
+        console.log("error loading wallet from private: " + exception);
     }
 }
 
@@ -133,7 +132,12 @@ export async function sendPayment(wallet, amount, recipientAddress) {
     };
 
     wallet = wallet.connect(provider);
-    wallet.sendTransaction(transaction).then((response) => {
+    try {
+        var response = await wallet.sendTransaction(transaction);
         console.log(response);
-    });
+        return "";
+    } catch (error) {
+        console.log(error);
+        return "";
+    }
 }

@@ -1,6 +1,5 @@
 import "react-native-gesture-handler";
 import React, { Text, useEffect, useState } from "react";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen, RegistrationScreen } from "./src/screens";
@@ -41,16 +40,13 @@ const Tab = createBottomTabNavigator();
 
 function Tabs() {
     const [account, setAccount] = useState(true);
-    
+
     useEffect(() => {
         async function grabAccount() {
-            console.log("tabs getting wallet");
             var existingAccount = await WalletFunctions.loadWalletFromPrivate();
             if (existingAccount != null) {
-                console.log("Success")
                 setAccount(true);
             } else {
-                console.log("bitch")
                 setAccount(false);
             }
         }
@@ -192,10 +188,6 @@ function Tabs() {
 
 export default function App() {
     const [user, setUser] = useState(null);
-    // const [ethAccount, setEthAccount] = useState(null);
-    // const [balance, setBalance] = useState("Loading");
-    // const [address, setAddress] = useState("Loading");
-    // const [mnemonic, setMnemonic] = useState("");
 
     useEffect(() => {
         const usersRef = firebase.firestore().collection("users");
@@ -247,20 +239,25 @@ export default function App() {
                             {(props) => <PaymentsScreen {...props} />}
                         </Stack.Screen>
 
-                        
                         <Stack.Screen
-                        // account screen needs to be in stack and tab for when recovering from mnemonic
-                            name="Account"
+                            // account screen needs to be in stack and tab for when recovering from mnemonic
+                            name="ViewOtherAccount"
                             options={{
-                                tabBarIcon: () => (
-                                    <Icon name="person" color="#2e2b30" size={30} />
-                                ),
+                                // tabBarIcon: () => (
+                                //     <Icon
+                                //         name="person"
+                                //         color="#2e2b30"
+                                //         size={30}
+                                //     />
+                                // ),
                                 title: "",
                                 headerStyle: {
                                     backgroundColor:
-                                        masterStyles.mainBackground.backgroundColor,
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
                                     borderColor:
-                                        masterStyles.mainBackground.backgroundColor,
+                                        masterStyles.mainBackground
+                                            .backgroundColor,
                                     elevation: 0,
                                     shadowOpacity: 0,
                                     borderBottomWidth: 0,
@@ -277,6 +274,7 @@ export default function App() {
                         <Stack.Screen
                             name="AccountDetailScreen"
                             options={{
+                                title: "Account Details",
                                 headerStyle: {
                                     backgroundColor:
                                         masterStyles.mainBackground

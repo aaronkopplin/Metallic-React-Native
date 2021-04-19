@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import {
-    Image,
     Text,
     View,
     Dimensions,
     Platform,
     Alert,
-    Button,
     TextInput,
 } from "react-native";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firebase } from "../../firebase/config";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 
@@ -80,6 +77,10 @@ export function AccountRecoveryScreen() {
     const navigation = useNavigation();
     const [mnemonic, setMnemonic] = useState("");
 
+    alert(
+        "The wallet for the account you are accessing was not found on this device. Plase recover your account with the mnemonic phrase from this account."
+    );
+
     return (
         <View style={masterStyles.mainBackground}>
             <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
@@ -109,10 +110,11 @@ export function AccountRecoveryScreen() {
                     Enter the mnemonic phrase for the account that you wish to
                     recover below.
                 </Text>
+                <Text></Text>
                 <TextInput
                     style={[
                         masterStyles.input,
-                        { width: screenSize.width - 60 },
+                        { width: screenSize.width - 80 },
                     ]}
                     placeholder="Mnemonic"
                     placeholderTextColor="#aaaaaa"
@@ -122,6 +124,7 @@ export function AccountRecoveryScreen() {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
+                <Text></Text>
                 <CustomButton
                     onPress={() => {
                         try {
@@ -131,6 +134,22 @@ export function AccountRecoveryScreen() {
                         }
                     }}
                     text="Recover Account"
+                    color="#1e1c21"
+                    width={screenSize.width - 80}
+                    height={screenSize.height / 20}
+                ></CustomButton>
+                <Text></Text>
+                <CustomButton
+                    onPress={() => {
+                        firebase
+                            .auth()
+                            .signOut()
+                            .then(() => {})
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    }}
+                    text="Log Out"
                     color="#1e1c21"
                     width={screenSize.width - 80}
                     height={screenSize.height / 20}

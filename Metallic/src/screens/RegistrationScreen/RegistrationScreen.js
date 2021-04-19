@@ -6,15 +6,13 @@ import {
     View,
     Dimensions,
     Platform,
-    KeyboardAvoidingView,
-    Alert,
 } from "react-native";
-import { firebase } from "../../firebase/config";
-import { login } from "../LoginScreen/LoginScreen";
 import CustomButton from "../../../button";
 import { masterStyles } from "../../../../Metallic/masterStyles";
-import "firebase/storage"
-import {defaultImage } from "../../../assets/Default_Img.png"
+import "firebase/storage";
+import { defaultImage } from "../../../assets/Default_Img.png";
+import * as FirebaseFunctions from "../../firebase/firebaseFunctions";
+import * as WalletFunctions from "../../ethereum/walletFunctions";
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values";
@@ -25,123 +23,12 @@ import "@ethersproject/shims";
 // Import the ethers library
 import { ethers } from "ethers";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
-function callLogin(setLoadingMessage, user_email, user_password, newWallet) {
-    console.log("Successfully created account");
-    setLoadingMessage("Account creation successful.");
-    Platform.OS == "web" ? login(user_email, user_password, newWallet) : console.log("not web");
-    // setLoading(false);    
-}
-
-function displayErrorMessage(error, setLoadingMessage) {
-    console.log(error);
-    setLoadingMessage(error + "\n\nPlease go back and try again.");
-}
-
-async function createAccount(
-    fullName,
-    user_email,
-    user_password,
-    userName,
-    setLoading,
-    setLoadingMessage
-) {
-    setLoadingMessage("Your account is being created...");
-
-    const db = firebase.firestore();
-    const snapshot = await db
-        .collection("users")
-        .where("userName", "==", userName)
-        .get();
-
-    if (!snapshot.empty) {
-        setLoadingMessage(
-            "Username Already Taken.\n\nPlease go back and try again."
-        );
-        return;
-    }
-
-    const snapshot2 = await db
-        .collection("users")
-        .where("email", "==", user_email)
-        .get();
-
-    if (!snapshot2.empty) {
-        setLoadingMessage(
-            "Email Already In Use.\n\nPlease go back and try again."
-        );
-        return;
-    }
-
-    // alert("Please wait while we create your account.");
-    const newWallet = ethers.Wallet.createRandom();
-
-    await firebase
-        .auth()
-        .createUserWithEmailAndPassword(user_email, user_password)
-        .then(
-            (response) => {
-                const uid = response.user.uid;
-                const data = {
-                    id: uid,
-                    email: user_email,
-                    fullName: fullName,
-                    userName: userName,
-                    address: newWallet.address,
-                };
-
-                const data2 = {
-                    userName,
-                    fullName,
-                    email: user_email,
-                    address: newWallet.address,
-                };
-
-                const usersRef = firebase.firestore().collection("users");
-                usersRef
-                    .doc(uid)
-                    .set(data)
-                    .then(
-                        () => {
-                            usersRef
-                                .doc(uid)
-                                .collection("Contacts")
-                                .doc(data.fullName)
-                                .set(data2)
-                                .then(
-                                    () => {
-                                        callLogin(
-                                            setLoadingMessage,
-                                            user_email,
-                                            user_password,
-                                            newWallet
-                                        );
-                                    },
-                                    (error) => {
-                                        console.log(error);
-                                        setLoadingMessage(
-                                            error +
-                                                "\n\nPlease go back and try again."
-                                        );
-                                    }
-                                );
-                        },
-                        (error) => {
-                            displayErrorMessage(error, setLoadingMessage);
-                        }
-                    );
-            },
-            (error) => {
-                displayErrorMessage(error, setLoadingMessage);
-            }
-        );
-}
+import { useEffect } from "react/cjs/react.development";
 
 export default function RegistrationScreen({ navigation }) {
-    // state
-    const [fullName, setFullName] = useState("");
-    const [userEmail, setEmail] = useState("");
-    const [userPassword, setPassword] = useState("");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [userName, setUserName] = useState("");
     const [loading, setLoading] = useState(false);
@@ -157,86 +44,60 @@ export default function RegistrationScreen({ navigation }) {
         navigation.navigate("Login");
     };
 
-    // const storeData = async (key, value) => {
-    //     try {
-    //         var user = firebase.auth().currentUser;
-    //         var doc = await firebase
-    //             .firestore()
-    //             .collection("users")
-    //             .doc(user.uid)
-    //             .get();
-    //         var userName = doc.data().userName;
-    //         await AsyncStorage.setItem(userName + key, value);
-    //     } catch (e) {
-    //         // saving error
-    //     }
-    // };
-
-    const onRegisterPress = async () => {
-        if (fullName == "") {
-            alert("Please enter a name for the account.");
+    async function onRegisterPress() {
+        if (name == "") {
+            setLoadingMessage("Please enter a name for the account.");
             return;
         }
 
-        if (userEmail == "") {
-            alert("Please enter an email for the account.");
+        if (email == "") {
+            setLoadingMessage("Please enter an email for the account.");
             return;
         }
 
-        if (userPassword == "") {
-            alert("Please enter a password.");
+        if (password == "") {
+            setLoadingMessage("Please enter a password.");
             return;
         }
 
         if (confirmPassword == "") {
-            alert("Please confirm password.");
+            setLoadingMessage("Please confirm password.");
             return;
         }
 
         if (userName == "") {
-            alert("Please enter a username for the account.");
+            setLoadingMessage("Please enter a username for the account.");
             return;
         }
 
-        if (userPassword !== confirmPassword) {
-            alert("Passwords don't match.");
+        if (password !== confirmPassword) {
+            setLoadingMessage("Passwords don't match.");
             return;
         }
 
-        setLoading(true);
-        
-        const newWallet = await createAccount(
-            fullName,
-            userEmail,
-            userPassword,
-            userName,
-            setLoading,
-            setLoadingMessage
+        var wallet = await WalletFunctions.createRandomWalletAndWriteToStorage(
+            userName
         );
-        
-        Platform.OS != "web" ? login(userEmail, userPassword, newWallet) : console.log("Am Web");
-        // Alert.alert(
-        //     "Creating Account",
-        //     "Account creation will take a few seconds, sit tight.",
-        //     [
-        //         {
-        //             text: "Got it",
-        //             onPress: () => {
-        //                 setLoading(true);
-        //                 createAccount(
-        //                     fullName,
-        //                     userEmail,
-        //                     userPassword,
-        //                     userName,
-        //                     setLoading,
-        //                     setLoadingMessage
-        //                 );
-        //             },
-        //             style: "cancel",
-        //         },
-        //     ]
-        // );
-    };
+
+        var errorMessage = await FirebaseFunctions.firebaseCreateAccountAndLogIn(
+            email,
+            password,
+            name,
+            userName,
+            wallet.address
+        );
+
+        if (errorMessage != "") {
+            setLoadingMessage(errorMessage);
+        }
+    }
+
+    useEffect(() => {
+        if (loading) {
+            console.log("loading: " + loading);
+            onRegisterPress();
+        }
+    }, [loading]);
 
     return loading ? (
         <View style={masterStyles.mainView}>
@@ -247,7 +108,10 @@ export default function RegistrationScreen({ navigation }) {
 
             <View
                 style={{
+                    flex: 0.5,
+                    backgroundColor: "#2e2b30",
                     width: screenSize.width - 20,
+                    paddingLeft: 20,
                     borderRadius: 4,
                 }}
                 justifyContent="center"
@@ -265,15 +129,15 @@ export default function RegistrationScreen({ navigation }) {
                     {loadingMessage}
                 </Text>
                 <Text></Text>
-                {/* <CustomButton
+                <CustomButton
                     onPress={() => {
                         setLoading(false);
                     }}
-                    text="Go back"
+                    text="Go Back"
                     color="#1e1c21"
                     width={screenSize.width - 60}
                     height={screenSize.height / 20}
-                ></CustomButton> */}
+                />
             </View>
         </View>
     ) : (
@@ -296,9 +160,9 @@ export default function RegistrationScreen({ navigation }) {
                     ]}
                     placeholder="Full Name"
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setFullName(text)}
-                    value={fullName}
+                    onChangeText={(text) => setName(text)}
                     underlineColorAndroid="transparent"
+                    value={name}
                     autoCapitalize="words"
                     autoCompleteType="off"
                     autoCorrect={false}
@@ -316,7 +180,7 @@ export default function RegistrationScreen({ navigation }) {
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
-                    value={userEmail}
+                    value={email}
                     keyboardType="email-address"
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
@@ -356,7 +220,7 @@ export default function RegistrationScreen({ navigation }) {
                     secureTextEntry
                     placeholder="Password"
                     onChangeText={(text) => setPassword(text)}
-                    value={userPassword}
+                    value={password}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                     autoCompleteType="off"
@@ -395,7 +259,7 @@ export default function RegistrationScreen({ navigation }) {
 
                 <View style={masterStyles.footerView}>
                     <Text style={masterStyles.footerText}>
-                        Already got an account?{" "}
+                        Already have an account?{" "}
                         <Text
                             onPress={onFooterLinkPress}
                             style={masterStyles.footerLink}

@@ -8,21 +8,19 @@ import {
     Dimensions,
     Platform,
     FlatList,
-    KeyboardAvoidingView,
 } from "react-native";
 import { firebase } from "../../firebase/config";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { masterStyles } from "../../../masterStyles";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export function UserSearchScreen(props) {
-
-
-    const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
+    const screenSize =
+        Platform.OS === "web"
+            ? Dimensions.get("window")
+            : Dimensions.get("screen");
 
     const [searchText, setSearchText] = useState("");
-
 
     var [users, setUsers] = useState([]);
     const thisUser = firebase.auth().currentUser;
@@ -30,38 +28,47 @@ export function UserSearchScreen(props) {
 
     useEffect(() => {
         // retrieve users from firebase without returning my own account
-        userRef.where("email", "!=", thisUser.email)
-            .onSnapshot(
-                (querySnapshot) => {
-                    var newEntities = [];
-                    if (searchText.trim != "") {    // search text entered
-                        querySnapshot.forEach(doc => {
-                            const entity = doc.data();
+        userRef.where("email", "!=", thisUser.email).onSnapshot(
+            (querySnapshot) => {
+                var newEntities = [];
+                if (searchText.trim != "") {
+                    // search text entered
+                    querySnapshot.forEach((doc) => {
+                        const entity = doc.data();
 
-                            // get text prior to @ of email
-                            var emailToSearch = String(entity.email).substring(0, (String(entity.email).lastIndexOf('@'))).toLowerCase();
-                            const search = searchText.toLowerCase();
+                        // get text prior to @ of email
+                        var emailToSearch = String(entity.email)
+                            .substring(0, String(entity.email).lastIndexOf("@"))
+                            .toLowerCase();
+                        const search = searchText.toLowerCase();
 
-                            // return only accounts that contain search text in the email, fullName, or userName
-                            if (emailToSearch.includes(search) || String(entity.fullName).toLowerCase().includes(search) || String(entity.userName).toLowerCase().includes(search)) {
-                                newEntities.push(entity);
-                            }
-
-                        });
-                    } else {    // no search text entered
-                        querySnapshot.forEach(doc => {
-                            const entity = doc.data();
-
+                        // return only accounts that contain search text in the email, fullName, or userName
+                        if (
+                            emailToSearch.includes(search) ||
+                            String(entity.fullName)
+                                .toLowerCase()
+                                .includes(search) ||
+                            String(entity.userName)
+                                .toLowerCase()
+                                .includes(search)
+                        ) {
                             newEntities.push(entity);
-                        });
-                    }
-                    setUsers(newEntities);
+                        }
+                    });
+                } else {
+                    // no search text entered
+                    querySnapshot.forEach((doc) => {
+                        const entity = doc.data();
 
-                },
-                (error) => {
-                    console.log(error);
+                        newEntities.push(entity);
+                    });
                 }
-            );
+                setUsers(newEntities);
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
     }, [searchText]);
 
     const navigation = useNavigation();
@@ -75,7 +82,7 @@ export function UserSearchScreen(props) {
                         navigation.navigate('Account')
                     }
                     else {
-                        navigation.navigate('UserAccountScreen', {
+                        navigation.navigate('ViewOtherAccount', {
                             email: item.email,
                             fullName: item.fullName,
                             userName: item.userName,
@@ -88,16 +95,41 @@ export function UserSearchScreen(props) {
                         <Image 
                             style={masterStyles.userSearchLogo}
                             defaultSource={require("../../../assets/Default_Img.png")}
-                            source={{ uri: ("https://storage.googleapis.com/metallic-975be.appspot.com/" + item.userName + "ProfileImage")}}
-                                
-                        />                           
-                        <View style={{paddingLeft: 10}}>
-                            <Text style={[masterStyles.headingsSmall, {color: '#fff', fontWeight: 'normal', fontSize: 25}]} >{item.userName}</Text>
-                            <Text style={[masterStyles.headingsSmallNotBold, {fontWeight: 'normal', paddingLeft: 15, fontSize: 15}]} >{item.email}</Text>
+                            source={{
+                                uri:
+                                    "https://storage.googleapis.com/metallic-975be.appspot.com/" +
+                                    item.userName +
+                                    "ProfileImage",
+                            }}
+                        />
+                        <View style={{ paddingLeft: 10 }}>
+                            <Text
+                                style={[
+                                    masterStyles.headingsSmall,
+                                    {
+                                        color: "#fff",
+                                        fontWeight: "normal",
+                                        fontSize: 25,
+                                    },
+                                ]}
+                            >
+                                {item.userName}
+                            </Text>
+                            <Text
+                                style={[
+                                    masterStyles.headingsSmallNotBold,
+                                    {
+                                        fontWeight: "normal",
+                                        paddingLeft: 15,
+                                        fontSize: 15,
+                                    },
+                                ]}
+                            >
+                                {item.email}
+                            </Text>
                         </View>
                     </View>
                 </TouchableOpacity>
-
             </View>
         );
     };
@@ -127,8 +159,6 @@ export function UserSearchScreen(props) {
                     />
                 </View>
             </View>
-                {/* </View>
-            </View> */}
         </SafeAreaView>
     );
 }

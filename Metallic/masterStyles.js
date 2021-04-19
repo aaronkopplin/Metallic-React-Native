@@ -1,7 +1,7 @@
-import { useCardAnimation } from '@react-navigation/stack';
-import { StyleSheet, Dimensions, Platform } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from "react-native";
 
-const screenSize = Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
+const screenSize =
+    Platform.OS === "web" ? Dimensions.get("window") : Dimensions.get("screen");
 
 export const masterStyles = StyleSheet.create({
   mainBackground: {

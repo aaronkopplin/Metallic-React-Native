@@ -50,40 +50,37 @@ export function UserAccountScreen({ route }) {
 
     useEffect(() => {
         const userRef = firebase.firestore().collection("users").doc(user.uid);
-        const ContactsRef = userRef.collection("Contacts"); 
-        ContactsRef.onSnapshot((person) =>
-            {
-                person.forEach((doc) => {
-                    if (doc.data().userName == userName){
-                        setForF("Remove Contact");
-                    }
+        const ContactsRef = userRef.collection("Contacts");
+        ContactsRef.onSnapshot((person) => {
+            person.forEach((doc) => {
+                if (doc.data().userName == userName) {
+                    setForF("Remove Contact");
                 }
-                )
-            }
-        )
-        
-    }, [forf])
+            });
+        });
+    }, [forf]);
 
     useEffect(() => {
-        // Failed to find Image for user        
-        const getImage = async(userName) => {
-            if (userName != ""){
-                const ref = await firebase.storage().ref('/' + userName + 'ProfileImage');
+        // Failed to find Image for user
+        const getImage = async (userName) => {
+            if (userName != "") {
+                const ref = await firebase
+                    .storage()
+                    .ref("/" + userName + "ProfileImage");
                 await ref.getDownloadURL().then(onResolve, onReject);
-            
+
                 async function onReject(error) {
                     //console.log(error.code)
                 }
-                
+
                 async function onResolve(foundUrl) {
                     setImageUrl(foundUrl);
                 }
             }
-        }
+        };
 
         getImage(userName);
-    
-    }, [userName, imageUrl])
+    }, [userName, imageUrl]);
 
     const navigation = useNavigation();
 
@@ -102,7 +99,7 @@ export function UserAccountScreen({ route }) {
                     fullName: fullName,
                     userName: userName,
                     address: address,
-                    score: score
+                    score: score,
                 };
 
                 ContactsRef.doc(userName).set(data);
@@ -154,7 +151,6 @@ export function UserAccountScreen({ route }) {
 
         getUser(userRef, userName);
     };
-
 
     return (
         <View style={masterStyles.mainView}>

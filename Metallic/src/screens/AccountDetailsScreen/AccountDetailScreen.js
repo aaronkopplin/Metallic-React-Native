@@ -1,22 +1,13 @@
 import React, { useState } from "react";
-import {
-    Image,
-    Text,
-    View,
-    Dimensions,
-    Platform,
-    Alert,
-    Button,
-} from "react-native";
-import { firebase } from "../../firebase/config";
-import CustomButton from "../../../button";
+import { Text, View, Dimensions, Platform, StyleSheet } from "react-native";
 import { masterStyles } from "../../../../Metallic/masterStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 import { useEffect } from "react";
-import { Wallet } from "ethers";
 import QRCode from "react-native-qrcode-svg";
 import { useNavigation } from "@react-navigation/native";
+import { Colors } from "../../styling/colors";
+import * as FirebaseFunctions from "../../firebase/firebaseFunctions";
 
 export function AccountDetailScreen(props) {
     const screenSize =
@@ -26,74 +17,72 @@ export function AccountDetailScreen(props) {
     const [address, setAddress] = useState("Loading");
     const [privateKey, setPrivateKey] = useState("Loading");
     const [mnemonic, setMnemonic] = useState("Loading");
+    const [email, setEmail] = useState("Loading");
+    const [name, setName] = useState("Loading");
     const navigation = useNavigation();
 
     useEffect(() => {
-        const fetchBal = async () => {
-            const wallet = await WalletFunctions.loadWalletFromPrivate();
-            const storedMnemonic = await WalletFunctions.loadMnemonic();
-            setAddress(wallet.address);
-            setPrivateKey(wallet.privateKey);
-            setMnemonic(storedMnemonic);
-        };
+        async function grabData() {
+            var data = await FirebaseFunctions.firebaseGetUserAccount();
+            setAddress(data.address);
+            setPrivateKey(data.privateKey);
+            setMnemonic(data.mnemonic);
+            setEmail(data.email);
+            setName(data.name);
+        }
 
-        fetchBal();
+        grabData();
     }, []);
 
     return (
-        <View style={masterStyles.mainBackground}>
-            <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
-            <View
-                style={{
-                    flex: 4,
-                    backgroundColor: "#2e2b30",
-                    width: screenSize.width - 40,
-                    height:
-                        Platform.OS === "web"
-                            ? screenSize.height / 2.5
-                            : screenSize.width - 30,
-                    paddingTop: screenSize.height / 50,
-                    alignItems: "center",
-                    borderRadius: 4,
-                }}
-            >
-                <Text
-                    onPress={() => {}}
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingBottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
-                    address: {address}
-                </Text>
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingBottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
-                    private Key: {privateKey}
-                </Text>
-                <Text
-                    style={[
-                        masterStyles.headingsSmall,
-                        {
-                            paddingBottom: screenSize.height * 0.005,
-                            textAlign: "center",
-                        },
-                    ]}
-                >
-                    mnemonic: {mnemonic}
-                </Text>
-                <QRCode value={address} size={screenSize.width / 2} />
+        <View
+            style={{
+                flex: 4,
+                backgroundColor: "#2e2b30",
+                alignItems: "center",
+            }}
+        >
+            <View style={styles.horizontalContainer}>
+                <Text style={styles.boldLabel}>Name:</Text>
+                <Text style={styles.label}>{name}</Text>
             </View>
-            <View style={(masterStyles.mainBackground, { flex: 0.5 })}></View>
+            <View style={styles.horizontalContainer}>
+                <Text style={styles.boldLabel}>Email:</Text>
+                <Text style={styles.label}>{email}</Text>
+            </View>
+            <View style={styles.horizontalContainer}>
+                <Text style={styles.boldLabel}>Address:</Text>
+                <Text style={styles.label}>{address}</Text>
+            </View>
+            <View style={styles.horizontalContainer}>
+                <Text style={styles.boldLabel}>Private Key:</Text>
+                <Text style={styles.label}>{privateKey}</Text>
+            </View>
+            <View style={styles.horizontalContainer}>
+                <Text style={styles.boldLabel}>Mnemonic:</Text>
+                <Text style={styles.label}>{mnemonic}</Text>
+            </View>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    boldLabel: {
+        fontSize: 20,
+        color: Colors.lightForeground,
+        fontWeight: "bold",
+        width: "35%",
+    },
+    label: {
+        fontSize: 20,
+        color: Colors.lightForeground,
+        width: "65%",
+    },
+    qrCode: {},
+    horizontalContainer: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+        width: "100%",
+        padding: 10,
+    },
+});
