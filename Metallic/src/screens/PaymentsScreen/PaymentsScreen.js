@@ -201,7 +201,7 @@ export function PaymentsScreen({ route }) {
             });
 
         // send the transaction
-        if (amount > balance) {
+        if (amount < balance) {
             async function callSendPayment() {
                 var response = await WalletFunctions.sendPayment(
                     wallet,

@@ -187,26 +187,15 @@ function Tabs() {
 }
 
 export default function App() {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(false);
 
     useEffect(() => {
         const usersRef = firebase.firestore().collection("users");
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                usersRef
-                    .doc(user.uid)
-                    .get()
-                    .then((document) => {
-                        const userData = document.data();
-                        console.log("setting user " + (userData != null));
-                        setUser(userData);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                setUser(true);
             } else {
-                console.log("setting user to NULL");
-                setUser(null);
+                setUser(false);
             }
         });
     }, []);
