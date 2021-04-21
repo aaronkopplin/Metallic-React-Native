@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Image,
     Text,
@@ -23,7 +23,6 @@ import "@ethersproject/shims";
 // Import the ethers library
 import { ethers } from "ethers";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useEffect } from "react/cjs/react.development";
 
 export default function RegistrationScreen({ navigation }) {
     const [name, setName] = useState("");
