@@ -14,8 +14,27 @@ export async function createRandomWalletAndWriteToStorage(userName) {
     var wallet = ethers.Wallet.createRandom();
     await storeData(userName, "mnemonic", wallet.mnemonic.phrase);
     await storeData(userName, "privateKey", wallet.privateKey);
+    await storeUserName(userName);
 
     return wallet;
+}
+
+export async function storeUserName(userName) {
+    try {
+        console.log("storing userame " + userName);
+        await AsyncStorage.setItem("userName", userName);
+    } catch (error) {
+        console.log("ERROR STORING DATA: " + error);
+    }
+}
+
+export async function getUserNameFromLocalStorage() {
+    try {
+        var userName = await AsyncStorage.getItem("userName");
+        return userName;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function clearKeysNotForThisUser() {
@@ -30,7 +49,10 @@ export async function clearKeysNotForThisUser() {
 
                 if (userName && userName.length > 0) {
                     keys.forEach((key) => {
-                        if (key.substring(0, userName.length) != userName) {
+                        if (
+                            key.substring(0, userName.length) != userName &&
+                            key != "userName"
+                        ) {
                             //this key is not associated with the logged in user
                             console.log("removing data for key: " + key);
                             AsyncStorage.removeItem(key);
@@ -63,13 +85,7 @@ export async function storeData(userName, key, value) {
 }
 
 export async function getData(key) {
-    var user = firebase.auth().currentUser;
-    var doc = await firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .get();
-    var userName = doc.data().userName;
+    var userName = await getUserNameFromLocalStorage();
     const storedPrivate = await AsyncStorage.getItem(userName + key);
     return storedPrivate;
 }

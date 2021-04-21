@@ -99,6 +99,7 @@ export default function RegistrationScreen({ navigation }) {
         );
 
         if (errorMessage != "") {
+            console.log(errorMessage);
             setLoadingMessage(errorMessage);
         }
     }
