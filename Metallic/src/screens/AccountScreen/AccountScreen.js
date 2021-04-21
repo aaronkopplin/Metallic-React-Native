@@ -106,7 +106,7 @@ export function AccountScreen({ navigation, route }) {
                     .ref("/" + userName + "ProfileImage");
                 await ref.getDownloadURL().then(onResolve, onReject);
                 async function onReject(error) {
-                    console.log(error);
+                    // console.log(error);
                 }
                 async function onResolve(foundUrl) {
                     setImageUrl(foundUrl);
@@ -194,9 +194,7 @@ export function AccountScreen({ navigation, route }) {
         });
     }
     return (
-        <View
-            style={masterStyles.mainView}
-        >
+        <View style={masterStyles.mainView}>
             <View style={[masterStyles.accountContainer]}>
                 <Modal
                     animationType="slide"
@@ -207,110 +205,114 @@ export function AccountScreen({ navigation, route }) {
                         setModalVisible(!modalVisible);
                     }}
                 >
-                <View style={[styles.centeredView]}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.label}>{qrModalLabelText}</Text>
-                        <QRCode
-                            value={userAddress}
-                            style={styles.qrCode}
-                            size={200}
-                        />
+                    <View style={[styles.centeredView]}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.label}>{qrModalLabelText}</Text>
+                            <QRCode
+                                value={userAddress}
+                                style={styles.qrCode}
+                                size={200}
+                            />
+                            <TouchableOpacity
+                                style={styles.modalButton}
+                                onPress={() => {
+                                    setModalVisible(false);
+                                }}
+                            >
+                                <Text style={styles.label}>Dismiss</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+                {route.params == null ? (
+                    <View style={styles.horizontalContainer}>
                         <TouchableOpacity
-                            style={styles.modalButton}
+                            onPress={FirebaseFunctions.firebaseLogout}
+                        >
+                            <Icon
+                                name="log-out-outline"
+                                color="#79777d"
+                                size={30}
+                                style={styles.iconButton}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
                             onPress={() => {
-                                setModalVisible(false);
+                                navigation.navigate("AccountDetailScreen");
                             }}
                         >
-                            <Text style={styles.label}>Dismiss</Text>
+                            <Icon
+                                name="settings"
+                                color="#79777d"
+                                size={30}
+                                style={styles.iconButton}
+                            />
                         </TouchableOpacity>
                     </View>
-                </View>
-            </Modal>
-            {route.params == null ? (
-                <View style={styles.horizontalContainer}>
-                    <TouchableOpacity
-                        onPress={FirebaseFunctions.firebaseLogout}
-                    >
-                        <Icon
-                            name="log-out-outline"
-                            color="#79777d"
-                            size={30}
-                            style={styles.iconButton}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate("AccountDetailScreen");
+                ) : null}
+                <View style={styles.avitar}>
+                    <Image
+                        style={{
+                            width: 200,
+                            height: 200,
+                            borderRadius: 1000,
                         }}
-                    >
-                        <Icon
-                            name="settings"
-                            color="#79777d"
-                            size={30}
-                            style={styles.iconButton}
-                        />
-                    </TouchableOpacity>
-                </View>
-            ) : null}
-            <View style={styles.avitar}>
-                <Image
-                    style={{
-                        width: 200,
-                        height: 200,
-                        borderRadius: 1000,
-                    }}
-                    defaultSource={require("../../../assets/Default_Img.png")}
-                    source={{ uri: imageLoading ? localImageUri : imageUrl }}
-                    onPress={() => {
-                        console.log("press");
-                    }}
-                />
-                {route.params == null ? (
-                    <Icon
-                        name="camera"
-                        color="#79777d"
-                        size={25}
-                        style={styles.cameraButton}
+                        defaultSource={require("../../../assets/Default_Img.png")}
+                        source={{
+                            uri: imageLoading ? localImageUri : imageUrl,
+                        }}
                         onPress={() => {
-                            onChooseImagePress();
+                            console.log("press");
                         }}
                     />
-                ) : null}
-                <Icon
-                    name="qr-code"
-                    color="#79777d"
-                    size={25}
-                    style={styles.qrCodeButton}
-                    onPress={() => {
-                        console.log(userAddress);
-                        setModalVisible(true);
-                    }}
-                />
-            </View>
-            <Text style={styles.name}>{userFullName}</Text>
-            <View style={styles.horizontalContainer}>
-                <Text style={styles.label}>@{userName}</Text>
-                <Text style={styles.label}>{balance} Eth</Text>
-                <Text style={styles.label}>{score} points</Text>
-            </View>
-            {route.params == null ? (
-                <Text></Text>
-            ) : (
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={addOrRemoveContact}
-                    >
-                        <Text style={styles.label}>{addContactButtonText}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={sendPayment}
-                    >
-                        <Text style={styles.label}>Send Payment</Text>
-                    </TouchableOpacity>
+                    {route.params == null ? (
+                        <Icon
+                            name="camera"
+                            color="#79777d"
+                            size={25}
+                            style={styles.cameraButton}
+                            onPress={() => {
+                                onChooseImagePress();
+                            }}
+                        />
+                    ) : null}
+                    <Icon
+                        name="qr-code"
+                        color="#79777d"
+                        size={25}
+                        style={styles.qrCodeButton}
+                        onPress={() => {
+                            console.log(userAddress);
+                            setModalVisible(true);
+                        }}
+                    />
                 </View>
-            )}
+                <Text style={styles.name}>{userFullName}</Text>
+                <View style={styles.horizontalContainer}>
+                    <Text style={styles.label}>@{userName}</Text>
+                    <Text style={styles.label}>{balance} Eth</Text>
+                    <Text style={styles.label}>{score} points</Text>
+                </View>
+                {route.params == null ? (
+                    <Text></Text>
+                ) : (
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={addOrRemoveContact}
+                        >
+                            <Text style={styles.label}>
+                                {addContactButtonText}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={sendPayment}
+                        >
+                            <Text style={styles.label}>Send Payment</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </View>
         </View>
     );
