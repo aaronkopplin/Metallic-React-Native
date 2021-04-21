@@ -75,6 +75,17 @@ export default function RegistrationScreen({ navigation }) {
             return;
         }
 
+        setLoading(true);
+    }
+
+    useEffect(() => {
+        if (loading) {
+            console.log("loading: " + loading);
+            createWalletAndCreateAccount();
+        }
+    }, [loading]);
+
+    async function createWalletAndCreateAccount() {
         var wallet = await WalletFunctions.createRandomWalletAndWriteToStorage(
             userName
         );
@@ -91,13 +102,6 @@ export default function RegistrationScreen({ navigation }) {
             setLoadingMessage(errorMessage);
         }
     }
-
-    useEffect(() => {
-        if (loading) {
-            console.log("loading: " + loading);
-            onRegisterPress();
-        }
-    }, [loading]);
 
     return loading ? (
         <View style={masterStyles.mainView}>
@@ -147,16 +151,21 @@ export default function RegistrationScreen({ navigation }) {
                 source={require("../../../assets/metalliclogo.png")}
             />
 
-            <KeyboardAwareScrollView style={masterStyles.registrationKeyboardAwareView}>
+            <KeyboardAwareScrollView
+                style={masterStyles.registrationKeyboardAwareView}
+            >
                 <Text></Text>
-                <Text style={masterStyles.mainHeadings}>
-                    Name
-                </Text>
+                <Text style={masterStyles.mainHeadings}>Name</Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
+                        {
+                            width:
+                                Platform.OS == "web"
+                                    ? screenSize.width * 0.58
+                                    : screenSize.width * 0.85,
+                        },
                     ]}
                     placeholder="Full Name"
                     placeholderTextColor="#aaaaaa"
@@ -168,14 +177,17 @@ export default function RegistrationScreen({ navigation }) {
                     autoCorrect={false}
                 />
 
-                <Text style={masterStyles.mainHeadings}>
-                    E-Mail
-                </Text>
+                <Text style={masterStyles.mainHeadings}>E-Mail</Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
+                        {
+                            width:
+                                Platform.OS == "web"
+                                    ? screenSize.width * 0.58
+                                    : screenSize.width * 0.85,
+                        },
                     ]}
                     placeholder="E-mail"
                     placeholderTextColor="#aaaaaa"
@@ -188,14 +200,17 @@ export default function RegistrationScreen({ navigation }) {
                     autoCorrect={false}
                 />
 
-                <Text style={masterStyles.mainHeadings} >
-                    Username
-                </Text>
+                <Text style={masterStyles.mainHeadings}>Username</Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
+                        {
+                            width:
+                                Platform.OS == "web"
+                                    ? screenSize.width * 0.58
+                                    : screenSize.width * 0.85,
+                        },
                     ]}
                     placeholderTextColor="#aaaaaa"
                     placeholder="Username"
@@ -207,14 +222,17 @@ export default function RegistrationScreen({ navigation }) {
                     autoCorrect={false}
                 />
 
-                <Text style={masterStyles.mainHeadings}>
-                    Password
-                </Text>
+                <Text style={masterStyles.mainHeadings}>Password</Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
+                        {
+                            width:
+                                Platform.OS == "web"
+                                    ? screenSize.width * 0.58
+                                    : screenSize.width * 0.85,
+                        },
                     ]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
@@ -227,14 +245,17 @@ export default function RegistrationScreen({ navigation }) {
                     autoCorrect={false}
                 />
 
-                <Text style={masterStyles.mainHeadings}>
-                    Confirm Password
-                </Text>
+                <Text style={masterStyles.mainHeadings}>Confirm Password</Text>
 
                 <TextInput
                     style={[
                         masterStyles.input,
-                        {width: Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85},
+                        {
+                            width:
+                                Platform.OS == "web"
+                                    ? screenSize.width * 0.58
+                                    : screenSize.width * 0.85,
+                        },
                     ]}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
@@ -246,14 +267,18 @@ export default function RegistrationScreen({ navigation }) {
                     autoCompleteType="off"
                     autoCorrect={false}
                 />
-                
-                <View style={{height: screenSize.height * .05}}/>
+
+                <View style={{ height: screenSize.height * 0.05 }} />
 
                 <CustomButton
                     onPress={onRegisterPress}
                     text="Create Account"
                     color="#117ed1"
-                    width={Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85}
+                    width={
+                        Platform.OS == "web"
+                            ? screenSize.width * 0.58
+                            : screenSize.width * 0.85
+                    }
                     height={screenSize.height / 20}
                 />
 
