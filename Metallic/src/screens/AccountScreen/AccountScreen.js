@@ -15,6 +15,7 @@ import { firebase } from "../../firebase/config";
 import { useEffect } from "react";
 import * as WalletFunctions from "../../ethereum/walletFunctions";
 import * as ImagePicker from "expo-image-picker";
+import CustomButton from "../../../button";
 import "firebase/storage";
 import * as Permissions from "expo-permissions";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -41,6 +42,16 @@ export function AccountScreen({ navigation, route }) {
     const [refresh, setRefresh] = useState("");
     const [imageLoading, setImageLoading] = useState(false);
     const [localImageUri, setLocalImageUri] = useState("");
+    var web = false;
+    const screenSize =
+    Platform.OS === "web"
+        ? Dimensions.get("window")
+        : Dimensions.get("screen");
+    
+    if (Platform.OS === "web"){
+        web = true;
+    }
+
 
     useFocusEffect(() => {
         console.log("refreshing account screen");
@@ -195,7 +206,67 @@ export function AccountScreen({ navigation, route }) {
     }
     return (
         <View style={masterStyles.mainView}>
-            <View style={[masterStyles.accountContainer]}>
+            <View style={[masterStyles.accountContainer]}>{web ? (
+                <>
+                <Text style={masterStyles.accountMyAccount}>
+                    My Account
+                </Text>
+                <Image
+                    style={masterStyles.logo}
+                    defaultSource={require("../../../assets/Default_Img.png")}
+                    source={{ uri: imageUrl }}
+                />
+                <Text style={masterStyles.accountUserName}>
+                    {userName}
+                </Text>
+                <Text style={masterStyles.accountDetails}>
+                    Name: {userFullName}
+                </Text>
+                <Text style={masterStyles.accountDetails}>
+                    Email: {userEmail}
+                </Text>
+                <Text style={masterStyles.accountDetails}>
+                    Balance: {balance}
+                </Text>
+                <Text style={masterStyles.accountDetails}>
+                    Score: {score}
+                </Text>
+
+                <View style={{height: screenSize.height *.07}} />
+
+                <CustomButton
+                    onPress={() => {
+                        navigation.navigate("AccountDetailScreen");
+                    }}
+                    text="View Account Details"
+                    color="#6111d1"
+                    width={Platform.OS == "web" ? screenSize.width *.55 : screenSize.width * .8}
+                    height={screenSize.height / 20}
+                />
+
+                <View style={{height: screenSize.height * .02}} /> 
+
+                <CustomButton
+                    onPress={() => {onChooseImagePress()}}
+                    text="Change Profile Picture"
+                    color="#117ed1"
+                    width={Platform.OS == "web" ? screenSize.width *.55 : screenSize.width * .8}
+                    height={screenSize.height / 20}
+                />
+
+                <View style={{height: screenSize.height * .02 }} />
+                <CustomButton
+                    onPress={FirebaseFunctions.firebaseLogout}
+                    text="Logout"
+                    color="#000000"
+                    width={Platform.OS == "web" ? screenSize.width *.55 : screenSize.width * .8}
+                    height={screenSize.height / 20}
+                />
+            </>
+            ) 
+            // If Not Web
+            : (
+                <>
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -313,6 +384,8 @@ export function AccountScreen({ navigation, route }) {
                         </TouchableOpacity>
                     </View>
                 )}
+                </>
+            )}
             </View>
         </View>
     );
