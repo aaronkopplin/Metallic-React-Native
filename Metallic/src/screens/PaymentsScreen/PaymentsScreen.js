@@ -430,7 +430,7 @@ export function PaymentsScreen({ route }) {
                             Platform.OS === "web"
                                 ? screenSize.height / 1.4 - 160
                                 : Platform.OS === "android"
-                                ? screenSize.height / 1.54 - 140
+                                ? screenSize.height / 1.54 - 160
                                 : screenSize.height / 1.54 - 120,
                         alignItems: "center",
                         justifyContent: "center",
