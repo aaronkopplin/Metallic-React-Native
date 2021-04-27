@@ -117,7 +117,11 @@ export function ContactsScreen({ navigation }) {
                             navigation.navigate('Account')
                         }
                         else if (c.userName == title){
-                            navigation.navigate('ViewOtherAccount',{
+                            var destination = 'ViewOtherAccount';
+                            if (Platform.OS === "web"){
+                                destination = 'UserAccountScreen'
+                            }
+                            navigation.navigate(destination,{
                                 email: c.email,
                                 fullName: c.fullName,
                                 userName: c.userName,

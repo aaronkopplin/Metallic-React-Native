@@ -82,7 +82,11 @@ export function UserSearchScreen(props) {
                         navigation.navigate('Account')
                     }
                     else {
-                        navigation.navigate('ViewOtherAccount', {
+                        var destination = 'ViewOtherAccount';
+                        if (Platform.OS === "web"){
+                            destination = 'UserAccountScreen'
+                        }
+                        navigation.navigate(destination, {
                             email: item.email,
                             fullName: item.fullName,
                             userName: item.userName,
