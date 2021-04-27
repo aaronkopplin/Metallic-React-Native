@@ -295,7 +295,7 @@ export default function RegistrationScreen({ navigation }) {
                 </View>
             </KeyboardAwareScrollView>
 
-            <View style={(masterStyles.mainBackground, { flex: 0.1 })}></View>
+            <View style={(masterStyles.mainBackground, { flex: Platform.OS == 'android' ? 0.2 : 1.2, })}></View>
         </View>
     );
 }

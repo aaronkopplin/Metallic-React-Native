@@ -140,27 +140,30 @@ export function UserSearchScreen(props) {
 
     return (
         <SafeAreaView style={masterStyles.mainView}>
-            <View style={masterStyles.userSearchPrompt}>
-                <TextInput
-                    style={[masterStyles.input, {width: Platform.OS == "web" ? screenSize.width *.6 : screenSize.width * .99 , marginBottom: 10}]}
-                    placeholder="Enter name/username to search for a user"
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setSearchText(text)}
-                    clearButtonMode="while-editing"
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                    clearTextOnFocus={true}
-                    value={searchText}
-                />
-            <View style={masterStyles.userSearchListContainer}>
-            {/* <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
-                <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}> */}
-                    <FlatList
-                        data={users}
-                        renderItem={renderUser}
-                        keyExtractor={(item) => item.id}
-                        removeClippedSubviews={true}
+            <View style={{  height: Platform.OS == "web" ? (screenSize.height * 0.85) : screenSize.height,
+                            maxHeight: Platform.OS == "web" ? screenSize.height: (screenSize.height * 0.75), top: Platform.OS == "android" ? 8 : 0}}>
+                <View style={masterStyles.userSearchPrompt}>
+                    <TextInput
+                        style={[masterStyles.input, {width: Platform.OS == "web" ? screenSize.width *.6 : screenSize.width * .99}]}
+                        placeholder="Enter name/username to search for a user"
+                        placeholderTextColor="#aaaaaa"
+                        onChangeText={(text) => setSearchText(text)}
+                        clearButtonMode="while-editing"
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        clearTextOnFocus={true}
+                        value={searchText}
                     />
+                <View style={masterStyles.userSearchListContainer}>
+                {/* <View style={{ backgroundColor: "#2e2b30", alignItems: 'center', borderRadius: 4, width: screenSize.width - 20, marginTop: 10,  }}>
+                    <View style={{ paddingVertical: 10, height: (screenSize.height * 0.75) - 40, width: screenSize.width - 20, paddingHorizontal: 10 }}> */}
+                        <FlatList
+                            data={users}
+                            renderItem={renderUser}
+                            keyExtractor={(item) => item.id}
+                            removeClippedSubviews={true}
+                        />
+                    </View>
                 </View>
             </View>
         </SafeAreaView>

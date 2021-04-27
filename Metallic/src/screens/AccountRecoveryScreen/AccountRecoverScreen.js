@@ -52,7 +52,7 @@ async function recoverAccount(mnemonic, navigation) {
     if (newWallet.address == oldAddress) {
         WalletFunctions.storeData("mnemonic", newWallet.mnemonic.phrase);
         WalletFunctions.storeData("privateKey", newWallet.privateKey);
-        navigation.navigate("Account");
+        navigation.navigate("ViewOtherAccount");
     } else {
         Alert.alert(
             "Error",
@@ -77,9 +77,9 @@ export function AccountRecoveryScreen() {
     const navigation = useNavigation();
     const [mnemonic, setMnemonic] = useState("");
 
-    alert(
-        "The wallet for the account you are accessing was not found on this device. Plase recover your account with the mnemonic phrase from this account."
-    );
+    // alert(
+    //     "The wallet for the account you are accessing was not found on this device. Plase recover your account with the mnemonic phrase from this account."
+    // );
 
     return (
         <View style={masterStyles.mainBackground}>

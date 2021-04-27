@@ -99,6 +99,7 @@ export default function LoginScreen({ navigation }) {
                     width={Platform.OS == 'web' ? screenSize.width * .58 : screenSize.width * .85}
                     height={screenSize.height / 20}
                 />
+                <View style={{height: screenSize.height / 30}} />
             </KeyboardAvoidingView>
         </View>
     );

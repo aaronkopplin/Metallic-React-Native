@@ -206,7 +206,7 @@ export function AccountScreen({ navigation, route }) {
     }
     return (
         <View style={masterStyles.mainView}>
-            <View style={[masterStyles.accountContainer]}>{web ? (
+            <View style={[masterStyles.accountContainer, {height: Platform.OS == 'android' ? screenSize.height * 0.77 - 17 : screenSize.height * 0.77 - 6}]}>{web ? (
                 <>
                 <Text style={masterStyles.accountMyAccount}>
                     My Account
@@ -277,7 +277,7 @@ export function AccountScreen({ navigation, route }) {
                     }}
                 >
                     <View style={[styles.centeredView]}>
-                        <View style={styles.modalView}>
+                        <View style={[styles.modalView]}>
                             <Text style={styles.label}>{qrModalLabelText}</Text>
                             <QRCode
                                 value={userAddress}
@@ -362,7 +362,7 @@ export function AccountScreen({ navigation, route }) {
                 <View style={styles.horizontalContainer}>
                     <Text style={styles.label}>@{userName}</Text>
                     <Text style={styles.label}>{balance} Eth</Text>
-                    <Text style={styles.label}>{score} points</Text>
+                    <Text style={styles.label}>{score} {score == 1 ? "point" : "points"}</Text>
                 </View>
                 {route.params == null ? (
                     <Text></Text>

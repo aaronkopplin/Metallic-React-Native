@@ -128,10 +128,10 @@ export const masterStyles = StyleSheet.create({
       Platform.OS == "web" 
         ? screenSize.width *.6 
         : screenSize.width * .95,
-    height:
-      Platform.OS === "web"
-          ? screenSize.height * .5
-          : screenSize.width * .9,
+    // height:
+    //   Platform.OS === "web"
+    //       ? screenSize.height * .5
+    //       : screenSize.width * .9,
     paddingTop: screenSize.height / 50,
     paddingLeft: 20,
     borderRadius: 10,
@@ -173,10 +173,10 @@ export const masterStyles = StyleSheet.create({
   accountContainer: {
     backgroundColor: "#2e2b30",
     width: Platform.OS == "web" ? screenSize.width *.6 : screenSize.width * .99,
-    height: Platform.OS == "web" ? screenSize.height * .9 : screenSize.height * .75,
+    height: Platform.OS == "web" ? screenSize.height * .9 : screenSize.height * .76 + 2,
     top: 10,
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 5,
   },
   accountMyAccount: {
     color: '#ffffff',
@@ -214,6 +214,7 @@ export const masterStyles = StyleSheet.create({
         Platform.OS == "web" 
         ? 0
         : screenSize.height * .01,
+    justifyContent: 'center'
   },
 
   contactsUserTopName: {
@@ -232,9 +233,9 @@ export const masterStyles = StyleSheet.create({
   contactsContainer: {
     backgroundColor: "#2e2b30", 
     paddingBottom: 10, 
-    borderRadius: 4, 
+    borderRadius: 5, 
     height: Platform.OS == "web" ? (screenSize.height * 0.8) : screenSize.height,
-    maxHeight: Platform.OS == "web" ? screenSize.height: (screenSize.height * 0.65), 
+    maxHeight: Platform.OS == "web" ? screenSize.height : Platform.OS == "android" ? (screenSize.height * 0.67) - 2 : (screenSize.height * 0.66) - 1, 
     width: Platform.OS == "web" ? screenSize.width *.6 : screenSize.width * .99
   },
 
@@ -299,11 +300,11 @@ export const masterStyles = StyleSheet.create({
   recentChatsContainer: {
     backgroundColor: "#2e2b30", 
     paddingBottom: 10, 
-    borderRadius: 4, 
-    height: Platform.OS == "web" ? (screenSize.height * 0.85) : screenSize.height,
-    maxHeight: Platform.OS == "web" ? screenSize.height: (screenSize.height * 0.65), 
+    borderRadius: 5, 
+    height: Platform.OS == "web" ? (screenSize.height * 0.85) : Platform.OS == "android" ? (screenSize.height * 0.75) : (screenSize.height * 0.75 + 10),
+    maxHeight: Platform.OS == "web" ? screenSize.height : Platform.OS == "android" ? (screenSize.height * 0.75) : (screenSize.height * 0.75 + 10), 
     width: Platform.OS == "web" ? screenSize.width *.6 : screenSize.width * .99,
-    top: 20,
+    top: 10,
     
   },
   recentChatsUserNames: {
@@ -315,15 +316,15 @@ export const masterStyles = StyleSheet.create({
 
   // ****** User Search Screen ******
   userSearchPrompt: {
-    paddingBottom: 4,
-    top: 10,
+    top: -30
   },
   userSearchListContainer: {
     backgroundColor: "#2e2b30", 
-    paddingBottom: 10, 
-    borderRadius: 4, 
+    marginTop: 10, 
+    borderRadius: 5, 
+    paddingVertical: 10,
     height: Platform.OS == "web" ? (screenSize.height * 0.8) : screenSize.height,
-    maxHeight: Platform.OS == "web" ? screenSize.height: (screenSize.height * 0.65), 
+    maxHeight: Platform.OS == "web" ? screenSize.height: (screenSize.height * 0.704) + 8.5, 
     width: Platform.OS == "web" ? screenSize.width *.6 : screenSize.width * .99,
   },
   userSearchLogo: {
