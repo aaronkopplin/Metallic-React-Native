@@ -551,6 +551,8 @@ export function PaymentsScreen({ route }) {
                             ]}
                             placeholder="Enter amount of ETH to send"
                             keyboardType="decimal-pad"
+                            autoCompleteType="off"
+                            autoCorrect={false}
                             returnKeyType="done"
                             textAlign="left"
                             onFocus={() => changeAmountInput(0.0)}
